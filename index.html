@@ -874,12 +874,12 @@
         const amountInput = document.getElementById('amount');
 
         function updateHoshinoDisplay(exprKey, text) {
-        hoshinoDialogue.textContent = `"${text}"`
+          hoshinoDialogue.textContent = `"${text}"`
         // Make sure the image element is visible in case it was hidden by an error before
-        hoshinoSpriteImg.style.display = 'block'
+          hoshinoSpriteImg.style.display = 'block'
         // Set the new expression image source
-        hoshinoSpriteImg.src = expressionSprites[exprKey] || 'normal.png';
-    }
+          hoshinoSpriteImg.src = expressionSprites[exprKey] || 'expression/normal.png';
+        }
 
         updateHoshinoDisplay(initialExpr, startupText);
 
