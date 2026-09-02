@@ -684,12 +684,12 @@
 
         // TIME-BASED AUDIO SETUP
         const audioTracks = {
-            morning: new Audio('bbgm_morning.mp3'),
-            noon: new Audio('bgm_noon.mp3'),
-            afternoon: new Audio('bgm_afternoon.mp3'),
-            night: new Audio('bgm_night.mp3'),
-            latenight: new Audio('bgm_latenight.mp3')
+          morning: new Audio('audio/bgm_morning.mp3'),
+          noon: new Audio('audio/bgm_noon.mp3'),
+          evening: new Audio('audio/bgm_evening.mp3'),
+          night: new Audio('audio/bgm_night.mp3')
         };
+
 
         let gameVolume = parseFloat(localStorage.getItem("gameVolume")) || 0.5;
         Object.values(audioTracks).forEach(audio => {
@@ -776,14 +776,15 @@
         let currentWalletId = wallets[0].id;
 
         const expressionSprites = {
-            normal: 'normal.png',
-            squished: 'squished.png',
-            sleepy: 'sleepy.png',
-            happy: 'happy.png',
-            joking: 'joking.png',
-            surprised: 'surprised.png',
-            embarrassed: 'embarrassed.png'
+          normal: 'expression/normal.png',
+          squished: 'expression/squished.png',
+          sleepy: 'expression/sleepy.png',
+          happy: 'expression/happy.png',
+          joking: 'expression/joking.png',
+          surprised: 'expression/surprised.png',
+          embarrassed: 'expression/embarrassed.png'
         };
+
 
         const expressionDialogues = {
             normal: [
@@ -879,7 +880,6 @@
         // Set the new expression image source
         hoshinoSpriteImg.src = expressionSprites[exprKey] || 'normal.png';
     }
-
 
         updateHoshinoDisplay(initialExpr, startupText);
 
