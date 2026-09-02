@@ -588,7 +588,7 @@
 
         <div class="vn-section">
             <div class="hoshino-avatar" id="hoshinoSpriteBox" onclick="pokeHoshino()">
-                <img id="hoshinoSpriteImg" src="" alt="Hoshino Sprite" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size:1.8rem;\'>🐋</span>';">
+                <img id="hoshinoSpriteImg" src="" alt="Hoshino Sprite" onerror="this.src='normal.png';">
             </div>
             <div class="speech-bubble">
                 <strong>Hoshino</strong>
@@ -872,10 +872,13 @@
         const amountInput = document.getElementById('amount');
 
         function updateHoshinoDisplay(exprKey, text) {
-            hoshinoDialogue.textContent = `"${text}"`;
-            hoshinoSpriteImg.src = expressionSprites[exprKey] || 'normal.png';
-            hoshinoSpriteImg.style.display = 'block';
-        }
+        hoshinoDialogue.textContent = `"${text}"`
+        // Make sure the image element is visible in case it was hidden by an error before
+        hoshinoSpriteImg.style.display = 'block'
+        // Set the new expression image source
+        hoshinoSpriteImg.src = expressionSprites[exprKey] || 'normal.png';
+    }
+
 
         updateHoshinoDisplay(initialExpr, startupText);
 
