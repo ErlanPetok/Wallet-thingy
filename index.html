@@ -683,10 +683,12 @@
         <div class="bg-settings-panel" id="bgSettingsPanel" style="display: none;">
             <div style="font-weight: 600; color: var(--text-color);">🎨 Choose Background Preset:</div>
             <div class="bg-presets-row">
-                <button class="bg-preset-btn" onclick="setPresetBg('together')">🏫 Together</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('desert')">🏜️ Desert Dunes</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('rooftop')">☁️ Rooftop Chill</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('none')">❌ Solid Color</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('together')">💕 Together</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('together2')">💕 Together 2</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('school')">🏫 Abydos</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('classroom')">☁️ Committee Room</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('classroomnight')">🌃 Committee Room (night)</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('classroomnightlight')">💡 Committee Room (nightlight)</button>
             </div>
             <div style="font-weight: 600; color: var(--text-color); margin-top: 4px;">📂 Or Custom Background Image:</div>
             <div style="display: flex; gap: 6px;">
@@ -806,7 +808,7 @@
 
             if (customBg === 'together') {
                 document.body.style.backgroundImage = "url('background/together.jpg')";
-            } else if (customBg === 'desert') {
+            } else if (customBg === 'school') {
                 document.body.style.backgroundImage = "url('background/abydos.jpg')";
             } else if (customBg === 'rooftop') {
                 document.body.style.backgroundImage = "url('background/abydos.jpg')";
