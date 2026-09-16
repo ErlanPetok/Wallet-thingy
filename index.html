@@ -689,6 +689,7 @@
                 <button class="bg-preset-btn" onclick="setPresetBg('classroom')">☁️ Committee Room</button>
                 <button class="bg-preset-btn" onclick="setPresetBg('classroomnight')">🌃 Committee Room (night)</button>
                 <button class="bg-preset-btn" onclick="setPresetBg('classroomnightlight')">💡 Committee Room (nightlight)</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('councilroom')">💡 Council Room</button>
             </div>
             <div style="font-weight: 600; color: var(--text-color); margin-top: 4px;">📂 Or Custom Background Image:</div>
             <div style="display: flex; gap: 6px;">
@@ -808,10 +809,18 @@
 
             if (customBg === 'together') {
                 document.body.style.backgroundImage = "url('background/together.jpg')";
+            } else if (customBg === 'together2') {
+                document.body.style.backgroundImage = "url('background/together2.jpg')";
             } else if (customBg === 'school') {
                 document.body.style.backgroundImage = "url('background/abydos.jpg')";
-            } else if (customBg === 'rooftop') {
-                document.body.style.backgroundImage = "url('background/abydos.jpg')";
+            } else if (customBg === 'classroom') {
+                document.body.style.backgroundImage = "url('background/Committee_Room_Day.jpg')";
+            } else if (customBg === 'classroomnight') {
+                document.body.style.backgroundImage = "url('background/Committee_Room_Night_1.jpg')";
+            } else if (customBg === 'classroomnightlight') {
+                document.body.style.backgroundImage = "url('background/Committee_Room_Night_2.jpg')";
+            } else if (customBg === 'councilroom') {
+                document.body.style.backgroundImage = "url('background/BG_AbydosCouncilRoom.jpg')";
             } else if (customBg.startsWith('data:image')) {
                 document.body.style.backgroundImage = `url('${customBg}')`;
             } else {
