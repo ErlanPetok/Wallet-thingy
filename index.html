@@ -19,6 +19,7 @@
             --gain-color: #2b9348;
             --header-text: #fff;
             --sticky-bg: rgba(255, 255, 255, 0.88);
+            --page-scale: 1;
         }
 
         body.night-theme {
@@ -68,15 +69,15 @@
             border-radius: 24px;
             box-shadow: var(--shadow);
             border: 2px solid var(--primary-pink);
-            transition: background 0.3s ease, border-color 0.3s ease;
+            transition: background 0.3s ease, border-color 0.3s ease, max-width 0.2s ease;
             text-shadow:
                 0 0 2px rgba(255, 255, 255, 0.9),
                 0 0 3px rgba(255, 255, 255, 0.7);
-            /* Normal flow - no internal scroll */
             display: flex;
             flex-direction: column;
             position: relative;
-            padding-top: 110px;   /* space for fixed VN section */
+            /* Page scale via max-width */
+            max-width: calc(400px * var(--page-scale));
         }
 
         body.night-theme .phone-container {
@@ -102,11 +103,7 @@
             align-items: center;
             position: relative;
             border-radius: 22px 22px 0 0;
-            margin-top: -110px;  /* pull header back up under the fixed VN */
         }
-
-        /* Actually - we want header first, then VN fixed over it. Let me reorder. */
-        /* Wait - cleaner: keep header sticky together with VN. */
 
         .header-title-box {
             background: rgba(255, 255, 255, 0.25);
@@ -232,7 +229,6 @@
             opacity: 1;
         }
 
-        /* === VN Section — sticky under the header === */
         .vn-section {
             display: flex;
             align-items: center;
@@ -246,7 +242,6 @@
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px dashed var(--primary-pink);
             transition: background 0.3s ease;
-            /* Fade from blurred to transparent at the bottom edge */
             box-shadow: 0 4px 10px -4px rgba(255, 179, 198, 0.5);
         }
 
@@ -440,6 +435,19 @@
                 0 1px 1px rgba(0, 0, 0, 0.4);
         }
 
+        /* Typewriter cursor */
+        .speech-bubble span.typing::after {
+            content: '▍';
+            color: var(--dark-pink);
+            animation: blink 0.7s infinite;
+            margin-left: 1px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
         .music-bar {
             margin: 10px 16px 0 16px;
             background: var(--accent-pink);
@@ -630,6 +638,80 @@
             flex-direction: column;
             gap: 8px;
             font-size: 0.75rem;
+        }
+
+        /* === Settings Panel === */
+        .settings-panel {
+            margin: 8px 16px 0 16px;
+            background: var(--accent-pink);
+            border: 1px dashed var(--primary-pink);
+            padding: 10px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.75rem;
+        }
+
+        .settings-panel h4 {
+            font-size: 0.75rem;
+            color: var(--dark-pink);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 2px;
+        }
+
+        .setting-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            color: var(--dark-pink);
+            font-weight: 600;
+        }
+
+        .setting-row .setting-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+        }
+
+        .setting-row .setting-value {
+            color: var(--dark-pink);
+            font-weight: 800;
+            font-size: 0.7rem;
+        }
+
+        .setting-row input[type="range"] {
+            width: 100%;
+            accent-color: var(--dark-pink);
+            cursor: pointer;
+        }
+
+        .setting-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 0.72rem;
+            color: var(--dark-pink);
+            font-weight: 600;
+        }
+
+        .setting-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--dark-pink);
+            cursor: pointer;
+        }
+
+        .setting-hint {
+            font-size: 0.6rem;
+            color: var(--dark-pink);
+            opacity: 0.7;
+            font-style: italic;
+            font-weight: 500;
         }
 
         .bg-presets-row {
@@ -1319,7 +1401,6 @@
             display: none;
         }
 
-        /* Wallet editor actions */
         .wallet-action-list {
             display: flex;
             flex-direction: column;
@@ -1485,7 +1566,41 @@
             </div>
         </div>
 
+        <!-- === Settings Panel === -->
+        <div class="settings-panel" id="settingsPanel" style="display: none;">
+            <h4>⚙️ Settings</h4>
+
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span>✍️ Dialogue Speed</span>
+                    <span class="setting-value" id="dialogueSpeedLabel">40ms</span>
+                </div>
+                <input type="range" id="dialogueSpeedSlider" min="10" max="120" step="5" value="40" oninput="updateDialogueSpeed(this.value)">
+                <div class="setting-hint">Lower = faster typing</div>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span>📏 Page Size</span>
+                    <span class="setting-value" id="pageScaleLabel">100%</span>
+                </div>
+                <input type="range" id="pageScaleSlider" min="70" max="140" step="5" value="100" oninput="updatePageScale(this.value)">
+                <div class="setting-hint">Shrink to see your background, or enlarge for bigger UI</div>
+            </div>
+
+            <div class="setting-toggle">
+                <span>⌨️ Typewriter Effect</span>
+                <input type="checkbox" id="typewriterToggle" checked onchange="toggleTypewriter(this.checked)">
+            </div>
+
+            <div class="setting-toggle">
+                <span>🎭 Mood Overtime</span>
+                <input type="checkbox" id="moodOvertimeToggle" checked onchange="toggleMoodOvertime(this.checked)">
+            </div>
+        </div>
+
         <div class="backup-controls">
+            <button onclick="toggleSettingsPanel()" id="settingsBtn">⚙️ Settings</button>
             <button onclick="exportData()">💾 Export</button>
             <button onclick="document.getElementById('importInput').click()">📂 Import</button>
         </div>
@@ -1653,6 +1768,14 @@
         const squishAudio = new Audio('audio/squish.ogg');
 
         // ==========================================
+        // SETTINGS STATE
+        // ==========================================
+        let dialogueSpeed = parseInt(localStorage.getItem('hoshino_dialogue_speed')) || 40;
+        let pageScale = parseInt(localStorage.getItem('hoshino_page_scale')) || 100;
+        let typewriterEnabled = localStorage.getItem('hoshino_typewriter') !== 'false';
+        let moodOvertimeEnabled = localStorage.getItem('hoshino_mood_overtime') !== 'false';
+
+        // ==========================================
         // THEME
         // ==========================================
         let nightTheme = localStorage.getItem('hoshino_night_theme') === 'true';
@@ -1677,6 +1800,92 @@
         applyTheme();
 
         // ==========================================
+        // PAGE SCALE
+        // ==========================================
+        function applyPageScale() {
+            document.documentElement.style.setProperty('--page-scale', pageScale / 100);
+            document.getElementById('pageScaleLabel').textContent = pageScale + '%';
+            document.getElementById('pageScaleSlider').value = pageScale;
+        }
+
+        function updatePageScale(val) {
+            pageScale = parseInt(val);
+            localStorage.setItem('hoshino_page_scale', pageScale);
+            applyPageScale();
+        }
+
+        applyPageScale();
+
+        // ==========================================
+        // DIALOGUE SPEED
+        // ==========================================
+        function applyDialogueSpeed() {
+            document.getElementById('dialogueSpeedLabel').textContent = dialogueSpeed + 'ms';
+            document.getElementById('dialogueSpeedSlider').value = dialogueSpeed;
+        }
+
+        function updateDialogueSpeed(val) {
+            dialogueSpeed = parseInt(val);
+            localStorage.setItem('hoshino_dialogue_speed', dialogueSpeed);
+            applyDialogueSpeed();
+        }
+
+        applyDialogueSpeed();
+
+        // ==========================================
+        // TYPING EFFECT
+        // ==========================================
+        let currentTypingTimer = null;
+
+        function typeDialogue(text, callback) {
+            const el = document.getElementById('hoshinoDialogue');
+            if (currentTypingTimer) {
+                clearTimeout(currentTypingTimer);
+                currentTypingTimer = null;
+            }
+
+            // If typewriter is off, just set the text
+            if (!typewriterEnabled) {
+                el.textContent = `"${text}"`;
+                el.classList.remove('typing');
+                if (callback) callback();
+                return;
+            }
+
+            el.textContent = '"';
+            el.classList.add('typing');
+            let i = 0;
+
+            function typeNext() {
+                if (i >= text.length) {
+                    el.textContent = `"${text}"`;
+                    el.classList.remove('typing');
+                    currentTypingTimer = null;
+                    if (callback) callback();
+                    return;
+                }
+
+                const char = text[i];
+                el.textContent = `"${text.slice(0, i + 1)}`;
+
+                // Extra delay after punctuation
+                let extraDelay = 0;
+                if (char === '.' || char === '!' || char === '?') {
+                    extraDelay = dialogueSpeed * 6;
+                } else if (char === ',' || char === ';' || char === ':') {
+                    extraDelay = dialogueSpeed * 3;
+                } else if (char === '~' || char === '…') {
+                    extraDelay = dialogueSpeed * 4;
+                }
+
+                i++;
+                currentTypingTimer = setTimeout(typeNext, dialogueSpeed + extraDelay);
+            }
+
+            typeNext();
+        }
+
+        // ==========================================
         // BACKGROUND & OPACITY
         // ==========================================
         document.getElementById('date').valueAsDate = new Date();
@@ -1690,7 +1899,6 @@
             document.getElementById('opacityValLabel').textContent = customOpacity;
             document.getElementById('opacitySlider').value = customOpacity;
 
-            // Match the sticky VN section bg to the same opacity
             const stickyBgAlpha = Math.min(parseFloat(customOpacity) / 100 + 0.15, 0.98);
             if (nightTheme) {
                 document.documentElement.style.setProperty('--sticky-bg', `rgba(40, 30, 50, ${stickyBgAlpha})`);
@@ -1790,7 +1998,6 @@
             const phoneContainer = document.getElementById('phoneContainer');
             phoneContainer.style.background = `rgba(255, 255, 255, ${parseFloat(val) / 100})`;
 
-            // Update sticky bg
             const stickyBgAlpha = Math.min(parseFloat(val) / 100 + 0.15, 0.98);
             if (nightTheme) {
                 document.documentElement.style.setProperty('--sticky-bg', `rgba(40, 30, 50, ${stickyBgAlpha})`);
@@ -1803,6 +2010,118 @@
             const panel = document.getElementById('bgSettingsPanel');
             panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
         }
+
+        function toggleSettingsPanel() {
+            const panel = document.getElementById('settingsPanel');
+            panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function toggleTypewriter(enabled) {
+            typewriterEnabled = enabled;
+            localStorage.setItem('hoshino_typewriter', enabled);
+        }
+
+        function toggleMoodOvertime(enabled) {
+            moodOvertimeEnabled = enabled;
+            localStorage.setItem('hoshino_mood_overtime', enabled);
+            if (enabled) applyMoodOvertime(true);
+        }
+
+        // ==========================================
+        // MOOD OVERTIME
+        // ==========================================
+        // Each mood is a state based on recent activity, applied when no
+        // immediate reaction is happening.
+        function computeMood() {
+            if (!moodOvertimeEnabled) return null;
+
+            const wallet = getCurrentWallet();
+            const now = new Date();
+            const todayStr = now.toISOString().slice(0, 10);
+            const lastOpened = localStorage.getItem('hoshino_last_open');
+            const todayLogCount = wallet.transactions.filter(t => t.date === todayStr).length;
+
+            // Days since last log (from streak data or transaction dates)
+            const lastLogDate = streakData.lastLogDate;
+            let daysSinceLog = 0;
+            if (lastLogDate) {
+                const diffMs = now - new Date(lastLogDate);
+                daysSinceLog = Math.floor(diffMs / 86400000);
+            } else {
+                daysSinceLog = 999; // Never logged
+            }
+
+            // Today's spent total
+            let todaySpent = 0;
+            wallet.transactions.forEach(t => {
+                if (t.type === 'spend' && t.date === todayStr) todaySpent += t.amount;
+            });
+
+            // Late night check
+            const hour = now.getHours();
+            const isLateNight = hour >= 0 && hour < 5;
+
+            // Mood priority order:
+            // 1. Never logged at all
+            if (daysSinceLog >= 999) {
+                return { expr: 'normal', text: "Uhe~ Let's log our first transaction together, Sensei! 🌸" };
+            }
+
+            // 2. Streak broken (missed 2+ days)
+            if (daysSinceLog >= 2) {
+                return { expr: 'sleepy', text: `Sensei... you haven't logged in ${daysSinceLog} days. I was worried... 💤` };
+            }
+
+            // 3. Missed yesterday
+            if (daysSinceLog === 1) {
+                return { expr: 'joking', text: "Oh, you're back? I was starting to think you forgot about me~ 🛋️" };
+            }
+
+            // 4. Late night + logged today
+            if (isLateNight && todayLogCount > 0) {
+                return { expr: 'sleepy', text: "Sensei, it's late... but you logged today, so I'll allow it. 💤" };
+            }
+
+            // 5. Overspending today
+            if (todaySpent >= 100000) {
+                return { expr: 'surprised', text: "Sensei, today's spending is really high... please be careful! 💥" };
+            }
+
+            if (todaySpent >= 50000) {
+                return { expr: 'embarrassed', text: "Uhe~ That's a lot spent today. I'm keeping an eye on you... 💦" };
+            }
+
+            // 6. Great streak (5+ days)
+            if (streakData.count >= 5) {
+                return { expr: 'happy', text: `${streakData.count} days in a row! You're amazing, Sensei~ ✨` };
+            }
+
+            // 7. Already logged today
+            if (todayLogCount > 0) {
+                return { expr: 'happy', text: "You've already logged today. I'm proud of you, Sensei! 💖" };
+            }
+
+            // 8. Not logged yet today (but streak is fine)
+            return { expr: 'normal', text: "Have you logged anything today, Sensei? I'm waiting~ 🌸" };
+        }
+
+        function applyMoodOvertime(force) {
+            const mood = computeMood();
+            if (!mood) return;
+
+            // Only apply if there's been no dialogue change in the last ~8 sec
+            // (so we don't interrupt active reactions)
+            const now = Date.now();
+            if (!force && lastDialogueChangeTime && (now - lastDialogueChangeTime < 8000)) return;
+
+            // Also skip if user is actively typing a dialogue from a click
+            if (currentTypingTimer && !force) return;
+
+            updateHoshinoDisplay(mood.expr, mood.text);
+        }
+
+        // Run mood check on load and every 60 seconds
+        setInterval(() => applyMoodOvertime(false), 60000);
 
         // ==========================================
         // NOTIFICATIONS
@@ -2344,7 +2663,6 @@
 
             document.getElementById('walletModalTitle').textContent = `Edit "${wallet.name}"`;
 
-            // Show/hide "Remove Photo" based on whether wallet has a photo
             const removePhotoBtn = document.getElementById('walletRemovePhotoBtn');
             if (wallet.photo) {
                 removePhotoBtn.style.display = 'flex';
@@ -2375,7 +2693,6 @@
         function walletActionChangePhoto() {
             const wallet = wallets.find(w => w.id === editingWalletId);
             if (!wallet) return;
-            // Temporarily set as current so handleImageUpload targets this wallet
             currentWalletId = editingWalletId;
             closeWalletModal();
             setTimeout(() => fileInput.click(), 150);
@@ -2575,8 +2892,12 @@
         const fileInput = document.getElementById('fileInput');
         const amountInput = document.getElementById('amount');
 
+        let lastDialogueChangeTime = 0;
+
         function updateHoshinoDisplay(exprKey, text) {
-            hoshinoDialogue.textContent = `"${text}"`;
+            lastDialogueChangeTime = Date.now();
+            typeDialogue(text);
+
             hoshinoSpriteImg.style.display = 'block';
             hoshinoSpriteImg.src = expressionSprites[exprKey] || 'expression/normal.png';
 
@@ -2672,7 +2993,7 @@
         // ==========================================
         function exportData() {
             const backup = {
-                version: 2,
+                version: 3,
                 exportedAt: new Date().toISOString(),
                 wallets: wallets,
                 chips: chips,
@@ -2680,7 +3001,13 @@
                 customOpacity: customOpacity,
                 nightTheme: nightTheme,
                 gameVolume: gameVolume,
-                streak: streakData
+                streak: streakData,
+                settings: {
+                    dialogueSpeed: dialogueSpeed,
+                    pageScale: pageScale,
+                    typewriter: typewriterEnabled,
+                    moodOvertime: moodOvertimeEnabled
+                }
             };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
             const downloadAnchor = document.createElement('a');
@@ -2748,6 +3075,13 @@
                     if (imported.streak && typeof imported.streak === 'object') {
                         streakData = imported.streak;
                     }
+                    if (imported.settings && typeof imported.settings === 'object') {
+                        const s = imported.settings;
+                        if (typeof s.dialogueSpeed === 'number') dialogueSpeed = s.dialogueSpeed;
+                        if (typeof s.pageScale === 'number') pageScale = s.pageScale;
+                        if (typeof s.typewriter === 'boolean') typewriterEnabled = s.typewriter;
+                        if (typeof s.moodOvertime === 'boolean') moodOvertimeEnabled = s.moodOvertime;
+                    }
 
                     localStorage.setItem('hoshino_wallets', JSON.stringify(wallets));
                     localStorage.setItem('hoshino_chips', JSON.stringify(chips));
@@ -2756,6 +3090,10 @@
                     localStorage.setItem('hoshinoGameVolume', gameVolume);
                     localStorage.setItem('hoshino_custom_bg', customBg);
                     localStorage.setItem('hoshino_streak', JSON.stringify(streakData));
+                    localStorage.setItem('hoshino_dialogue_speed', dialogueSpeed);
+                    localStorage.setItem('hoshino_page_scale', pageScale);
+                    localStorage.setItem('hoshino_typewriter', typewriterEnabled);
+                    localStorage.setItem('hoshino_mood_overtime', moodOvertimeEnabled);
 
                     alert("Backup imported successfully! Reloading... ✨");
                     location.reload();
@@ -3119,6 +3457,12 @@
         }
 
         render();
+
+        // ==========================================
+        // MOOD OVERTIME — initial trigger after app settles
+        // ==========================================
+        localStorage.setItem('hoshino_last_open', Date.now());
+        setTimeout(() => applyMoodOvertime(true), 2500);
 
         // ==========================================
         // SERVICE WORKER + UPDATE BUTTON
