@@ -76,7 +76,6 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            /* Page scale via max-width */
             max-width: calc(400px * var(--page-scale));
         }
 
@@ -435,7 +434,6 @@
                 0 1px 1px rgba(0, 0, 0, 0.4);
         }
 
-        /* Typewriter cursor */
         .speech-bubble span.typing::after {
             content: '▍';
             color: var(--dark-pink);
@@ -640,7 +638,6 @@
             font-size: 0.75rem;
         }
 
-        /* === Settings Panel === */
         .settings-panel {
             margin: 8px 16px 0 16px;
             background: var(--accent-pink);
@@ -1172,6 +1169,207 @@
             font-weight: 600;
         }
 
+        /* ==========================================
+           MONTHLY SUMMARY CARD
+           ========================================== */
+        .monthly-summary-section {
+            padding: 0 16px 16px 16px;
+        }
+
+        .monthly-toggle-btn {
+            width: 100%;
+            background: var(--accent-pink);
+            border: 2px dashed var(--primary-pink);
+            color: var(--dark-pink);
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .monthly-toggle-btn:hover {
+            background: var(--primary-pink);
+            color: #fff;
+        }
+
+        .monthly-card {
+            background: var(--accent-pink);
+            border: 1px solid var(--primary-pink);
+            border-radius: 14px;
+            padding: 14px;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            animation: slideDown 0.25s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .monthly-card h4 {
+            font-size: 0.8rem;
+            color: var(--dark-pink);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .monthly-totals {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--primary-pink);
+        }
+
+        .monthly-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .monthly-total-row .label {
+            opacity: 0.85;
+        }
+
+        .monthly-total-row .value {
+            font-weight: 800;
+        }
+
+        .monthly-total-row.gain .value {
+            color: var(--gain-color);
+        }
+
+        .monthly-total-row.spend .value {
+            color: var(--dark-pink);
+        }
+
+        .monthly-total-row.net {
+            border-top: 1px dashed var(--primary-pink);
+            padding-top: 6px;
+            margin-top: 2px;
+            font-size: 0.85rem;
+        }
+
+        .monthly-total-row.net .value {
+            color: var(--dark-pink);
+            font-size: 0.95rem;
+        }
+
+        .monthly-bar-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .monthly-bar-title {
+            font-size: 0.68rem;
+            color: var(--dark-pink);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .monthly-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.68rem;
+            font-family: ui-monospace, "SF Mono", Menlo, monospace;
+            font-weight: 600;
+            color: var(--text-color);
+            line-height: 1.3;
+        }
+
+        .monthly-bar-row .day-label {
+            width: 28px;
+            flex-shrink: 0;
+            color: var(--dark-pink);
+            font-weight: 700;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .monthly-bar-row .bar {
+            flex-grow: 1;
+            color: var(--dark-pink);
+            letter-spacing: -1px;
+            opacity: 0.85;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .monthly-bar-row .bar .empty {
+            opacity: 0.35;
+        }
+
+        .monthly-bar-row .bar-amount {
+            font-size: 0.62rem;
+            color: var(--dark-pink);
+            font-weight: 700;
+            flex-shrink: 0;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .monthly-highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--primary-pink);
+            font-size: 0.7rem;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .monthly-highlight-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .monthly-highlight-row .hl-label {
+            color: var(--dark-pink);
+            font-weight: 700;
+        }
+
+        .monthly-highlight-row .hl-value {
+            color: var(--text-color);
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .monthly-empty {
+            font-size: 0.72rem;
+            color: var(--dark-pink);
+            text-align: center;
+            padding: 8px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
         /* === Modal === */
         .modal-overlay {
             position: fixed;
@@ -1566,7 +1764,6 @@
             </div>
         </div>
 
-        <!-- === Settings Panel === -->
         <div class="settings-panel" id="settingsPanel" style="display: none;">
             <h4>⚙️ Settings</h4>
 
@@ -1659,6 +1856,19 @@
         <div class="history-section">
             <h2>History 📜</h2>
             <div class="history-list" id="historyList"></div>
+        </div>
+
+        <!-- ==========================================
+             MONTHLY SUMMARY CARD (below history)
+             ========================================== -->
+        <div class="monthly-summary-section">
+            <button class="monthly-toggle-btn" id="monthlyToggleBtn" onclick="toggleMonthlySummary()">
+                <span>📊 This Month</span>
+                <span id="monthlyToggleIcon">▼ Show</span>
+            </button>
+            <div class="monthly-card" id="monthlyCard" style="display: none;">
+                <!-- Filled by JS -->
+            </div>
         </div>
     </div>
 
@@ -1774,6 +1984,7 @@
         let pageScale = parseInt(localStorage.getItem('hoshino_page_scale')) || 100;
         let typewriterEnabled = localStorage.getItem('hoshino_typewriter') !== 'false';
         let moodOvertimeEnabled = localStorage.getItem('hoshino_mood_overtime') !== 'false';
+        let monthlyExpanded = localStorage.getItem('hoshino_monthly_expanded') === 'true';
 
         // ==========================================
         // THEME
@@ -1844,7 +2055,6 @@
                 currentTypingTimer = null;
             }
 
-            // If typewriter is off, just set the text
             if (!typewriterEnabled) {
                 el.textContent = `"${text}"`;
                 el.classList.remove('typing');
@@ -1868,7 +2078,6 @@
                 const char = text[i];
                 el.textContent = `"${text.slice(0, i + 1)}`;
 
-                // Extra delay after punctuation
                 let extraDelay = 0;
                 if (char === '.' || char === '!' || char === '?') {
                     extraDelay = dialogueSpeed * 6;
@@ -2030,78 +2239,55 @@
         // ==========================================
         // MOOD OVERTIME
         // ==========================================
-        // Each mood is a state based on recent activity, applied when no
-        // immediate reaction is happening.
         function computeMood() {
             if (!moodOvertimeEnabled) return null;
 
             const wallet = getCurrentWallet();
             const now = new Date();
             const todayStr = now.toISOString().slice(0, 10);
-            const lastOpened = localStorage.getItem('hoshino_last_open');
             const todayLogCount = wallet.transactions.filter(t => t.date === todayStr).length;
 
-            // Days since last log (from streak data or transaction dates)
             const lastLogDate = streakData.lastLogDate;
             let daysSinceLog = 0;
             if (lastLogDate) {
                 const diffMs = now - new Date(lastLogDate);
                 daysSinceLog = Math.floor(diffMs / 86400000);
             } else {
-                daysSinceLog = 999; // Never logged
+                daysSinceLog = 999;
             }
 
-            // Today's spent total
             let todaySpent = 0;
             wallet.transactions.forEach(t => {
                 if (t.type === 'spend' && t.date === todayStr) todaySpent += t.amount;
             });
 
-            // Late night check
             const hour = now.getHours();
             const isLateNight = hour >= 0 && hour < 5;
 
-            // Mood priority order:
-            // 1. Never logged at all
             if (daysSinceLog >= 999) {
                 return { expr: 'normal', text: "Uhe~ Let's log our first transaction together, Sensei! 🌸" };
             }
-
-            // 2. Streak broken (missed 2+ days)
             if (daysSinceLog >= 2) {
                 return { expr: 'sleepy', text: `Sensei... you haven't logged in ${daysSinceLog} days. I was worried... 💤` };
             }
-
-            // 3. Missed yesterday
             if (daysSinceLog === 1) {
                 return { expr: 'joking', text: "Oh, you're back? I was starting to think you forgot about me~ 🛋️" };
             }
-
-            // 4. Late night + logged today
             if (isLateNight && todayLogCount > 0) {
                 return { expr: 'sleepy', text: "Sensei, it's late... but you logged today, so I'll allow it. 💤" };
             }
-
-            // 5. Overspending today
             if (todaySpent >= 100000) {
                 return { expr: 'surprised', text: "Sensei, today's spending is really high... please be careful! 💥" };
             }
-
             if (todaySpent >= 50000) {
                 return { expr: 'embarrassed', text: "Uhe~ That's a lot spent today. I'm keeping an eye on you... 💦" };
             }
-
-            // 6. Great streak (5+ days)
             if (streakData.count >= 5) {
                 return { expr: 'happy', text: `${streakData.count} days in a row! You're amazing, Sensei~ ✨` };
             }
-
-            // 7. Already logged today
             if (todayLogCount > 0) {
                 return { expr: 'happy', text: "You've already logged today. I'm proud of you, Sensei! 💖" };
             }
-
-            // 8. Not logged yet today (but streak is fine)
             return { expr: 'normal', text: "Have you logged anything today, Sensei? I'm waiting~ 🌸" };
         }
 
@@ -2109,18 +2295,13 @@
             const mood = computeMood();
             if (!mood) return;
 
-            // Only apply if there's been no dialogue change in the last ~8 sec
-            // (so we don't interrupt active reactions)
             const now = Date.now();
             if (!force && lastDialogueChangeTime && (now - lastDialogueChangeTime < 8000)) return;
-
-            // Also skip if user is actively typing a dialogue from a click
             if (currentTypingTimer && !force) return;
 
             updateHoshinoDisplay(mood.expr, mood.text);
         }
 
-        // Run mood check on load and every 60 seconds
         setInterval(() => applyMoodOvertime(false), 60000);
 
         // ==========================================
@@ -3131,6 +3312,172 @@
         }
 
         // ==========================================
+        // MONTHLY SUMMARY
+        // ==========================================
+        function toggleMonthlySummary() {
+            monthlyExpanded = !monthlyExpanded;
+            localStorage.setItem('hoshino_monthly_expanded', monthlyExpanded);
+            updateMonthlySummary();
+        }
+
+        function updateMonthlySummary() {
+            const card = document.getElementById('monthlyCard');
+            const icon = document.getElementById('monthlyToggleIcon');
+
+            if (!monthlyExpanded) {
+                card.style.display = 'none';
+                icon.textContent = '▼ Show';
+                return;
+            }
+
+            card.style.display = 'flex';
+            icon.textContent = '▲ Hide';
+
+            const wallet = getCurrentWallet();
+            const now = new Date();
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const currentMonthName = monthNames[now.getMonth()];
+            const currentYear = now.getFullYear();
+            const monthStart = new Date(currentYear, now.getMonth(), 1);
+
+            // Filter to this month only
+            const thisMonthTx = wallet.transactions.filter(t => {
+                const d = new Date(t.date + 'T00:00:00');
+                return d >= monthStart && d.getFullYear() === currentYear;
+            });
+
+            let income = 0;
+            let spending = 0;
+            thisMonthTx.forEach(t => {
+                if (t.type === 'gain') income += t.amount;
+                else spending += t.amount;
+            });
+            const net = income - spending;
+
+            // Last 7 days bars
+            const days = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toISOString().slice(0, 10);
+                const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()];
+                const spent = wallet.transactions
+                    .filter(t => t.type === 'spend' && t.date === dateStr)
+                    .reduce((sum, t) => sum + t.amount, 0);
+                days.push({ date: dateStr, dayName, spent });
+            }
+
+            const maxSpent = Math.max(...days.map(d => d.spent), 1);
+
+            // Build bar rows
+            const barRows = days.map(d => {
+                const filled = d.spent === 0 ? 0 : Math.max(1, Math.round((d.spent / maxSpent) * 10));
+                const bar = '▓'.repeat(filled) + `<span class="empty">${'░'.repeat(10 - filled)}</span>`;
+                const amtDisplay = d.spent > 0 ? d.spent.toLocaleString() : '—';
+                return `
+                    <div class="monthly-bar-row">
+                        <span class="day-label">${d.dayName}</span>
+                        <span class="bar">${bar}</span>
+                        <span class="bar-amount">${amtDisplay}</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Highlights — highest spend day this month
+            const daySpending = {};
+            thisMonthTx.forEach(t => {
+                if (t.type === 'spend') {
+                    daySpending[t.date] = (daySpending[t.date] || 0) + t.amount;
+                }
+            });
+
+            let highestDay = null;
+            let highestAmount = 0;
+            Object.entries(daySpending).forEach(([date, amt]) => {
+                if (amt > highestAmount) {
+                    highestAmount = amt;
+                    highestDay = date;
+                }
+            });
+
+            // Most active weekday (by total spend)
+            const weekdaySpend = { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 };
+            thisMonthTx.forEach(t => {
+                if (t.type === 'spend') {
+                    const d = new Date(t.date + 'T00:00:00');
+                    const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()];
+                    weekdaySpend[dayName] += t.amount;
+                }
+            });
+            let topWeekday = null;
+            let topWeekdayAmt = 0;
+            Object.entries(weekdaySpend).forEach(([day, amt]) => {
+                if (amt > topWeekdayAmt) {
+                    topWeekdayAmt = amt;
+                    topWeekday = day;
+                }
+            });
+
+            // Format highest day date nicely
+            let highestDayDisplay = '—';
+            if (highestDay) {
+                const d = new Date(highestDay + 'T00:00:00');
+                highestDayDisplay = `${monthNames[d.getMonth()].slice(0,3)} ${d.getDate()} (${highestAmount.toLocaleString()})`;
+            }
+
+            let topWeekdayDisplay = '—';
+            if (topWeekday && topWeekdayAmt > 0) {
+                topWeekdayDisplay = `${topWeekday} (${topWeekdayAmt.toLocaleString()})`;
+            }
+
+            // Empty state
+            if (thisMonthTx.length === 0) {
+                card.innerHTML = `
+                    <h4>📊 This Month (${currentMonthName} ${currentYear})</h4>
+                    <div class="monthly-empty">No transactions logged this month yet~ 🌸</div>
+                `;
+                return;
+            }
+
+            card.innerHTML = `
+                <h4>
+                    <span>📊 This Month (${currentMonthName} ${currentYear})</span>
+                </h4>
+
+                <div class="monthly-totals">
+                    <div class="monthly-total-row gain">
+                        <span class="label">📈 Income</span>
+                        <span class="value">+${income.toLocaleString()}</span>
+                    </div>
+                    <div class="monthly-total-row spend">
+                        <span class="label">📉 Spending</span>
+                        <span class="value">-${spending.toLocaleString()}</span>
+                    </div>
+                    <div class="monthly-total-row net">
+                        <span class="label">💰 Net</span>
+                        <span class="value">${net >= 0 ? '+' : ''}${net.toLocaleString()}</span>
+                    </div>
+                </div>
+
+                <div class="monthly-bar-section">
+                    <div class="monthly-bar-title">Last 7 Days (Spending)</div>
+                    ${barRows}
+                </div>
+
+                <div class="monthly-highlights">
+                    <div class="monthly-highlight-row">
+                        <span class="hl-label">🔥 Highest spend</span>
+                        <span class="hl-value">${highestDayDisplay}</span>
+                    </div>
+                    <div class="monthly-highlight-row">
+                        <span class="hl-label">📅 Top weekday</span>
+                        <span class="hl-value">${topWeekdayDisplay}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
         // FORM SUBMIT
         // ==========================================
         form.addEventListener('submit', function(e) {
@@ -3172,6 +3519,7 @@
             saveAndRender();
 
             updateStreakOnLog(date);
+            updateMonthlySummary();
 
             form.reset();
             document.getElementById('date').valueAsDate = new Date();
@@ -3223,6 +3571,7 @@
             wallet.transactions = wallet.transactions.filter(t => t.id !== txId);
             if (activeEditTxId === txId) activeEditTxId = null;
             saveAndRender();
+            updateMonthlySummary();
         }
 
         function toggleTransactionDrawer(txId) {
@@ -3272,6 +3621,7 @@
 
             activeEditTxId = null;
             saveAndRender();
+            updateMonthlySummary();
         }
 
         // ==========================================
@@ -3357,6 +3707,7 @@
                 historyList.innerHTML = '<div class="empty-state">No entries in this wallet yet. Time to relax! Uhe~ ☕💤</div>';
                 totalBalanceEl.textContent = '0';
                 denomSummary.style.display = 'none';
+                updateMonthlySummary();
                 return;
             }
 
@@ -3454,6 +3805,8 @@
             } else {
                 denomSummary.style.display = 'none';
             }
+
+            updateMonthlySummary();
         }
 
         render();
