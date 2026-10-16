@@ -295,18 +295,21 @@
             height: 100%;
             object-fit: cover;
             pointer-events: none;
-            transform-origin: center center;
+            /* Anchor at bottom — head gets patted down, body stays */
+            transform-origin: center bottom;
         }
 
-        @keyframes pokeSquish {
-            0%   { transform: scale(1, 1); }
-            30%  { transform: scale(0.8, 1.2); }
-            60%  { transform: scale(1.15, 0.85); }
-            100% { transform: scale(1, 1); }
+        /* NEW: Patted-on-head squish — top compresses down, bottom stays */
+        @keyframes pattedSquish {
+            0%   { transform: scale(1, 1) translateY(0); }
+            25%  { transform: scale(0.92, 0.88) translateY(2%); }
+            55%  { transform: scale(1.06, 1.06) translateY(-1%); }
+            80%  { transform: scale(0.98, 0.97) translateY(0.5%); }
+            100% { transform: scale(1, 1) translateY(0); }
         }
 
         .hoshino-avatar img.squish-anim {
-            animation: pokeSquish 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: pattedSquish 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
         }
 
         .hoshino-avatar::before {
@@ -626,18 +629,6 @@
             display: none;
         }
 
-        .bg-settings-panel {
-            margin: 8px 16px 0 16px;
-            background: var(--accent-pink);
-            border: 1px dashed var(--primary-pink);
-            padding: 10px;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 0.75rem;
-        }
-
         .settings-panel {
             margin: 8px 16px 0 16px;
             background: var(--accent-pink);
@@ -646,7 +637,7 @@
             border-radius: 12px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             font-size: 0.75rem;
         }
 
@@ -657,6 +648,11 @@
             text-transform: uppercase;
             letter-spacing: 0.4px;
             margin-bottom: 2px;
+        }
+
+        .settings-divider {
+            border-top: 1px dashed var(--primary-pink);
+            margin: 2px 0;
         }
 
         .setting-row {
@@ -715,6 +711,17 @@
             display: flex;
             gap: 6px;
             overflow-x: auto;
+            padding-bottom: 2px;
+            scrollbar-width: thin;
+        }
+
+        .bg-presets-row::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .bg-presets-row::-webkit-scrollbar-thumb {
+            background: var(--primary-pink);
+            border-radius: 4px;
         }
 
         .bg-preset-btn {
@@ -812,6 +819,7 @@
             text-align: center;
             border: 1px solid var(--primary-pink);
             box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), var(--shadow);
+            position: relative;
         }
 
         .balance-card h3 {
@@ -820,6 +828,32 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 700;
+        }
+
+        .balance-eye-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1.5px solid var(--primary-pink);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s, transform 0.15s;
+            z-index: 2;
+        }
+
+        .balance-eye-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .balance-eye-btn:active {
+            transform: scale(0.9);
         }
 
         .total-amount {
@@ -831,6 +865,13 @@
                 0 0 4px rgba(255, 255, 255, 1),
                 0 0 8px rgba(255, 255, 255, 0.8),
                 1px 1px 2px rgba(255, 255, 255, 0.9);
+            transition: filter 0.2s;
+        }
+
+        .total-amount.hidden-balance {
+            filter: blur(8px);
+            user-select: none;
+            pointer-events: none;
         }
 
         body.night-theme .total-amount {
@@ -1006,6 +1047,125 @@
             width: 100%;
         }
 
+        /* === Note toggle for main form === */
+        .note-toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--dark-pink);
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 2px 0;
+            text-align: left;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .note-toggle-btn:hover {
+            opacity: 0.75;
+        }
+
+        .note-toggle-btn .arrow {
+            font-size: 0.6rem;
+            opacity: 0.8;
+        }
+
+        .note-input-wrap {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .note-input-wrap.active {
+            display: flex;
+        }
+
+        /* === Search & Filter === */
+        .history-search-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary-pink);
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+        }
+
+        .history-search-bar input {
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            outline: none;
+            flex-grow: 1;
+            font-size: 0.78rem;
+            padding: 2px 0;
+            width: 100%;
+        }
+
+        .history-search-bar input::placeholder {
+            color: var(--dark-pink);
+            opacity: 0.55;
+        }
+
+        .search-clear-btn {
+            background: transparent;
+            border: none;
+            color: var(--dark-pink);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 0 2px;
+            opacity: 0.6;
+        }
+
+        .search-clear-btn:hover {
+            opacity: 1;
+        }
+
+        .history-filter-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: var(--accent-pink);
+            border: 1px solid var(--primary-pink);
+            color: var(--text-color);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-chip.active {
+            background: var(--dark-pink);
+            color: #fff;
+            border-color: var(--dark-pink);
+        }
+
+        .filter-chip:hover:not(.active) {
+            background: var(--primary-pink);
+            color: #fff;
+        }
+
+        .history-empty-filter {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--dark-pink);
+            padding: 12px;
+            font-weight: 600;
+            opacity: 0.75;
+            font-style: italic;
+        }
+
         .submit-btn {
             background: var(--dark-pink);
             color: #fff;
@@ -1028,7 +1188,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 250px;
+            max-height: 400px;
             overflow-y: auto;
         }
 
@@ -1088,6 +1248,19 @@
             font-size: 0.65rem;
             color: var(--dark-pink);
             font-weight: 600;
+        }
+
+        .history-note-badge {
+            font-size: 0.6rem;
+            color: var(--dark-pink);
+            font-weight: 700;
+            opacity: 0.85;
+            font-style: italic;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-top: 2px;
         }
 
         .history-amount-group {
@@ -1686,6 +1859,22 @@
             background: #2e2238 !important;
             color: var(--text-color) !important;
         }
+
+        body.night-theme .balance-eye-btn {
+            background: rgba(46, 34, 56, 0.7);
+            border-color: var(--dark-pink);
+        }
+
+        body.night-theme .history-search-bar {
+            background: #241c30;
+            border-color: var(--primary-pink);
+        }
+
+        body.night-theme .history-search-bar input {
+            background: transparent !important;
+            color: var(--text-color) !important;
+            border: none !important;
+        }
     </style>
 </head>
 <body>
@@ -1734,36 +1923,12 @@
             <span class="wallet-hint">💡 Long-press a wallet tab to edit</span>
             <div class="wallet-controls-group">
                 <button onclick="toggleDenomSystem()" id="toggleDenomBtn">⚙️ Denoms: OFF</button>
-                <button onclick="toggleBgPanel()" id="toggleBgBtn">🖼️ Bg</button>
             </div>
         </div>
 
-        <div class="bg-settings-panel" id="bgSettingsPanel" style="display: none;">
-            <div style="font-weight: 700; color: var(--dark-pink);">🎨 Choose Background Preset:</div>
-            <div class="bg-presets-row">
-                <button class="bg-preset-btn" onclick="setPresetBg('together')">💕 Together</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('together2')">💕 Together 2</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('school')">🏫 Abydos</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('classroom')">☁️ Committee Room</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('classroomsunset')">🌆 Committee Room (sunset)</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('classroomnight')">🌃 Committee Room (night)</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('classroomnightlight')">💡 Committee Room (nightlight)</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('councilroom')">💡 Council Room</button>
-            </div>
-            <div style="font-weight: 700; color: var(--dark-pink); margin-top: 4px;">📂 Or Custom Background Image:</div>
-            <div style="display: flex; gap: 6px;">
-                <button class="action-btn" onclick="document.getElementById('bgFileInput').click()">Upload Image</button>
-                <button class="action-btn" onclick="clearCustomBg()">Reset Default</button>
-            </div>
-            <div class="opacity-control-row" style="margin-top: 4px;">
-                <span>White Box Opacity: <span id="opacityValLabel">50</span>%</span>
-                <input type="range" id="opacitySlider" min="20" max="100" value="50" class="volume-slider" oninput="updateCardOpacity(this.value)">
-            </div>
-            <div style="margin-top: 4px;">
-                <button class="submit-btn" style="width: 100%; padding: 6px; font-size: 0.75rem;" onclick="requestNotificationPermission()">🔔 Enable Daily Wallet Reminder</button>
-            </div>
-        </div>
-
+        <!-- ==========================================
+             SETTINGS PANEL — includes bg options now
+             ========================================== -->
         <div class="settings-panel" id="settingsPanel" style="display: none;">
             <h4>⚙️ Settings</h4>
 
@@ -1794,6 +1959,43 @@
                 <span>🎭 Mood Overtime</span>
                 <input type="checkbox" id="moodOvertimeToggle" checked onchange="toggleMoodOvertime(this.checked)">
             </div>
+
+            <div class="settings-divider"></div>
+
+            <h4>🎨 Background</h4>
+
+            <div style="font-weight: 700; color: var(--dark-pink); font-size: 0.7rem;">Presets:</div>
+            <div class="bg-presets-row">
+                <button class="bg-preset-btn" onclick="setPresetBg('together')">💕 Together</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('together2')">💕 Together 2</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('school')">🏫 Abydos</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('classroom')">☁️ Committee Room</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('classroomsunset')">🌆 Committee Room (sunset)</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('classroomnight')">🌃 Committee Room (night)</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('classroomnightlight')">💡 Committee Room (nightlight)</button>
+                <button class="bg-preset-btn" onclick="setPresetBg('councilroom')">💡 Council Room</button>
+            </div>
+
+            <div style="font-weight: 700; color: var(--dark-pink); font-size: 0.7rem; margin-top: 2px;">Or custom image:</div>
+            <div style="display: flex; gap: 6px;">
+                <button class="action-btn" onclick="document.getElementById('bgFileInput').click()">Upload Image</button>
+                <button class="action-btn" onclick="clearCustomBg()">Reset Default</button>
+            </div>
+
+            <div class="setting-row" style="margin-top: 4px;">
+                <div class="setting-label">
+                    <span>White Box Opacity</span>
+                    <span class="setting-value" id="opacityValLabel">50%</span>
+                </div>
+                <input type="range" id="opacitySlider" min="20" max="100" value="50" oninput="updateCardOpacity(this.value)">
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <h4>🔔 Notifications</h4>
+
+            <button class="submit-btn" style="width: 100%; padding: 8px; font-size: 0.75rem;" onclick="requestNotificationPermission()">🔔 Enable Daily Wallet Reminder</button>
+            <div class="setting-hint">Sends a gentle nudge once per day when the app is open</div>
         </div>
 
         <div class="backup-controls">
@@ -1810,6 +2012,7 @@
 
         <div class="balance-card">
             <h3 id="currentWalletTitle">Total Balance 💰</h3>
+            <button class="balance-eye-btn" id="balanceEyeBtn" onclick="toggleBalanceVisibility()" title="Hide/Show balance">👁️</button>
             <div class="total-amount" id="totalBalance">0</div>
             <div class="denomination-summary" id="denomSummary" style="display: none;"></div>
         </div>
@@ -1850,24 +2053,44 @@
                 <div class="input-group"><label for="description">Description 📝</label><input type="text" id="description" placeholder="e.g., Canned coffee ☕" required></div>
             </div>
 
+            <button type="button" class="note-toggle-btn" id="noteToggleBtn" onclick="toggleNoteInput()">
+                <span class="arrow" id="noteToggleArrow">▶</span>
+                <span>📎 Add note (optional)</span>
+            </button>
+            <div class="note-input-wrap" id="noteInputWrap">
+                <input type="text" id="note" placeholder="e.g., Bought for a friend" maxlength="120">
+            </div>
+
             <button type="submit" class="submit-btn">Add Entry ✨</button>
         </form>
 
         <div class="history-section">
             <h2>History 📜</h2>
+
+            <!-- Search & Filter -->
+            <div class="history-search-bar">
+                <span>🔍</span>
+                <input type="text" id="historySearchInput" placeholder="Search description or note..." oninput="onHistorySearchInput()">
+                <button class="search-clear-btn" id="historySearchClear" onclick="clearHistorySearch()" style="display: none;">✕</button>
+            </div>
+
+            <div class="history-filter-row">
+                <button class="filter-chip active" data-filter="all" onclick="setHistoryFilter('all')">All</button>
+                <button class="filter-chip" data-filter="gain" onclick="setHistoryFilter('gain')">📈 Gains</button>
+                <button class="filter-chip" data-filter="spend" onclick="setHistoryFilter('spend')">📉 Spends</button>
+                <button class="filter-chip" data-filter="noted" onclick="setHistoryFilter('noted')">📎 With notes</button>
+            </div>
+
             <div class="history-list" id="historyList"></div>
         </div>
 
-        <!-- ==========================================
-             MONTHLY SUMMARY CARD (below history)
-             ========================================== -->
+        <!-- MONTHLY SUMMARY CARD -->
         <div class="monthly-summary-section">
             <button class="monthly-toggle-btn" id="monthlyToggleBtn" onclick="toggleMonthlySummary()">
                 <span>📊 This Month</span>
                 <span id="monthlyToggleIcon">▼ Show</span>
             </button>
             <div class="monthly-card" id="monthlyCard" style="display: none;">
-                <!-- Filled by JS -->
             </div>
         </div>
     </div>
@@ -1985,6 +2208,11 @@
         let typewriterEnabled = localStorage.getItem('hoshino_typewriter') !== 'false';
         let moodOvertimeEnabled = localStorage.getItem('hoshino_mood_overtime') !== 'false';
         let monthlyExpanded = localStorage.getItem('hoshino_monthly_expanded') === 'true';
+        let balanceHidden = localStorage.getItem('hoshino_balance_hidden') === 'true';
+
+        // History search & filter state
+        let historySearchQuery = '';
+        let historyFilter = 'all'; // all | gain | spend | noted
 
         // ==========================================
         // THEME
@@ -2105,7 +2333,7 @@
         function applyBackgroundAndOpacity() {
             const phoneContainer = document.getElementById('phoneContainer');
             phoneContainer.style.background = `rgba(255, 255, 255, ${parseFloat(customOpacity) / 100})`;
-            document.getElementById('opacityValLabel').textContent = customOpacity;
+            document.getElementById('opacityValLabel').textContent = customOpacity + '%';
             document.getElementById('opacitySlider').value = customOpacity;
 
             const stickyBgAlpha = Math.min(parseFloat(customOpacity) / 100 + 0.15, 0.98);
@@ -2203,7 +2431,7 @@
         function updateCardOpacity(val) {
             customOpacity = val;
             localStorage.setItem('hoshino_bg_opacity', val);
-            document.getElementById('opacityValLabel').textContent = val;
+            document.getElementById('opacityValLabel').textContent = val + '%';
             const phoneContainer = document.getElementById('phoneContainer');
             phoneContainer.style.background = `rgba(255, 255, 255, ${parseFloat(val) / 100})`;
 
@@ -2213,11 +2441,6 @@
             } else {
                 document.documentElement.style.setProperty('--sticky-bg', `rgba(255, 255, 255, ${stickyBgAlpha})`);
             }
-        }
-
-        function toggleBgPanel() {
-            const panel = document.getElementById('bgSettingsPanel');
-            panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
         }
 
         function toggleSettingsPanel() {
@@ -2234,6 +2457,113 @@
             moodOvertimeEnabled = enabled;
             localStorage.setItem('hoshino_mood_overtime', enabled);
             if (enabled) applyMoodOvertime(true);
+        }
+
+        // ==========================================
+        // BALANCE VISIBILITY
+        // ==========================================
+        function applyBalanceVisibility() {
+            const totalEl = document.getElementById('totalBalance');
+            const eyeBtn = document.getElementById('balanceEyeBtn');
+            if (balanceHidden) {
+                totalEl.classList.add('hidden-balance');
+                eyeBtn.textContent = '🙈';
+            } else {
+                totalEl.classList.remove('hidden-balance');
+                eyeBtn.textContent = '👁️';
+            }
+        }
+
+        function toggleBalanceVisibility() {
+            balanceHidden = !balanceHidden;
+            localStorage.setItem('hoshino_balance_hidden', balanceHidden);
+            applyBalanceVisibility();
+
+            if (balanceHidden) {
+                const reactions = [
+                    "Hiding from someone? Don't worry, I won't peek either~ 🙈",
+                    "Ooh, secret mode! Your wallet is safe with me. 💖",
+                    "Uhe~ Privacy mode on. I'll look away. 🙈"
+                ];
+                updateHoshinoDisplay('joking', reactions[Math.floor(Math.random() * reactions.length)]);
+            } else {
+                const reactions = [
+                    "Peek-a-boo~ Your balance is back! 👁️",
+                    "All clear! I can see it again~ ✨",
+                    "Welcome back, Sensei's money! 💰"
+                ];
+                updateHoshinoDisplay('happy', reactions[Math.floor(Math.random() * reactions.length)]);
+            }
+        }
+
+        applyBalanceVisibility();
+
+        // ==========================================
+        // NOTE TOGGLE (main form)
+        // ==========================================
+        function toggleNoteInput() {
+            const wrap = document.getElementById('noteInputWrap');
+            const arrow = document.getElementById('noteToggleArrow');
+            if (wrap.classList.contains('active')) {
+                wrap.classList.remove('active');
+                arrow.textContent = '▶';
+            } else {
+                wrap.classList.add('active');
+                arrow.textContent = '▼';
+                setTimeout(() => document.getElementById('note').focus(), 100);
+            }
+        }
+
+        // ==========================================
+        // HISTORY SEARCH & FILTER
+        // ==========================================
+        function onHistorySearchInput() {
+            historySearchQuery = document.getElementById('historySearchInput').value.trim().toLowerCase();
+            document.getElementById('historySearchClear').style.display = historySearchQuery ? 'block' : 'none';
+            renderHistory();
+        }
+
+        function clearHistorySearch() {
+            document.getElementById('historySearchInput').value = '';
+            historySearchQuery = '';
+            document.getElementById('historySearchClear').style.display = 'none';
+            renderHistory();
+        }
+
+        function setHistoryFilter(filter) {
+            historyFilter = filter;
+            // Update active state on chips
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                if (chip.dataset.filter === filter) chip.classList.add('active');
+                else chip.classList.remove('active');
+            });
+            renderHistory();
+        }
+
+        function getFilteredTransactions(wallet) {
+            let list = wallet.transactions.slice();
+
+            // Apply type filter
+            if (historyFilter === 'gain') {
+                list = list.filter(t => t.type === 'gain');
+            } else if (historyFilter === 'spend') {
+                list = list.filter(t => t.type === 'spend');
+            } else if (historyFilter === 'noted') {
+                list = list.filter(t => t.note && t.note.trim() !== '');
+            }
+
+            // Apply search
+            if (historySearchQuery) {
+                const q = historySearchQuery;
+                list = list.filter(t => {
+                    const desc = (t.description || '').toLowerCase();
+                    const note = (t.note || '').toLowerCase();
+                    const dateStr = (t.date || '').toLowerCase();
+                    return desc.includes(q) || note.includes(q) || dateStr.includes(q);
+                });
+            }
+
+            return list;
         }
 
         // ==========================================
@@ -2534,6 +2864,44 @@
                     updateHoshinoDisplay('happy', milestones[streakData.count]);
                 }, 1200);
             }
+        }
+
+        function streakOpenReaction() {
+            const count = streakData.count;
+            const today = new Date().toISOString().slice(0, 10);
+            const loggedToday = streakData.lastLogDate === today;
+
+            let reaction = null;
+
+            if (count === 0) {
+                reaction = { expr: 'normal', text: "A fresh start, Sensei! Let's build a new streak today 🌸" };
+            } else if (count === 1) {
+                reaction = { expr: 'normal', text: "Day 1 of a new streak~ Let's keep it going! 🌱" };
+            } else if (count === 2) {
+                reaction = { expr: 'joking', text: "Two days in a row! Don't break it now, Sensei~ 😆" };
+            } else if (count >= 3 && count <= 4) {
+                reaction = { expr: 'happy', text: `🔥 ${count} days! You're warming up, Sensei~` };
+            } else if (count >= 5 && count <= 6) {
+                reaction = { expr: 'happy', text: `${count} days strong! A week is so close 💖` };
+            } else if (count >= 7 && count <= 13) {
+                reaction = { expr: 'happy', text: `${count}-day streak! Amazing consistency, Sensei ✨` };
+            } else if (count >= 14 && count <= 29) {
+                reaction = { expr: 'surprised', text: `${count} days?! That's seriously impressive! 😲` };
+            } else if (count >= 30 && count <= 99) {
+                reaction = { expr: 'embarrassed', text: `${count} days... I'm blushing from how proud I am 💦` };
+            } else if (count >= 100) {
+                reaction = { expr: 'surprised', text: `${count} days straight! Sensei, you're a legend! 🐋` };
+            }
+
+            if (!reaction) return;
+
+            if (!loggedToday && count > 0) {
+                reaction.text += " (Don't forget today!)";
+            }
+
+            setTimeout(() => {
+                updateHoshinoDisplay(reaction.expr, reaction.text);
+            }, 500);
         }
 
         checkStreakReset();
@@ -3174,7 +3542,7 @@
         // ==========================================
         function exportData() {
             const backup = {
-                version: 3,
+                version: 5,
                 exportedAt: new Date().toISOString(),
                 wallets: wallets,
                 chips: chips,
@@ -3183,6 +3551,7 @@
                 nightTheme: nightTheme,
                 gameVolume: gameVolume,
                 streak: streakData,
+                balanceHidden: balanceHidden,
                 settings: {
                     dialogueSpeed: dialogueSpeed,
                     pageScale: pageScale,
@@ -3256,6 +3625,9 @@
                     if (imported.streak && typeof imported.streak === 'object') {
                         streakData = imported.streak;
                     }
+                    if (typeof imported.balanceHidden === 'boolean') {
+                        balanceHidden = imported.balanceHidden;
+                    }
                     if (imported.settings && typeof imported.settings === 'object') {
                         const s = imported.settings;
                         if (typeof s.dialogueSpeed === 'number') dialogueSpeed = s.dialogueSpeed;
@@ -3275,6 +3647,7 @@
                     localStorage.setItem('hoshino_page_scale', pageScale);
                     localStorage.setItem('hoshino_typewriter', typewriterEnabled);
                     localStorage.setItem('hoshino_mood_overtime', moodOvertimeEnabled);
+                    localStorage.setItem('hoshino_balance_hidden', balanceHidden);
 
                     alert("Backup imported successfully! Reloading... ✨");
                     location.reload();
@@ -3340,7 +3713,6 @@
             const currentYear = now.getFullYear();
             const monthStart = new Date(currentYear, now.getMonth(), 1);
 
-            // Filter to this month only
             const thisMonthTx = wallet.transactions.filter(t => {
                 const d = new Date(t.date + 'T00:00:00');
                 return d >= monthStart && d.getFullYear() === currentYear;
@@ -3354,7 +3726,6 @@
             });
             const net = income - spending;
 
-            // Last 7 days bars
             const days = [];
             for (let i = 6; i >= 0; i--) {
                 const d = new Date();
@@ -3369,7 +3740,6 @@
 
             const maxSpent = Math.max(...days.map(d => d.spent), 1);
 
-            // Build bar rows
             const barRows = days.map(d => {
                 const filled = d.spent === 0 ? 0 : Math.max(1, Math.round((d.spent / maxSpent) * 10));
                 const bar = '▓'.repeat(filled) + `<span class="empty">${'░'.repeat(10 - filled)}</span>`;
@@ -3383,7 +3753,6 @@
                 `;
             }).join('');
 
-            // Highlights — highest spend day this month
             const daySpending = {};
             thisMonthTx.forEach(t => {
                 if (t.type === 'spend') {
@@ -3400,7 +3769,6 @@
                 }
             });
 
-            // Most active weekday (by total spend)
             const weekdaySpend = { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 };
             thisMonthTx.forEach(t => {
                 if (t.type === 'spend') {
@@ -3418,7 +3786,6 @@
                 }
             });
 
-            // Format highest day date nicely
             let highestDayDisplay = '—';
             if (highestDay) {
                 const d = new Date(highestDay + 'T00:00:00');
@@ -3430,7 +3797,6 @@
                 topWeekdayDisplay = `${topWeekday} (${topWeekdayAmt.toLocaleString()})`;
             }
 
-            // Empty state
             if (thisMonthTx.length === 0) {
                 card.innerHTML = `
                     <h4>📊 This Month (${currentMonthName} ${currentYear})</h4>
@@ -3487,6 +3853,7 @@
             const amount = parseFloat(amountInput.value);
             const date = document.getElementById('date').value;
             const description = document.getElementById('description').value;
+            const note = document.getElementById('note').value.trim();
             const now = new Date();
             const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
 
@@ -3514,7 +3881,7 @@
                 if (t.type === 'spend' && t.date === todayStr) todaySpentBefore += t.amount;
             });
 
-            wallet.transactions.unshift({ id: Date.now(), type, amount, date, time: timeStr, description, denoms });
+            wallet.transactions.unshift({ id: Date.now(), type, amount, date, time: timeStr, description, note, denoms });
             activeEditTxId = null;
             saveAndRender();
 
@@ -3523,6 +3890,14 @@
 
             form.reset();
             document.getElementById('date').valueAsDate = new Date();
+
+            const noteWrap = document.getElementById('noteInputWrap');
+            const noteArrow = document.getElementById('noteToggleArrow');
+            if (noteWrap.classList.contains('active')) {
+                noteWrap.classList.remove('active');
+                noteArrow.textContent = '▶';
+            }
+
             if (wallet.useDenom) {
                 denomKeys.forEach(key => document.getElementById('d' + key).value = '0');
             }
@@ -3592,6 +3967,7 @@
             const newAmount = parseFloat(document.getElementById(`editAmount_${txId}`).value);
             const newType = document.getElementById(`editType_${txId}`).value;
             const newDate = document.getElementById(`editDate_${txId}`).value;
+            const newNote = document.getElementById(`editNote_${txId}`).value.trim();
 
             if (!newAmount || newAmount <= 0 || !newDesc || !newDate) {
                 alert("Please fill in valid transaction details, Sensei! ✨");
@@ -3602,6 +3978,7 @@
             tx.amount = newAmount;
             tx.type = newType;
             tx.date = newDate;
+            tx.note = newNote;
 
             if (wallet.useDenom) {
                 if (!tx.denoms) tx.denoms = {};
@@ -3622,6 +3999,104 @@
             activeEditTxId = null;
             saveAndRender();
             updateMonthlySummary();
+        }
+
+        // ==========================================
+        // RENDER HISTORY (with filter + search)
+        // ==========================================
+        function renderHistory() {
+            const wallet = getCurrentWallet();
+            historyList.innerHTML = '';
+
+            if (wallet.transactions.length === 0) {
+                historyList.innerHTML = '<div class="empty-state">No entries in this wallet yet. Time to relax! Uhe~ ☕💤</div>';
+                return;
+            }
+
+            const filtered = getFilteredTransactions(wallet);
+
+            if (filtered.length === 0) {
+                historyList.innerHTML = '<div class="history-empty-filter">No matching transactions~ 🌸</div>';
+                return;
+            }
+
+            filtered.forEach(t => {
+                const container = document.createElement('div');
+                container.className = 'history-item-container';
+                container.onclick = (e) => {
+                    if (e.target.closest('.delete-btn') || e.target.closest('.edit-drawer')) return;
+                    toggleTransactionDrawer(t.id);
+                };
+
+                const sign = t.type === 'gain' ? '+' : '-';
+                const amountClass = t.type === 'gain' ? 'amount-gain' : 'amount-spend';
+                const timeDisplay = t.time ? ` • ${t.time}` : '';
+
+                let denomTextStr = '';
+                if (t.denoms && wallet.useDenom) {
+                    let parts = [];
+                    denomKeys.forEach(key => {
+                        if (t.denoms[key] > 0) parts.push(`${t.denoms[key]} ${key}`);
+                    });
+                    if (parts.length > 0) denomTextStr = `(${parts.join(', ')})`;
+                }
+
+                const noteBadge = t.note ? `<span class="history-note-badge">📎 ${t.note}</span>` : '';
+
+                const isOpen = activeEditTxId === t.id;
+
+                let editDenomsHtml = '';
+                if (wallet.useDenom) {
+                    let fieldsHtml = '';
+                    denomKeys.forEach(k => {
+                        let currentVal = (t.denoms && t.denoms[k]) ? t.denoms[k] : 0;
+                        fieldsHtml += `<div style="flex:1; min-width:45px;"><label style="font-size:0.6rem;">${k}</label><input type="number" id="edit_${k}_${t.id}" value="${currentVal}" min="0"></div>`;
+                    });
+                    editDenomsHtml = `<label>Bill Counts:</label><div style="display:flex; gap:4px; flex-wrap:wrap;">${fieldsHtml}</div>`;
+                }
+
+                container.innerHTML = `
+                    <div class="history-item">
+                        <div class="history-info">
+                            <span class="history-desc">${t.description}</span>
+                            <span class="history-date">${t.date}${timeDisplay}</span>
+                            ${noteBadge}
+                        </div>
+                        <div class="history-amount-group">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span class="history-amount ${amountClass}">${sign}${t.amount.toLocaleString()}</span>
+                                <button class="delete-btn" onclick="deleteTransaction(${t.id})">&times;</button>
+                            </div>
+                            ${denomTextStr ? `<span class="history-denoms">${denomTextStr}</span>` : ''}
+                        </div>
+                    </div>
+                    ${isOpen ? `
+                    <div class="edit-drawer" style="display: flex;" onclick="event.stopPropagation()">
+                        <label>Description:</label>
+                        <input type="text" id="editDesc_${t.id}" value="${t.description}">
+                        <div style="display:flex; gap:6px;">
+                            <div style="flex:1;">
+                                <label>Amount:</label>
+                                <input type="number" id="editAmount_${t.id}" value="${t.amount}" min="1" ${wallet.useDenom ? 'readonly' : ''}>
+                            </div>
+                            <div style="flex:1;">
+                                <label>Type:</label>
+                                <select id="editType_${t.id}">
+                                    <option value="gain" ${t.type==='gain'?'selected':''}>Gain (+)</option>
+                                    <option value="spend" ${t.type==='spend'?'selected':''}>Spend (-)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label>Note 📎:</label>
+                        <input type="text" id="editNote_${t.id}" value="${t.note || ''}" placeholder="Optional note..." maxlength="120">
+                        ${editDenomsHtml}
+                        <label>Date:</label>
+                        <input type="date" id="editDate_${t.id}" value="${t.date}">
+                        <button class="submit-btn" style="padding: 6px; font-size: 0.8rem; margin-top: 4px;" onclick="saveEditedTransaction(${t.id})">Save Changes ✨</button>
+                    </div>` : ''}
+                `;
+                historyList.appendChild(container);
+            });
         }
 
         // ==========================================
@@ -3697,19 +4172,12 @@
 
             buildQuickAddChips();
             renderStreakBadge();
+            applyBalanceVisibility();
 
-            historyList.innerHTML = '';
+            // Compute totals
             let total = 0;
             let totalDenoms = {};
             denomKeys.forEach(k => totalDenoms[k] = 0);
-
-            if (wallet.transactions.length === 0) {
-                historyList.innerHTML = '<div class="empty-state">No entries in this wallet yet. Time to relax! Uhe~ ☕💤</div>';
-                totalBalanceEl.textContent = '0';
-                denomSummary.style.display = 'none';
-                updateMonthlySummary();
-                return;
-            }
 
             wallet.transactions.forEach(t => {
                 const multiplier = t.type === 'gain' ? 1 : -1;
@@ -3720,77 +4188,6 @@
                         totalDenoms[key] += (t.denoms[key] || 0) * multiplier;
                     });
                 }
-
-                const container = document.createElement('div');
-                container.className = 'history-item-container';
-                container.onclick = (e) => {
-                    if (e.target.closest('.delete-btn') || e.target.closest('.edit-drawer')) return;
-                    toggleTransactionDrawer(t.id);
-                };
-
-                const sign = t.type === 'gain' ? '+' : '-';
-                const amountClass = t.type === 'gain' ? 'amount-gain' : 'amount-spend';
-                const timeDisplay = t.time ? ` • ${t.time}` : '';
-
-                let denomTextStr = '';
-                if (t.denoms && wallet.useDenom) {
-                    let parts = [];
-                    denomKeys.forEach(key => {
-                        if (t.denoms[key] > 0) parts.push(`${t.denoms[key]} ${key}`);
-                    });
-                    if (parts.length > 0) denomTextStr = `(${parts.join(', ')})`;
-                }
-
-                const isOpen = activeEditTxId === t.id;
-
-                let editDenomsHtml = '';
-                if (wallet.useDenom) {
-                    let fieldsHtml = '';
-                    denomKeys.forEach(k => {
-                        let currentVal = (t.denoms && t.denoms[k]) ? t.denoms[k] : 0;
-                        fieldsHtml += `<div style="flex:1; min-width:45px;"><label style="font-size:0.6rem;">${k}</label><input type="number" id="edit_${k}_${t.id}" value="${currentVal}" min="0"></div>`;
-                    });
-                    editDenomsHtml = `<label>Bill Counts:</label><div style="display:flex; gap:4px; flex-wrap:wrap;">${fieldsHtml}</div>`;
-                }
-
-                container.innerHTML = `
-                    <div class="history-item">
-                        <div class="history-info">
-                            <span class="history-desc">${t.description}</span>
-                            <span class="history-date">${t.date}${timeDisplay}</span>
-                        </div>
-                        <div class="history-amount-group">
-                            <div style="display: flex; align-items: center; gap: 6px;">
-                                <span class="history-amount ${amountClass}">${sign}${t.amount.toLocaleString()}</span>
-                                <button class="delete-btn" onclick="deleteTransaction(${t.id})">&times;</button>
-                            </div>
-                            ${denomTextStr ? `<span class="history-denoms">${denomTextStr}</span>` : ''}
-                        </div>
-                    </div>
-                    ${isOpen ? `
-                    <div class="edit-drawer" style="display: flex;" onclick="event.stopPropagation()">
-                        <label>Description:</label>
-                        <input type="text" id="editDesc_${t.id}" value="${t.description}">
-                        <div style="display:flex; gap:6px;">
-                            <div style="flex:1;">
-                                <label>Amount:</label>
-                                <input type="number" id="editAmount_${t.id}" value="${t.amount}" min="1" ${wallet.useDenom ? 'readonly' : ''}>
-                            </div>
-                            <div style="flex:1;">
-                                <label>Type:</label>
-                                <select id="editType_${t.id}">
-                                    <option value="gain" ${t.type==='gain'?'selected':''}>Gain (+)</option>
-                                    <option value="spend" ${t.type==='spend'?'selected':''}>Spend (-)</option>
-                                </select>
-                            </div>
-                        </div>
-                        ${editDenomsHtml}
-                        <label>Date:</label>
-                        <input type="date" id="editDate_${t.id}" value="${t.date}">
-                        <button class="submit-btn" style="padding: 6px; font-size: 0.8rem; margin-top: 4px;" onclick="saveEditedTransaction(${t.id})">Save Changes ✨</button>
-                    </div>` : ''}
-                `;
-                historyList.appendChild(container);
             });
 
             totalBalanceEl.textContent = total.toLocaleString();
@@ -3806,6 +4203,10 @@
                 denomSummary.style.display = 'none';
             }
 
+            // Render history (with filter)
+            renderHistory();
+
+            applyBalanceVisibility();
             updateMonthlySummary();
         }
 
@@ -3815,7 +4216,14 @@
         // MOOD OVERTIME — initial trigger after app settles
         // ==========================================
         localStorage.setItem('hoshino_last_open', Date.now());
-        setTimeout(() => applyMoodOvertime(true), 2500);
+
+        setTimeout(() => {
+            if (streakData.count > 0) {
+                streakOpenReaction();
+            } else {
+                applyMoodOvertime(true);
+            }
+        }, 2500);
 
         // ==========================================
         // SERVICE WORKER + UPDATE BUTTON
