@@ -128,3 +128,32 @@ self.addEventListener('notificationclick', event => {
         })
     );
 });
+
+function changeWalletCurrency(newCurrency) {
+    if (!CURRENCIES[newCurrency]) return;
+
+    const wallet = wallets.find(w => w.id === editingWalletId);
+    if (!wallet) return;
+
+    if (wallet.currency === newCurrency) return;
+
+    const confirmed = confirm(
+        `Change currency to ${CURRENCIES[newCurrency].name}?\n\n` +
+        `⚠️ Existing transactions will be reinterpreted as ${newCurrency}!\n` +
+        `This can cause weird amounts if you switch between currencies with different decimal places.\n\n` +
+        `Continue?`
+    );
+
+    if (!confirmed) {
+        document.getElementById('walletCurrencySelect').value = wallet.currency || 'IDR';
+        return;
+    }
+
+    wallet.currency = newCurrency;
+    // If switching to a non-IDR currency, disable denoms
+    if (!CURRENCIES[newCurrency].denoms) {
+        wallet.useDenom = false;
+    }
+    saveAndRender();
+    closeWalletModal();
+}

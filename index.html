@@ -2349,14 +2349,8 @@
 
             <div class="input-group" id="denomInputSection" style="display: none;">
                 <label>Bill Counts (Optional) 💳</label>
-                <div class="denom-container">
-                    <div class="denom-item"><label>1k</label><input type="tel" inputmode="numeric" pattern="[0-9]*" id="d1k" value="0" onfocus="if(this.value=='0')this.value=''" onblur="if(this.value=='')this.value='0'" oninput="calculateTotalFromDenoms()"></div>
-                    <div class="denom-item"><label>2k</label><input type="tel" inputmode="numeric" pattern="[0-9]*" id="d2k" value="0" onfocus="if(this.value=='0')this.value=''" onblur="if(this.value=='')this.value='0'" oninput="calculateTotalFromDenoms()"></div>
-                    <div class="denom-item"><label>5k</label><input type="tel" inputmode="numeric" pattern="[0-9]*" id="d5k" value="0" onfocus="if(this.value=='0')this.value=''" onblur="if(this.value=='')this.value='0'" oninput="calculateTotalFromDenoms()"></div>
-                    <div class="denom-item"><label>10k</label><input type="tel" inputmode="numeric" pattern="[0-9]*" id="d10k" value="0" onfocus="if(this.value=='0')this.value=''" onblur="if(this.value=='')this.value='0'" oninput="calculateTotalFromDenoms()"></div>
-                    <div class="denom-item"><label>20k</label><input type="tel" inputmode="numeric" pattern="[0-9]*" id="d20k" value="0" onfocus="if(this.value=='0')this.value=''" onblur="if(this.value=='')this.value='0'" oninput="calculateTotalFromDenoms()"></div>
-                    <div class="denom-item"><label>50k</label><input type="tel" inputmode="numeric" pattern="[0-9]*" id="d50k" value="0" onfocus="if(this.value=='0')this.value=''" onblur="if(this.value=='')this.value='0'" oninput="calculateTotalFromDenoms()"></div>
-                    <div class="denom-item" style="grid-column: span 3;"><label>100k</label><input type="tel" inputmode="numeric" pattern="[0-9]*" id="d100k" value="0" onfocus="if(this.value=='0')this.value=''" onblur="if(this.value=='')this.value='0'" oninput="calculateTotalFromDenoms()"></div>
+                <div class="denom-container" id="denomContainer">
+                    <!-- Dynamically built by JS based on wallet's currency -->
                 </div>
             </div>
 
@@ -2465,6 +2459,15 @@
             </div>
 
             <div class="modal-body">
+                <div class="modal-field" style="margin-bottom: 8px;">
+                    <label>Currency 💱</label>
+                    <select id="walletCurrencySelect" onchange="changeWalletCurrency(this.value)">
+                        <option value="IDR">🇮🇩 IDR (Rupiah)</option>
+                        <option value="USD">🇺🇸 USD (Dollar)</option>
+                        <option value="JPY">🇯🇵 JPY (Yen)</option>
+                        <option value="EUR">🇪🇺 EUR (Euro)</option>
+                    </select>
+                </div>
                 <div class="wallet-action-list">
                     <button class="wallet-action-btn" onclick="walletActionRename()">✏️ Rename Wallet</button>
                     <button class="wallet-action-btn" onclick="walletActionChangePhoto()">🖼️ Change Photo</button>
@@ -2476,6 +2479,102 @@
     </div>
 
     <script>
+                // ==========================================
+        // MULTI-CURRENCY CONFIG
+        // ==========================================
+        const CURRENCIES = {
+            IDR: {
+                code: 'IDR',
+                symbol: 'Rp',
+                name: 'Indonesian Rupiah 🇮🇩',
+                decimals: 0,
+                denoms: {
+                    '1k': 1000, '2k': 2000, '5k': 5000, '10k': 10000,
+                    '20k': 20000, '50k': 50000, '100k': 100000
+                },
+                denomLabels: {
+                    '1k': '1k', '2k': '2k', '5k': '5k', '10k': '10k',
+                    '20k': '20k', '50k': '50k', '100k': '100k'
+                }
+            },
+            USD: {
+                code: 'USD',
+                symbol: '$',
+                name: 'US Dollar 🇺🇸',
+                decimals: 2,
+                denoms: {
+                    '1': 100, '5': 500, '10': 1000,
+                    '20': 2000, '50': 5000, '100': 10000
+                },
+                denomLabels: {
+                    '1': '$1', '5': '$5', '10': '$10',
+                    '20': '$20', '50': '$50', '100': '$100'
+                }
+            },
+            JPY: {
+                code: 'JPY',
+                symbol: '¥',
+                name: 'Japanese Yen 🇯🇵',
+                decimals: 0,
+                denoms: {
+                    '100': 100, '500': 500, '1000': 1000,
+                    '2000': 2000, '5000': 5000, '10000': 10000
+                },
+                denomLabels: {
+                    '100': '¥100', '500': '¥500', '1000': '¥1k',
+                    '2000': '¥2k', '5000': '¥5k', '10000': '¥10k'
+                }
+            },
+            EUR: {
+                code: 'EUR',
+                symbol: '€',
+                name: 'Euro 🇪🇺',
+                decimals: 2,
+                denoms: {
+                    '5': 500, '10': 1000, '20': 2000,
+                    '50': 5000, '100': 10000, '200': 20000
+                },
+                denomLabels: {
+                    '5': '€5', '10': '€10', '20': '€20',
+                    '50': '€50', '100': '€100', '200': '€200'
+                }
+            }
+        };
+
+        // Helper: format cents → display string
+        function formatMoney(amountInCents, currencyCode) {
+            const c = CURRENCIES[currencyCode] || CURRENCIES.IDR;
+            const divisor = Math.pow(10, c.decimals);
+            const value = amountInCents / divisor;
+            return c.symbol + ' ' + value.toLocaleString('en-US', {
+                minimumFractionDigits: c.decimals,
+                maximumFractionDigits: c.decimals
+            });
+        }
+
+        // Helper: display value → cents (storage)
+        function toCents(displayValue, currencyCode) {
+            const c = CURRENCIES[currencyCode] || CURRENCIES.IDR;
+            const multiplier = Math.pow(10, c.decimals);
+            return Math.round(displayValue * multiplier);
+        }
+
+        // Helper: cents → display number
+        function fromCents(cents, currencyCode) {
+            const c = CURRENCIES[currencyCode] || CURRENCIES.IDR;
+            const divisor = Math.pow(10, c.decimals);
+            return cents / divisor;
+        }
+
+        // Get current wallet's currency code
+        function getCurrentCurrency() {
+            const wallet = getCurrentWallet();
+            return wallet.currency || 'IDR';
+        }
+
+        function getCurrentCurrencyConfig() {
+            return CURRENCIES[getCurrentCurrency()] || CURRENCIES.IDR;
+        }
         // ==========================================
         // PATHS
         // ==========================================
@@ -3287,7 +3386,8 @@
                 el.dataset.chipId = chip.id;
 
                 const denomBadge = (chip.useDenom && walletUsesDenoms) ? ' 💳' : '';
-                el.textContent = `${chip.label} · ${chip.amount.toLocaleString()}${denomBadge}`;
+                const chipCurrency = getCurrentCurrency();
+                el.textContent = `${chip.label} · ${formatMoney(chip.amount, chipCurrency)}${denomBadge}`;
                 el.title = 'Tap to fill · Long-press / right-click to edit';
 
                 if (chip.useDenom && walletUsesDenoms) {
@@ -3340,23 +3440,33 @@
             }
         }
 
-        function breakIntoDenoms(amount) {
-            if (!amount || amount <= 0 || amount % 1000 !== 0) {
+        function breakIntoDenoms(amountInCents) {
+            const wallet = getCurrentWallet();
+            const currency = CURRENCIES[wallet.currency || 'IDR'];
+
+            if (!currency.denoms) return null;
+
+            const smallest = Math.min(...Object.values(currency.denoms));
+            if (!amountInCents || amountInCents <= 0 || amountInCents % smallest !== 0) {
                 return null;
             }
-            const orderedKeys = ['100k', '50k', '20k', '10k', '5k', '2k', '1k'];
-            const result = {};
-            orderedKeys.forEach(k => result[k] = 0);
 
-            let remaining = amount;
-            for (const key of orderedKeys) {
-                const value = denomValues[key];
+            // Sort descending by value
+            const orderedEntries = Object.entries(currency.denoms)
+                .sort((a, b) => b[1] - a[1]);
+
+            const result = {};
+            orderedEntries.forEach(([k]) => result[k] = 0);
+
+            let remaining = amountInCents;
+            for (const [key, value] of orderedEntries) {
                 if (remaining >= value) {
                     const count = Math.floor(remaining / value);
                     result[key] = count;
                     remaining -= count * value;
                 }
             }
+
             if (remaining !== 0) return null;
             return result;
         }
@@ -3377,6 +3487,7 @@
 
         function applyQuickAdd(chip) {
             const wallet = getCurrentWallet();
+            const currency = CURRENCIES[wallet.currency || 'IDR'];
 
             document.getElementById('type').value = chip.type;
             document.getElementById('description').value = chip.desc;
@@ -3385,41 +3496,54 @@
             }
 
             if (!wallet.useDenom) {
-                amountInput.value = chip.amount;
+                // Normal mode: chip.amount is already in cents (storage unit)
+                amountInput.value = fromCents(chip.amount, currency.code);
                 amountInput.focus();
                 return;
             }
 
+            // Denom mode
             if (chip.useDenom) {
                 const breakdown = breakIntoDenoms(chip.amount);
                 if (breakdown === null) {
-                    showChipToast(`⚠️ Can't break ${chip.amount.toLocaleString()} into bills`);
+                    showChipToast(`⚠️ Can't break ${formatMoney(chip.amount, currency.code)} into bills`);
                     return;
                 }
                 fillDenomInputs(breakdown);
-                showChipToast(`✨ ${chip.label} → filled ${chip.amount.toLocaleString()} worth of bills`);
+                showChipToast(`✨ ${chip.label} → filled ${formatMoney(chip.amount, currency.code)} worth of bills`);
                 return;
             }
 
             const breakdown = breakIntoDenoms(chip.amount);
             if (breakdown !== null) {
                 fillDenomInputs(breakdown);
-                showChipToast(`✨ Auto-filled bills for ${chip.amount.toLocaleString()}`);
+                showChipToast(`✨ Auto-filled bills for ${formatMoney(chip.amount, currency.code)}`);
                 return;
             }
 
-            showChipToast(`⚠️ ${chip.amount.toLocaleString()} can't be broken into bills (min 1k, whole thousands only)`);
+            showChipToast(`⚠️ ${formatMoney(chip.amount, currency.code)} can't be broken into bills`);
         }
 
         function fillDenomInputs(breakdown) {
-            denomKeys.forEach(key => {
-                document.getElementById('d' + key).value = '0';
+            const wallet = getCurrentWallet();
+            const currency = CURRENCIES[wallet.currency || 'IDR'];
+
+            // Clear all inputs
+            document.querySelectorAll('#denomContainer input').forEach(inp => {
+                inp.value = '0';
             });
-            denomKeys.forEach(key => {
-                if (breakdown[key] > 0) {
-                    document.getElementById('d' + key).value = breakdown[key];
-                }
-            });
+
+            // Fill based on breakdown
+            if (breakdown) {
+                Object.entries(breakdown).forEach(([label, count]) => {
+                    if (count > 0 && currency.denoms[label]) {
+                        const denomValue = currency.denoms[label];
+                        const inp = document.getElementById('denom_input_' + denomValue);
+                        if (inp) inp.value = count;
+                    }
+                });
+            }
+
             calculateTotalFromDenoms();
         }
 
@@ -3442,7 +3566,8 @@
 
             document.getElementById('chipModalTitle').textContent = isNew ? 'New Chip ✨' : 'Edit Chip ✨';
             document.getElementById('chipNameInput').value = chip.label || '';
-            document.getElementById('chipAmountInput').value = chip.amount || '';
+            const chipCurr = getCurrentCurrency();
+            document.getElementById('chipAmountInput').value = chip.amount ? fromCents(chip.amount, chipCurr) : '';
             document.getElementById('chipTypeInput').value = chip.type || 'spend';
             document.getElementById('chipDescInput').value = chip.desc || '';
             document.getElementById('chipUseDenomInput').checked = chip.useDenom === true;
@@ -3476,7 +3601,9 @@
 
         function saveChipFromModal() {
             const label = document.getElementById('chipNameInput').value.trim();
-            const amount = parseInt(document.getElementById('chipAmountInput').value);
+            const amountDisplay = parseFloat(document.getElementById('chipAmountInput').value);
+            const currentCurr = getCurrentCurrency();
+            const amount = toCents(amountDisplay, currentCurr);
             const type = document.getElementById('chipTypeInput').value;
             const desc = document.getElementById('chipDescInput').value.trim();
             const useDenom = document.getElementById('chipUseDenomInput').checked;
@@ -3495,10 +3622,17 @@
                 setModalError('Type must be gain or spend! ✨');
                 return;
             }
-            if (useDenom && (amount % 1000 !== 0)) {
-                setModalError('Denom-mode chips need amounts divisible by 1,000 💳');
-                document.getElementById('chipAmountInput').focus();
-                return;
+            // Check if amount can be broken into bills for current currency
+            if (useDenom) {
+                const currConfig = CURRENCIES[currentCurr];
+                if (currConfig && currConfig.denoms) {
+                    const smallest = Math.min(...Object.values(currConfig.denoms));
+                    if (amount % smallest !== 0) {
+                        setModalError(`Denom-mode chips need amounts divisible by ${formatMoney(smallest, currentCurr)} 💳`);
+                        document.getElementById('chipAmountInput').focus();
+                        return;
+                    }
+                }
             }
 
             const finalDesc = desc || label;
@@ -3559,6 +3693,7 @@
             editingWalletId = walletId;
 
             document.getElementById('walletModalTitle').textContent = `Edit "${wallet.name}"`;
+            document.getElementById('walletCurrencySelect').value = wallet.currency || 'IDR';
 
             const removePhotoBtn = document.getElementById('walletRemovePhotoBtn');
             if (wallet.photo) {
@@ -3574,6 +3709,35 @@
             if (event && event.target !== document.getElementById('walletModalOverlay')) return;
             document.getElementById('walletModalOverlay').classList.remove('active');
             editingWalletId = null;
+        }
+
+        function changeWalletCurrency(newCurrency) {
+            if (!CURRENCIES[newCurrency]) return;
+
+            const wallet = wallets.find(w => w.id === editingWalletId);
+            if (!wallet) return;
+
+            if (wallet.currency === newCurrency) return;
+
+            const confirmed = confirm(
+                `Change currency to ${CURRENCIES[newCurrency].name}?\n\n` +
+                `⚠️ Existing transactions will be reinterpreted as ${newCurrency}!\n` +
+                `This can cause weird amounts if you switch between currencies with different decimal places.\n\n` +
+                `Continue?`
+            );
+
+            if (!confirmed) {
+                document.getElementById('walletCurrencySelect').value = wallet.currency || 'IDR';
+                return;
+            }
+
+            wallet.currency = newCurrency;
+            // If switching to a currency without denoms, disable denoms
+            if (!CURRENCIES[newCurrency].denoms) {
+                wallet.useDenom = false;
+            }
+            saveAndRender();
+            closeWalletModal();
         }
 
         function walletActionRename() {
@@ -3838,18 +4002,76 @@
             }
         }
 
-        const denomKeys = ['1k', '2k', '5k', '10k', '20k', '50k', '100k'];
-        const denomValues = { '1k': 1000, '2k': 2000, '5k': 5000, '10k': 10000, '20k': 20000, '50k': 50000, '100k': 100000 };
+        // These are now dynamic per-wallet via CURRENCIES config
+        // Legacy references kept for backward compatibility where possible
+        function getDenomKeys() {
+            const c = getCurrentCurrencyConfig();
+            return Object.keys(c.denoms || {});
+        }
+        function getDenomValues() {
+            const c = getCurrentCurrencyConfig();
+            return c.denoms || {};
+        }
 
         function calculateTotalFromDenoms() {
             const wallet = getCurrentWallet();
             if (!wallet.useDenom) return;
-            let totalSum = 0;
-            denomKeys.forEach(key => {
-                let val = parseInt(document.getElementById('d' + key).value) || 0;
-                totalSum += val * denomValues[key];
+
+            const inputs = document.querySelectorAll('#denomContainer input');
+            let totalCents = 0;
+            inputs.forEach(inp => {
+                const denomValue = parseInt(inp.dataset.denomValue) || 0;
+                const count = parseInt(inp.value) || 0;
+                totalCents += denomValue * count;
             });
-            amountInput.value = totalSum > 0 ? totalSum : '';
+
+            const currency = getCurrentCurrencyConfig();
+            if (totalCents > 0) {
+                amountInput.value = fromCents(totalCents, currency.code);
+            } else {
+                amountInput.value = '';
+            }
+        }
+
+        function renderDenomInputs() {
+            const container = document.getElementById('denomContainer');
+            if (!container) return;
+
+            const wallet = getCurrentWallet();
+            const currency = CURRENCIES[wallet.currency || 'IDR'];
+
+            if (!currency.denoms) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = '';
+            const denomEntries = Object.entries(currency.denoms);
+
+            denomEntries.forEach(([label, value]) => {
+                const item = document.createElement('div');
+                item.className = 'denom-item';
+
+                const lbl = document.createElement('label');
+                lbl.textContent = currency.denomLabels[label] || label;
+
+                const inp = document.createElement('input');
+                inp.type = 'tel';
+                inp.inputMode = 'numeric';
+                inp.pattern = '[0-9]*';
+                inp.dataset.denomValue = value;
+                inp.dataset.denomKey = label;
+                inp.id = 'denom_input_' + value;
+                inp.value = '0';
+
+                inp.addEventListener('focus', () => { if (inp.value === '0') inp.value = ''; });
+                inp.addEventListener('blur', () => { if (inp.value === '') inp.value = '0'; });
+                inp.addEventListener('input', calculateTotalFromDenoms);
+
+                item.appendChild(lbl);
+                item.appendChild(inp);
+                container.appendChild(item);
+            });
         }
 
         function saveAndRender() {
@@ -3869,13 +4091,33 @@
 
         function addWallet() {
             const name = prompt("Enter new wallet name (e.g., Savings, Snack Fund 🍡):");
-            if (name && name.trim() !== '') {
-                const newWallet = { id: 'wallet_' + Date.now(), name: name.trim(), photo: '', useDenom: false, transactions: [] };
-                wallets.push(newWallet);
-                currentWalletId = newWallet.id;
-                activeEditTxId = null;
-                saveAndRender();
-            }
+            if (!name || name.trim() === '') return;
+
+            const currPrompt = prompt(
+                "Currency?\n\n" +
+                "1. IDR 🇮🇩 (Rupiah)\n" +
+                "2. USD 🇺🇸 (Dollar)\n" +
+                "3. JPY 🇯🇵 (Yen)\n" +
+                "4. EUR 🇪🇺 (Euro)\n\n" +
+                "Enter number (default: 1):",
+                "1"
+            );
+
+            const map = { '1': 'IDR', '2': 'USD', '3': 'JPY', '4': 'EUR' };
+            const currency = map[(currPrompt || '1').trim()] || 'IDR';
+
+            const newWallet = {
+                id: 'wallet_' + Date.now(),
+                name: name.trim(),
+                currency: currency,
+                photo: '',
+                useDenom: false,
+                transactions: []
+            };
+            wallets.push(newWallet);
+            currentWalletId = newWallet.id;
+            activeEditTxId = null;
+            saveAndRender();
         }
 
         function toggleDenomSystem() {
@@ -3890,7 +4132,7 @@
         // ==========================================
         function exportData() {
             const backup = {
-                version: 6,
+                version: 7,
                 exportedAt: new Date().toISOString(),
                 wallets: wallets,
                 chips: chips,
@@ -3949,6 +4191,11 @@
                     }
 
                     wallets = imported.wallets;
+                    // Migration: ensure every wallet has a currency
+                    wallets = wallets.map(w => ({
+                        ...w,
+                        currency: w.currency || 'IDR'
+                    }));
                     currentWalletId = wallets[0].id;
                     activeEditTxId = null;
 
@@ -4097,7 +4344,7 @@
             const barRows = days.map(d => {
                 const filled = d.spent === 0 ? 0 : Math.max(1, Math.round((d.spent / maxSpent) * 10));
                 const bar = '▓'.repeat(filled) + `<span class="empty">${'░'.repeat(10 - filled)}</span>`;
-                const amtDisplay = d.spent > 0 ? d.spent.toLocaleString() : '—';
+                const amtDisplay = d.spent > 0 ? formatMoney(d.spent, getCurrentCurrency()) : '—';
                 return `
                     <div class="monthly-bar-row">
                         <span class="day-label">${d.dayName}</span>
@@ -4143,12 +4390,12 @@
             let highestDayDisplay = '—';
             if (highestDay) {
                 const d = new Date(highestDay + 'T00:00:00');
-                highestDayDisplay = `${monthNames[d.getMonth()].slice(0,3)} ${d.getDate()} (${highestAmount.toLocaleString()})`;
+                highestDayDisplay = `${monthNames[d.getMonth()].slice(0,3)} ${d.getDate()} (${formatMoney(highestAmount, getCurrentCurrency())})`;
             }
 
             let topWeekdayDisplay = '—';
             if (topWeekday && topWeekdayAmt > 0) {
-                topWeekdayDisplay = `${topWeekday} (${topWeekdayAmt.toLocaleString()})`;
+                topWeekdayDisplay = `${topWeekday} (${formatMoney(topWeekdayAmt, getCurrentCurrency())})`;
             }
 
             if (thisMonthTx.length === 0) {
@@ -4167,15 +4414,15 @@
                 <div class="monthly-totals">
                     <div class="monthly-total-row gain">
                         <span class="label">📈 Income</span>
-                        <span class="value">+${income.toLocaleString()}</span>
+                        <span class="value">+${formatMoney(income, getCurrentCurrency())}</span>
                     </div>
                     <div class="monthly-total-row spend">
                         <span class="label">📉 Spending</span>
-                        <span class="value">-${spending.toLocaleString()}</span>
+                        <span class="value">-${formatMoney(spending, getCurrentCurrency())}</span>
                     </div>
                     <div class="monthly-total-row net">
                         <span class="label">💰 Net</span>
-                        <span class="value">${net >= 0 ? '+' : ''}${net.toLocaleString()}</span>
+                        <span class="value">${net >= 0 ? '+' : ''}${formatMoney(net, getCurrentCurrency())}</span>
                     </div>
                 </div>
 
@@ -4203,24 +4450,27 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const wallet = getCurrentWallet();
+            const currency = CURRENCIES[wallet.currency || 'IDR'];
             const type = document.getElementById('type').value;
-            const amount = parseFloat(amountInput.value);
+            const amountDisplay = parseFloat(amountInput.value);
+            const amountCents = toCents(amountDisplay, currency.code);
             const date = document.getElementById('date').value;
             const description = document.getElementById('description').value;
             const note = document.getElementById('note').value.trim();
             const now = new Date();
             const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
 
-            if (!amount || amount <= 0) {
+            if (!amountCents || amountCents <= 0) {
                 alert("Please enter a valid amount, Sensei! 💸");
                 return;
             }
 
             let denoms = null;
-            if (wallet.useDenom) {
+            if (wallet.useDenom && currency.denoms) {
                 denoms = {};
-                denomKeys.forEach(key => {
-                    denoms[key] = parseInt(document.getElementById('d' + key).value) || 0;
+                Object.entries(currency.denoms).forEach(([key]) => {
+                    const inp = document.getElementById('denom_input_' + currency.denoms[key]);
+                    denoms[key] = inp ? (parseInt(inp.value) || 0) : 0;
                 });
             }
 
@@ -4235,7 +4485,7 @@
                 if (t.type === 'spend' && t.date === todayStr) todaySpentBefore += t.amount;
             });
 
-            wallet.transactions.unshift({ id: Date.now(), type, amount, date, time: timeStr, description, note, denoms });
+            wallet.transactions.unshift({ id: Date.now(), type, amount: amountCents, date, time: timeStr, description, note, denoms });
             activeEditTxId = null;
             saveAndRender();
 
@@ -4252,11 +4502,11 @@
                 noteArrow.textContent = '▶';
             }
 
-            if (wallet.useDenom) {
-                denomKeys.forEach(key => document.getElementById('d' + key).value = '0');
+            if (wallet.useDenom && currency.denoms) {
+                document.querySelectorAll('#denomContainer input').forEach(inp => inp.value = '0');
             }
 
-            triggerTransactionReaction(type, amount, balanceBefore, todaySpentBefore + (type === 'spend' ? amount : 0));
+            triggerTransactionReaction(type, amountCents, balanceBefore, todaySpentBefore + (type === 'spend' ? amountCents : 0));
         });
 
         function triggerTransactionReaction(type, amount, balanceBefore, todaySpentAfter) {
@@ -4266,8 +4516,22 @@
                 exprKey = 'happy';
                 dialogue = getRandomTransactionDialogue('gain');
             } else {
-                const isBigSingle = amount >= 50000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);
-                const isBigDay = todaySpentAfter >= 100000;
+                const currency = CURRENCIES[getCurrentCurrency()];
+                let isBigSingle, isBigDay;
+
+                if (currency.code === 'IDR') {
+                    isBigSingle = amount >= 50000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);
+                    isBigDay = todaySpentAfter >= 100000;
+                } else if (currency.code === 'USD' || currency.code === 'EUR') {
+                    isBigSingle = amount >= 5000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);  // $50
+                    isBigDay = todaySpentAfter >= 10000;  // $100
+                } else if (currency.code === 'JPY') {
+                    isBigSingle = amount >= 5000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);  // ¥5,000
+                    isBigDay = todaySpentAfter >= 10000;  // ¥10,000
+                } else {
+                    isBigSingle = amount >= 50000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);
+                    isBigDay = todaySpentAfter >= 100000;
+                }
 
                 if (isBigDay) {
                     exprKey = 'surprised';
@@ -4403,35 +4667,37 @@
 
         function saveEditedTransaction(txId) {
             const wallet = getCurrentWallet();
+            const currency = CURRENCIES[wallet.currency || 'IDR'];
             const tx = wallet.transactions.find(t => t.id === txId);
             if (!tx) return;
 
             const newDesc = document.getElementById(`editDesc_${txId}`).value.trim();
-            const newAmount = parseFloat(document.getElementById(`editAmount_${txId}`).value);
+            const newAmountDisplay = parseFloat(document.getElementById(`editAmount_${txId}`).value);
             const newType = document.getElementById(`editType_${txId}`).value;
             const newDate = document.getElementById(`editDate_${txId}`).value;
             const newNote = document.getElementById(`editNote_${txId}`).value.trim();
 
-            if (!newAmount || newAmount <= 0 || !newDesc || !newDate) {
+            if (!newAmountDisplay || newAmountDisplay < 0 || !newDesc || !newDate) {
                 alert("Please fill in valid transaction details, Sensei! ✨");
                 return;
             }
 
+            // Convert display → cents
+            tx.amount = toCents(newAmountDisplay, currency.code);
             tx.description = newDesc;
-            tx.amount = newAmount;
             tx.type = newType;
             tx.date = newDate;
             tx.note = newNote;
 
-            if (wallet.useDenom) {
+            if (wallet.useDenom && currency.denoms) {
                 if (!tx.denoms) tx.denoms = {};
                 let calculatedFromEdit = 0;
-                denomKeys.forEach(key => {
+                Object.entries(currency.denoms).forEach(([key, value]) => {
                     const editDenomInput = document.getElementById(`edit_${key}_${txId}`);
                     if (editDenomInput) {
                         const val = parseInt(editDenomInput.value) || 0;
                         tx.denoms[key] = val;
-                        calculatedFromEdit += val * denomValues[key];
+                        calculatedFromEdit += val * value;
                     }
                 });
                 if (calculatedFromEdit > 0) {
@@ -4476,10 +4742,13 @@
                 const timeDisplay = t.time ? ` • ${t.time}` : '';
 
                 let denomTextStr = '';
-                if (t.denoms && wallet.useDenom) {
+                const historyCurrency = CURRENCIES[wallet.currency || 'IDR'];
+                if (t.denoms && wallet.useDenom && historyCurrency.denoms) {
                     let parts = [];
-                    denomKeys.forEach(key => {
-                        if (t.denoms[key] > 0) parts.push(`${t.denoms[key]} ${key}`);
+                    Object.keys(historyCurrency.denoms).forEach(key => {
+                        if (t.denoms[key] > 0) {
+                            parts.push(`${t.denoms[key]} × ${historyCurrency.denomLabels[key]}`);
+                        }
                     });
                     if (parts.length > 0) denomTextStr = `(${parts.join(', ')})`;
                 }
@@ -4489,11 +4758,12 @@
                 const isOpen = activeEditTxId === t.id;
 
                 let editDenomsHtml = '';
-                if (wallet.useDenom) {
+                if (wallet.useDenom && historyCurrency.denoms) {
                     let fieldsHtml = '';
-                    denomKeys.forEach(k => {
+                    Object.entries(historyCurrency.denoms).forEach(([k, value]) => {
                         let currentVal = (t.denoms && t.denoms[k]) ? t.denoms[k] : 0;
-                        fieldsHtml += `<div style="flex:1; min-width:45px;"><label style="font-size:0.6rem;">${k}</label><input type="number" id="edit_${k}_${t.id}" value="${currentVal}" min="0"></div>`;
+                        const labelText = historyCurrency.denomLabels[k] || k;
+                        fieldsHtml += `<div style="flex:1; min-width:45px;"><label style="font-size:0.6rem;">${labelText}</label><input type="number" id="edit_${k}_${t.id}" value="${currentVal}" min="0"></div>`;
                     });
                     editDenomsHtml = `<label>Bill Counts:</label><div style="display:flex; gap:4px; flex-wrap:wrap;">${fieldsHtml}</div>`;
                 }
@@ -4507,7 +4777,7 @@
                         </div>
                         <div class="history-amount-group">
                             <div style="display: flex; align-items: center; gap: 6px;">
-                                <span class="history-amount ${amountClass}">${sign}${t.amount.toLocaleString()}</span>
+                                <span class="history-amount ${amountClass}">${sign}${formatMoney(t.amount, historyCurrency.code)}</span>
                                 <button class="delete-btn" onclick="deleteTransaction(${t.id})">&times;</button>
                             </div>
                             ${denomTextStr ? `<span class="history-denoms">${denomTextStr}</span>` : ''}
@@ -4520,7 +4790,7 @@
                         <div style="display:flex; gap:6px;">
                             <div style="flex:1;">
                                 <label>Amount:</label>
-                                <input type="number" id="editAmount_${t.id}" value="${t.amount}" min="1" ${wallet.useDenom ? 'readonly' : ''}>
+                                <input type="number" id="editAmount_${t.id}" value="${fromCents(t.amount, historyCurrency.code)}" min="0" step="${Math.pow(10, -historyCurrency.decimals)}" ${wallet.useDenom ? 'readonly' : ''}>
                             </div>
                             <div style="flex:1;">
                                 <label>Type:</label>
@@ -4589,22 +4859,38 @@
             walletNavRight.appendChild(addBtn);
 
             const wallet = getCurrentWallet();
-            currentWalletTitle.textContent = `${wallet.name} Balance 💰`;
+            const currencyConfig = CURRENCIES[wallet.currency || 'IDR'];
 
-            if (wallet.useDenom) {
-                toggleDenomBtn.textContent = "⚙️ Denoms: ON";
-                toggleDenomBtn.style.color = "var(--dark-pink)";
-                denomInputSection.style.display = "block";
-                amountInput.readOnly = true;
-                amountInput.style.backgroundColor = nightTheme ? "#1f1729" : "#f9f0f3";
-                amountInput.placeholder = "Auto-calculated from bills 💳";
-            } else {
-                toggleDenomBtn.textContent = "⚙️ Denoms: OFF";
-                toggleDenomBtn.style.color = "var(--dark-pink)";
-                denomInputSection.style.display = "none";
+            currentWalletTitle.textContent = `${wallet.name} Balance (${currencyConfig.code}) 💰`;
+
+            // Show or hide denom toggle based on currency support
+            const hasDenoms = currencyConfig.denoms && Object.keys(currencyConfig.denoms).length > 0;
+
+            if (!hasDenoms) {
+                toggleDenomBtn.style.display = 'none';
+                denomInputSection.style.display = 'none';
+                wallet.useDenom = false;
                 amountInput.readOnly = false;
                 amountInput.style.backgroundColor = nightTheme ? "#2e2238" : "#fff";
                 amountInput.placeholder = "0";
+            } else {
+                toggleDenomBtn.style.display = '';
+                if (wallet.useDenom) {
+                    toggleDenomBtn.textContent = "⚙️ Denoms: ON";
+                    toggleDenomBtn.style.color = "var(--dark-pink)";
+                    denomInputSection.style.display = "block";
+                    amountInput.readOnly = true;
+                    amountInput.style.backgroundColor = nightTheme ? "#1f1729" : "#f9f0f3";
+                    amountInput.placeholder = "Auto-calculated from bills 💳";
+                    renderDenomInputs();
+                } else {
+                    toggleDenomBtn.textContent = "⚙️ Denoms: OFF";
+                    toggleDenomBtn.style.color = "var(--dark-pink)";
+                    denomInputSection.style.display = "none";
+                    amountInput.readOnly = false;
+                    amountInput.style.backgroundColor = nightTheme ? "#2e2238" : "#fff";
+                    amountInput.placeholder = "0";
+                }
             }
 
             if (wallet.photo) {
@@ -4619,25 +4905,29 @@
 
             let total = 0;
             let totalDenoms = {};
-            denomKeys.forEach(k => totalDenoms[k] = 0);
+            if (currencyConfig.denoms) {
+                Object.keys(currencyConfig.denoms).forEach(k => totalDenoms[k] = 0);
+            }
 
             wallet.transactions.forEach(t => {
                 const multiplier = t.type === 'gain' ? 1 : -1;
                 total += t.amount * multiplier;
 
-                if (t.denoms && wallet.useDenom) {
-                    denomKeys.forEach(key => {
+                if (t.denoms && wallet.useDenom && currencyConfig.denoms) {
+                    Object.keys(currencyConfig.denoms).forEach(key => {
                         totalDenoms[key] += (t.denoms[key] || 0) * multiplier;
                     });
                 }
             });
 
-            totalBalanceEl.textContent = total.toLocaleString();
+            totalBalanceEl.textContent = formatMoney(total, currencyConfig.code);
 
-            if (wallet.useDenom) {
+            if (wallet.useDenom && currencyConfig.denoms) {
                 let denomBadges = [];
-                denomKeys.forEach(key => {
-                    if (totalDenoms[key] !== 0) denomBadges.push(`<span class="denom-badge">${totalDenoms[key]} ${key}</span>`);
+                Object.entries(currencyConfig.denoms).forEach(([key, value]) => {
+                    if (totalDenoms[key] !== 0) {
+                        denomBadges.push(`<span class="denom-badge">${totalDenoms[key]} × ${currencyConfig.denomLabels[key]}</span>`);
+                    }
                 });
                 denomSummary.innerHTML = denomBadges.length > 0 ? denomBadges.join(' ') : `<span class="denom-badge" style="color:var(--dark-pink); font-weight:600;">0 bills tracked 💳</span>`;
                 denomSummary.style.display = 'flex';
