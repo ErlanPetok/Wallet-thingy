@@ -22,7 +22,6 @@
             --page-scale: 1;
         }
 
-        /* === THEME: Night === */
         body.theme-night {
             --bg-color: #1a1420;
             --card-bg: rgba(40, 30, 50, 0.85);
@@ -37,7 +36,6 @@
             --sticky-bg: rgba(40, 30, 50, 0.88);
         }
 
-        /* === THEME: Ocean === */
         body.theme-ocean {
             --bg-color: #e8f4f8;
             --card-bg: rgba(240, 250, 255, 0.88);
@@ -52,7 +50,6 @@
             --sticky-bg: rgba(240, 250, 255, 0.9);
         }
 
-        /* === THEME: Spring (Yellow) === */
         body.theme-spring {
             --bg-color: #fffbe8;
             --card-bg: rgba(255, 253, 240, 0.9);
@@ -67,7 +64,6 @@
             --sticky-bg: rgba(255, 253, 240, 0.92);
         }
 
-        /* Legacy night-theme class (backward compat) */
         body.night-theme {
             --bg-color: #1a1420;
             --card-bg: rgba(40, 30, 50, 0.85);
@@ -374,14 +370,8 @@
         }
 
         @keyframes hoshinoRingBurst {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1.6);
-            }
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.6); }
         }
 
         .hoshino-emotion-badge {
@@ -535,9 +525,7 @@
             transition: transform 0.1s;
         }
 
-        .music-play-btn:active {
-            transform: scale(0.9);
-        }
+        .music-play-btn:active { transform: scale(0.9); }
 
         .music-info {
             white-space: nowrap;
@@ -583,10 +571,7 @@
             scrollbar-width: thin;
         }
 
-        .wallet-nav-left::-webkit-scrollbar {
-            height: 4px;
-        }
-
+        .wallet-nav-left::-webkit-scrollbar { height: 4px; }
         .wallet-nav-left::-webkit-scrollbar-thumb {
             background: var(--primary-pink);
             border-radius: 4px;
@@ -671,9 +656,7 @@
             padding: 2px 16px 0 16px;
         }
 
-        input[type="file"] {
-            display: none;
-        }
+        input[type="file"] { display: none; }
 
         .settings-panel {
             margin: 8px 16px 0 16px;
@@ -761,10 +744,7 @@
             scrollbar-width: thin;
         }
 
-        .bg-presets-row::-webkit-scrollbar {
-            height: 4px;
-        }
-
+        .bg-presets-row::-webkit-scrollbar { height: 4px; }
         .bg-presets-row::-webkit-scrollbar-thumb {
             background: var(--primary-pink);
             border-radius: 4px;
@@ -806,7 +786,6 @@
             font-weight: 600;
         }
 
-        /* === Theme picker === */
         .theme-picker-row {
             display: flex;
             gap: 8px;
@@ -829,9 +808,7 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
 
-        .theme-swatch:hover {
-            transform: scale(1.1);
-        }
+        .theme-swatch:hover { transform: scale(1.1); }
 
         .theme-swatch.active {
             border-color: var(--dark-pink);
@@ -856,18 +833,10 @@
             border: 2px solid var(--card-bg);
         }
 
-        .theme-swatch-pink {
-            background: linear-gradient(135deg, #ffb3c6, #ff4d6d);
-        }
-        .theme-swatch-night {
-            background: linear-gradient(135deg, #6b4a7a, #1a1420);
-        }
-        .theme-swatch-ocean {
-            background: linear-gradient(135deg, #7dd3e8, #0891b2);
-        }
-        .theme-swatch-spring {
-            background: linear-gradient(135deg, #fff5cc, #e6a800);
-        }
+        .theme-swatch-pink { background: linear-gradient(135deg, #ffb3c6, #ff4d6d); }
+        .theme-swatch-night { background: linear-gradient(135deg, #6b4a7a, #1a1420); }
+        .theme-swatch-ocean { background: linear-gradient(135deg, #7dd3e8, #0891b2); }
+        .theme-swatch-spring { background: linear-gradient(135deg, #fff5cc, #e6a800); }
 
         .wallet-banner {
             margin: 12px 16px 0 16px;
@@ -957,13 +926,8 @@
             z-index: 2;
         }
 
-        .balance-eye-btn:hover {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .balance-eye-btn:active {
-            transform: scale(0.9);
-        }
+        .balance-eye-btn:hover { background: rgba(255, 255, 255, 0.8); }
+        .balance-eye-btn:active { transform: scale(0.9); }
 
         .total-amount {
             font-size: 1.8rem;
@@ -1016,10 +980,7 @@
             align-items: center;
         }
 
-        .quick-add-row::-webkit-scrollbar {
-            height: 4px;
-        }
-
+        .quick-add-row::-webkit-scrollbar { height: 4px; }
         .quick-add-row::-webkit-scrollbar-thumb {
             background: var(--primary-pink);
             border-radius: 4px;
@@ -1047,9 +1008,7 @@
             color: #fff;
         }
 
-        .quick-add-chip:active {
-            transform: scale(0.88) !important;
-        }
+        .quick-add-chip:active { transform: scale(0.88) !important; }
 
         .quick-add-chip.denom-chip {
             border-color: var(--dark-pink);
@@ -1156,6 +1115,60 @@
             width: 100%;
         }
 
+        .with-change-toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 2px 0 2px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--dark-pink);
+        }
+
+        .with-change-toggle-row label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .with-change-toggle-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--dark-pink);
+            cursor: pointer;
+        }
+
+        .denom-block-label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--dark-pink);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+            margin-top: 4px;
+        }
+
+        .denom-block-label .block-total {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--dark-pink);
+            opacity: 0.9;
+        }
+
+        .net-preview {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--dark-pink);
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        .net-preview .net-spend { color: var(--dark-pink); }
+        .net-preview .net-gain { color: var(--gain-color); }
+
         .note-toggle-btn {
             background: transparent;
             border: none;
@@ -1172,14 +1185,8 @@
             transition: opacity 0.2s;
         }
 
-        .note-toggle-btn:hover {
-            opacity: 0.75;
-        }
-
-        .note-toggle-btn .arrow {
-            font-size: 0.6rem;
-            opacity: 0.8;
-        }
+        .note-toggle-btn:hover { opacity: 0.75; }
+        .note-toggle-btn .arrow { font-size: 0.6rem; opacity: 0.8; }
 
         .note-input-wrap {
             display: none;
@@ -1235,9 +1242,7 @@
             opacity: 0.6;
         }
 
-        .search-clear-btn:hover {
-            opacity: 1;
-        }
+        .search-clear-btn:hover { opacity: 1; }
 
         .history-filter-row {
             display: flex;
@@ -1389,13 +1394,8 @@
             font-weight: 700;
         }
 
-        .amount-gain {
-            color: var(--gain-color);
-        }
-
-        .amount-spend {
-            color: var(--dark-pink);
-        }
+        .amount-gain { color: var(--gain-color); }
+        .amount-spend { color: var(--dark-pink); }
 
         .history-denoms {
             font-size: 0.65rem;
@@ -1470,9 +1470,6 @@
             font-weight: 600;
         }
 
-        /* ==========================================
-           MONTHLY SUMMARY CARD
-           ========================================== */
         .monthly-summary-section {
             padding: 0 16px 16px 16px;
         }
@@ -1511,14 +1508,8 @@
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .monthly-card h4 {
@@ -1549,21 +1540,10 @@
             color: var(--text-color);
         }
 
-        .monthly-total-row .label {
-            opacity: 0.85;
-        }
-
-        .monthly-total-row .value {
-            font-weight: 800;
-        }
-
-        .monthly-total-row.gain .value {
-            color: var(--gain-color);
-        }
-
-        .monthly-total-row.spend .value {
-            color: var(--dark-pink);
-        }
+        .monthly-total-row .label { opacity: 0.85; }
+        .monthly-total-row .value { font-weight: 800; }
+        .monthly-total-row.gain .value { color: var(--gain-color); }
+        .monthly-total-row.spend .value { color: var(--dark-pink); }
 
         .monthly-total-row.net {
             border-top: 1px dashed var(--primary-pink);
@@ -1619,9 +1599,7 @@
             white-space: nowrap;
         }
 
-        .monthly-bar-row .bar .empty {
-            opacity: 0.35;
-        }
+        .monthly-bar-row .bar .empty { opacity: 0.35; }
 
         .monthly-bar-row .bar-amount {
             font-size: 0.62rem;
@@ -1671,7 +1649,6 @@
             font-style: italic;
         }
 
-        /* === Modal === */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -1684,18 +1661,11 @@
             animation: fadeIn 0.2s ease;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
         }
 
         .modal-card {
@@ -1826,9 +1796,7 @@
             padding: 4px 0;
         }
 
-        .modal-checkbox-field {
-            gap: 6px;
-        }
+        .modal-checkbox-field { gap: 6px; }
 
         .checkbox-label {
             display: flex;
@@ -1877,9 +1845,7 @@
             transition: transform 0.1s, opacity 0.15s;
         }
 
-        .modal-btn:active {
-            transform: scale(0.97);
-        }
+        .modal-btn:active { transform: scale(0.97); }
 
         .modal-btn-primary {
             background: var(--dark-pink);
@@ -1888,9 +1854,7 @@
             flex: 2;
         }
 
-        .modal-btn-primary:hover {
-            opacity: 0.9;
-        }
+        .modal-btn-primary:hover { opacity: 0.9; }
 
         .modal-btn-danger {
             background: transparent;
@@ -1904,9 +1868,7 @@
             color: #fff;
         }
 
-        .modal-btn-danger.hidden {
-            display: none;
-        }
+        .modal-btn-danger.hidden { display: none; }
 
         .wallet-action-list {
             display: flex;
@@ -1935,9 +1897,7 @@
             color: #fff;
         }
 
-        .wallet-action-btn:active {
-            transform: scale(0.98);
-        }
+        .wallet-action-btn:active { transform: scale(0.98); }
 
         .wallet-action-btn.danger {
             border-color: var(--dark-pink);
@@ -1949,9 +1909,6 @@
             color: #fff;
         }
 
-        /* ==========================================
-           UNDO TOAST
-           ========================================== */
         .undo-toast {
             position: fixed;
             bottom: 24px;
@@ -1980,9 +1937,7 @@
             pointer-events: auto;
         }
 
-        .undo-toast .undo-msg {
-            flex-grow: 1;
-        }
+        .undo-toast .undo-msg { flex-grow: 1; }
 
         .undo-toast .undo-btn {
             background: rgba(255, 255, 255, 0.25);
@@ -1998,17 +1953,9 @@
             letter-spacing: 0.5px;
         }
 
-        .undo-toast .undo-btn:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
+        .undo-toast .undo-btn:hover { background: rgba(255, 255, 255, 0.4); }
+        .undo-toast .undo-btn:active { transform: scale(0.95); }
 
-        .undo-toast .undo-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* ==========================================
-           ANIMATIONS
-           ========================================== */
         .phone-container {
             animation: pageFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
@@ -2028,10 +1975,7 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        .wallet-nav-left .wallet-tab {
-            animation: tabFadeIn 0.35s ease both;
-        }
-
+        .wallet-nav-left .wallet-tab { animation: tabFadeIn 0.35s ease both; }
         .wallet-nav-left .wallet-tab:nth-child(1) { animation-delay: 0.05s; }
         .wallet-nav-left .wallet-tab:nth-child(2) { animation-delay: 0.1s; }
         .wallet-nav-left .wallet-tab:nth-child(3) { animation-delay: 0.15s; }
@@ -2083,36 +2027,27 @@
             to   { opacity: 1; transform: translateY(0) scaleY(1); }
         }
 
-        .balance-card {
-            animation: balanceFloat 4s ease-in-out infinite;
-        }
+        .balance-card { animation: balanceFloat 4s ease-in-out infinite; }
 
         @keyframes balanceFloat {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-2px); }
         }
 
-        .balance-eye-btn:active {
-            animation: eyeBounce 0.25s ease;
-        }
+        .balance-eye-btn:active { animation: eyeBounce 0.25s ease; }
 
         @keyframes eyeBounce {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.25); }
         }
 
-        .modal-overlay.active {
-            animation: overlayFade 0.25s ease both;
-        }
+        .modal-overlay.active { animation: overlayFade 0.25s ease both; }
 
         @keyframes overlayFade {
             from { opacity: 0; backdrop-filter: blur(0px); }
             to   { opacity: 1; backdrop-filter: blur(3px); }
         }
 
-        /* ==========================================
-           NIGHT THEME OVERRIDES
-           ========================================== */
         body.night-theme input[type="text"],
         body.night-theme input[type="number"],
         body.night-theme input[type="date"],
@@ -2141,9 +2076,7 @@
             color: var(--text-color) !important;
         }
 
-        body.night-theme .edit-drawer {
-            background: #241c30 !important;
-        }
+        body.night-theme .edit-drawer { background: #241c30 !important; }
 
         body.night-theme .edit-drawer input,
         body.night-theme .edit-drawer select {
@@ -2226,18 +2159,10 @@
         <div class="settings-panel" id="settingsPanel" style="display: none;">
             <h4>🎨 Theme</h4>
             <div class="theme-picker-row">
-                <div class="theme-swatch theme-swatch-pink" data-theme="pink" onclick="setTheme('pink')" title="Pink">
-                    <span>🌸</span>
-                </div>
-                <div class="theme-swatch theme-swatch-night" data-theme="night" onclick="setTheme('night')" title="Night">
-                    <span>🌙</span>
-                </div>
-                <div class="theme-swatch theme-swatch-ocean" data-theme="ocean" onclick="setTheme('ocean')" title="Ocean">
-                    <span>🌊</span>
-                </div>
-                <div class="theme-swatch theme-swatch-spring" data-theme="spring" onclick="setTheme('spring')" title="Spring">
-                    <span>🌻</span>
-                </div>
+                <div class="theme-swatch theme-swatch-pink" data-theme="pink" onclick="setTheme('pink')" title="Pink"><span>🌸</span></div>
+                <div class="theme-swatch theme-swatch-night" data-theme="night" onclick="setTheme('night')" title="Night"><span>🌙</span></div>
+                <div class="theme-swatch theme-swatch-ocean" data-theme="ocean" onclick="setTheme('ocean')" title="Ocean"><span>🌊</span></div>
+                <div class="theme-swatch theme-swatch-spring" data-theme="spring" onclick="setTheme('spring')" title="Spring"><span>🌻</span></div>
             </div>
 
             <div class="settings-divider"></div>
@@ -2336,7 +2261,7 @@
             <div class="row-inputs">
                 <div class="input-group">
                     <label for="type">Type 🏷️</label>
-                    <select id="type">
+                    <select id="type" onchange="updateDenomLabels()">
                         <option value="gain">Gain (+) 📈</option>
                         <option value="spend">Spend (-) 📉</option>
                     </select>
@@ -2348,10 +2273,34 @@
             </div>
 
             <div class="input-group" id="denomInputSection" style="display: none;">
-                <label>Bill Counts (Optional) 💳</label>
-                <div class="denom-container" id="denomContainer">
-                    <!-- Dynamically built by JS based on wallet's currency -->
+                <label>Bill Counts 💳</label>
+
+                <div class="with-change-toggle-row">
+                    <label>
+                        <input type="checkbox" id="withChangeToggle" onchange="toggleWithChangeMode(this.checked)">
+                        <span>🔄 Include change (bills in)</span>
+                    </label>
                 </div>
+
+                <div class="denom-block-label">
+                    <span id="primaryBlockLabel">💸 Bills Paid</span>
+                    <span class="block-total" id="primaryBlockTotal">—</span>
+                </div>
+                <div class="denom-container" id="denomContainer">
+                    <!-- Primary grid, dynamically built -->
+                </div>
+
+                <div id="billsInSection" style="display: none;">
+                    <div class="denom-block-label">
+                        <span id="secondaryBlockLabel">💰 Change Received</span>
+                        <span class="block-total" id="secondaryBlockTotal">—</span>
+                    </div>
+                    <div class="denom-container" id="changeDenomContainer">
+                        <!-- Secondary grid, dynamically built -->
+                    </div>
+                </div>
+
+                <div class="net-preview" id="netPreview" style="display: none;">Net: —</div>
             </div>
 
             <div class="row-inputs">
@@ -2394,8 +2343,7 @@
                 <span>📊 This Month</span>
                 <span id="monthlyToggleIcon">▼ Show</span>
             </button>
-            <div class="monthly-card" id="monthlyCard" style="display: none;">
-            </div>
+            <div class="monthly-card" id="monthlyCard" style="display: none;"></div>
         </div>
     </div>
 
@@ -2479,123 +2427,72 @@
     </div>
 
     <script>
-                // ==========================================
+        // ==========================================
         // MULTI-CURRENCY CONFIG
         // ==========================================
         const CURRENCIES = {
             IDR: {
-                code: 'IDR',
-                symbol: 'Rp',
-                name: 'Indonesian Rupiah 🇮🇩',
-                decimals: 0,
-                denoms: {
-                    '1k': 1000, '2k': 2000, '5k': 5000, '10k': 10000,
-                    '20k': 20000, '50k': 50000, '100k': 100000
-                },
-                denomLabels: {
-                    '1k': '1k', '2k': '2k', '5k': '5k', '10k': '10k',
-                    '20k': '20k', '50k': '50k', '100k': '100k'
-                }
+                code: 'IDR', symbol: 'Rp', name: 'Indonesian Rupiah 🇮🇩', decimals: 0,
+                denoms: { '1k': 1000, '2k': 2000, '5k': 5000, '10k': 10000, '20k': 20000, '50k': 50000, '100k': 100000 },
+                denomLabels: { '1k': '1k', '2k': '2k', '5k': '5k', '10k': '10k', '20k': '20k', '50k': '50k', '100k': '100k' }
             },
             USD: {
-                code: 'USD',
-                symbol: '$',
-                name: 'US Dollar 🇺🇸',
-                decimals: 2,
-                denoms: {
-                    '1': 100, '5': 500, '10': 1000,
-                    '20': 2000, '50': 5000, '100': 10000
-                },
-                denomLabels: {
-                    '1': '$1', '5': '$5', '10': '$10',
-                    '20': '$20', '50': '$50', '100': '$100'
-                }
+                code: 'USD', symbol: '$', name: 'US Dollar 🇺🇸', decimals: 2,
+                denoms: { '1': 100, '5': 500, '10': 1000, '20': 2000, '50': 5000, '100': 10000 },
+                denomLabels: { '1': '$1', '5': '$5', '10': '$10', '20': '$20', '50': '$50', '100': '$100' }
             },
             JPY: {
-                code: 'JPY',
-                symbol: '¥',
-                name: 'Japanese Yen 🇯🇵',
-                decimals: 0,
-                denoms: {
-                    '100': 100, '500': 500, '1000': 1000,
-                    '2000': 2000, '5000': 5000, '10000': 10000
-                },
-                denomLabels: {
-                    '100': '¥100', '500': '¥500', '1000': '¥1k',
-                    '2000': '¥2k', '5000': '¥5k', '10000': '¥10k'
-                }
+                code: 'JPY', symbol: '¥', name: 'Japanese Yen 🇯🇵', decimals: 0,
+                denoms: { '100': 100, '500': 500, '1000': 1000, '2000': 2000, '5000': 5000, '10000': 10000 },
+                denomLabels: { '100': '¥100', '500': '¥500', '1000': '¥1k', '2000': '¥2k', '5000': '¥5k', '10000': '¥10k' }
             },
             EUR: {
-                code: 'EUR',
-                symbol: '€',
-                name: 'Euro 🇪🇺',
-                decimals: 2,
-                denoms: {
-                    '5': 500, '10': 1000, '20': 2000,
-                    '50': 5000, '100': 10000, '200': 20000
-                },
-                denomLabels: {
-                    '5': '€5', '10': '€10', '20': '€20',
-                    '50': '€50', '100': '€100', '200': '€200'
-                }
+                code: 'EUR', symbol: '€', name: 'Euro 🇪🇺', decimals: 2,
+                denoms: { '5': 500, '10': 1000, '20': 2000, '50': 5000, '100': 10000, '200': 20000 },
+                denomLabels: { '5': '€5', '10': '€10', '20': '€20', '50': '€50', '100': '€100', '200': '€200' }
             }
         };
 
-        // Helper: format cents → display string
         function formatMoney(amountInCents, currencyCode) {
             const c = CURRENCIES[currencyCode] || CURRENCIES.IDR;
             const divisor = Math.pow(10, c.decimals);
             const value = amountInCents / divisor;
             return c.symbol + ' ' + value.toLocaleString('en-US', {
-                minimumFractionDigits: c.decimals,
-                maximumFractionDigits: c.decimals
+                minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals
             });
         }
 
-        // Helper: display value → cents (storage)
         function toCents(displayValue, currencyCode) {
             const c = CURRENCIES[currencyCode] || CURRENCIES.IDR;
-            const multiplier = Math.pow(10, c.decimals);
-            return Math.round(displayValue * multiplier);
+            return Math.round(displayValue * Math.pow(10, c.decimals));
         }
 
-        // Helper: cents → display number
         function fromCents(cents, currencyCode) {
             const c = CURRENCIES[currencyCode] || CURRENCIES.IDR;
-            const divisor = Math.pow(10, c.decimals);
-            return cents / divisor;
+            return cents / Math.pow(10, c.decimals);
         }
 
-        // Get current wallet's currency code
         function getCurrentCurrency() {
-            const wallet = getCurrentWallet();
-            return wallet.currency || 'IDR';
+            return getCurrentWallet().currency || 'IDR';
         }
 
         function getCurrentCurrencyConfig() {
             return CURRENCIES[getCurrentCurrency()] || CURRENCIES.IDR;
         }
+
         // ==========================================
         // PATHS
         // ==========================================
         const expressionSprites = {
-            normal: 'expression/normal.png',
-            squished: 'expression/squished.png',
-            sleepy: 'expression/sleepy.png',
-            happy: 'expression/happy.png',
-            joking: 'expression/joking.png',
-            surprised: 'expression/surprised.png',
+            normal: 'expression/normal.png', squished: 'expression/squished.png',
+            sleepy: 'expression/sleepy.png', happy: 'expression/happy.png',
+            joking: 'expression/joking.png', surprised: 'expression/surprised.png',
             embarrassed: 'expression/embarrassed.png'
         };
 
         const emotionEmoji = {
-            normal:    '🌸',
-            squished:  '💢',
-            sleepy:    '💤',
-            happy:     '✨',
-            joking:    '😆',
-            surprised: '❗',
-            embarrassed: '💦'
+            normal: '🌸', squished: '💢', sleepy: '💤', happy: '✨',
+            joking: '😆', surprised: '❗', embarrassed: '💦'
         };
 
         const audioTracks = {
@@ -2622,6 +2519,9 @@
         let historySearchQuery = '';
         let historyFilter = 'all';
 
+        // With-Change mode: default OFF, resets after submit
+        let withChangeMode = false;
+
         // ==========================================
         // THEME SYSTEM
         // ==========================================
@@ -2629,40 +2529,25 @@
         const DARK_THEMES = ['night'];
 
         let currentTheme = localStorage.getItem('hoshino_theme') || 'pink';
-
-        // Migration: if user had removed themes (sakura/cosmic), fall back to pink
         if (currentTheme === 'sakura' || currentTheme === 'cosmic') {
             currentTheme = 'pink';
             localStorage.setItem('hoshino_theme', 'pink');
         }
-
         if (localStorage.getItem('hoshino_night_theme') === 'true' && !localStorage.getItem('hoshino_theme')) {
             currentTheme = 'night';
             localStorage.setItem('hoshino_theme', 'night');
         }
-
         let nightTheme = DARK_THEMES.includes(currentTheme);
 
         function applyTheme() {
             document.body.classList.remove('theme-pink', 'theme-night', 'theme-ocean', 'theme-spring', 'night-theme');
+            if (currentTheme !== 'pink') document.body.classList.add('theme-' + currentTheme);
+            if (DARK_THEMES.includes(currentTheme)) document.body.classList.add('night-theme');
 
-            if (currentTheme !== 'pink') {
-                document.body.classList.add('theme-' + currentTheme);
-            }
-
-            if (DARK_THEMES.includes(currentTheme)) {
-                document.body.classList.add('night-theme');
-            }
-
-            if (DARK_THEMES.includes(currentTheme)) {
-                document.getElementById('themeToggleBtn').textContent = '☀️';
-            } else {
-                document.getElementById('themeToggleBtn').textContent = '🌙';
-            }
+            document.getElementById('themeToggleBtn').textContent = DARK_THEMES.includes(currentTheme) ? '☀️' : '🌙';
 
             document.querySelectorAll('.theme-swatch').forEach(sw => {
-                if (sw.dataset.theme === currentTheme) sw.classList.add('active');
-                else sw.classList.remove('active');
+                sw.classList.toggle('active', sw.dataset.theme === currentTheme);
             });
 
             nightTheme = DARK_THEMES.includes(currentTheme);
@@ -2679,18 +2564,11 @@
         }
 
         function toggleTheme() {
-            if (DARK_THEMES.includes(currentTheme)) {
-                setTheme('pink');
-            } else {
-                setTheme('night');
-            }
+            setTheme(DARK_THEMES.includes(currentTheme) ? 'pink' : 'night');
         }
 
         applyTheme();
 
-        // ==========================================
-        // PAGE SCALE
-        // ==========================================
         function applyPageScale() {
             document.documentElement.style.setProperty('--page-scale', pageScale / 100);
             document.getElementById('pageScaleLabel').textContent = pageScale + '%';
@@ -2705,9 +2583,6 @@
 
         applyPageScale();
 
-        // ==========================================
-        // DIALOGUE SPEED
-        // ==========================================
         function applyDialogueSpeed() {
             document.getElementById('dialogueSpeedLabel').textContent = dialogueSpeed + 'ms';
             document.getElementById('dialogueSpeedSlider').value = dialogueSpeed;
@@ -2721,17 +2596,11 @@
 
         applyDialogueSpeed();
 
-        // ==========================================
-        // TYPING EFFECT
-        // ==========================================
         let currentTypingTimer = null;
 
         function typeDialogue(text, callback) {
             const el = document.getElementById('hoshinoDialogue');
-            if (currentTypingTimer) {
-                clearTimeout(currentTypingTimer);
-                currentTypingTimer = null;
-            }
+            if (currentTypingTimer) { clearTimeout(currentTypingTimer); currentTypingTimer = null; }
 
             if (!typewriterEnabled) {
                 el.textContent = `"${text}"`;
@@ -2757,13 +2626,9 @@
                 el.textContent = `"${text.slice(0, i + 1)}`;
 
                 let extraDelay = 0;
-                if (char === '.' || char === '!' || char === '?') {
-                    extraDelay = dialogueSpeed * 6;
-                } else if (char === ',' || char === ';' || char === ':') {
-                    extraDelay = dialogueSpeed * 3;
-                } else if (char === '~' || char === '…') {
-                    extraDelay = dialogueSpeed * 4;
-                }
+                if (char === '.' || char === '!' || char === '?') extraDelay = dialogueSpeed * 6;
+                else if (char === ',' || char === ';' || char === ':') extraDelay = dialogueSpeed * 3;
+                else if (char === '~' || char === '…') extraDelay = dialogueSpeed * 4;
 
                 i++;
                 currentTypingTimer = setTimeout(typeNext, dialogueSpeed + extraDelay);
@@ -2787,30 +2652,21 @@
             document.getElementById('opacitySlider').value = customOpacity;
 
             const stickyBgAlpha = Math.min(parseFloat(customOpacity) / 100 + 0.15, 0.98);
-            if (nightTheme) {
-                document.documentElement.style.setProperty('--sticky-bg', `rgba(40, 30, 50, ${stickyBgAlpha})`);
-            } else {
-                document.documentElement.style.setProperty('--sticky-bg', `rgba(255, 255, 255, ${stickyBgAlpha})`);
-            }
+            document.documentElement.style.setProperty('--sticky-bg',
+                nightTheme ? `rgba(40, 30, 50, ${stickyBgAlpha})` : `rgba(255, 255, 255, ${stickyBgAlpha})`);
 
             const bgMap = {
-                together: 'background/together.jpg',
-                together2: 'background/together2.jpg',
-                school: 'background/abydos.jpg',
-                classroom: 'background/Committee_Room_Day.jpg',
+                together: 'background/together.jpg', together2: 'background/together2.jpg',
+                school: 'background/abydos.jpg', classroom: 'background/Committee_Room_Day.jpg',
                 classroomsunset: 'background/BG_CommitteeRoom_Sunset.jpg',
                 classroomnight: 'background/Committee_Room_Night_1.jpg',
                 classroomnightlight: 'background/Committee_Room_Night_2.jpg',
                 councilroom: 'background/BG_AbydosCouncilRoom.jpg'
             };
 
-            if (bgMap[customBg]) {
-                document.body.style.backgroundImage = `url('${bgMap[customBg]}')`;
-            } else if (customBg.startsWith('data:image')) {
-                document.body.style.backgroundImage = `url('${customBg}')`;
-            } else {
-                document.body.style.backgroundImage = 'none';
-            }
+            if (bgMap[customBg]) document.body.style.backgroundImage = `url('${bgMap[customBg]}')`;
+            else if (customBg.startsWith('data:image')) document.body.style.backgroundImage = `url('${customBg}')`;
+            else document.body.style.backgroundImage = 'none';
         }
 
         applyBackgroundAndOpacity();
@@ -2829,53 +2685,45 @@
 
         function handleBgUpload(event) {
             const file = event.target.files[0];
-            if (file) {
-                if (file.type === 'image/gif') {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        customBg = e.target.result;
-                        try {
-                            localStorage.setItem('hoshino_custom_bg', customBg);
-                            applyBackgroundAndOpacity();
-                        } catch (err) {
-                            alert("Uhe~ That GIF file is too heavy for local storage, Sensei! Try a smaller GIF file. 💦");
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                    return;
-                }
-
+            if (!file) return;
+            if (file.type === 'image/gif') {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const MAX_DIM = 1200;
-                        if (width > height && width > MAX_DIM) {
-                            height *= MAX_DIM / width;
-                            width = MAX_DIM;
-                        } else if (height > MAX_DIM) {
-                            width *= MAX_DIM / height;
-                            height = MAX_DIM;
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        customBg = canvas.toDataURL('image/jpeg', 0.85);
-                        try {
-                            localStorage.setItem('hoshino_custom_bg', customBg);
-                            applyBackgroundAndOpacity();
-                        } catch (err) {
-                            alert("Uhe~ That image is still too heavy for local storage, Sensei! Try a slightly smaller file. 💦");
-                        }
-                    };
+                    customBg = e.target.result;
+                    try {
+                        localStorage.setItem('hoshino_custom_bg', customBg);
+                        applyBackgroundAndOpacity();
+                    } catch (err) {
+                        alert("Uhe~ That GIF file is too heavy for local storage, Sensei! Try a smaller GIF file. 💦");
+                    }
                 };
                 reader.readAsDataURL(file);
+                return;
             }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width, height = img.height;
+                    const MAX_DIM = 1200;
+                    if (width > height && width > MAX_DIM) { height *= MAX_DIM / width; width = MAX_DIM; }
+                    else if (height > MAX_DIM) { width *= MAX_DIM / height; height = MAX_DIM; }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    customBg = canvas.toDataURL('image/jpeg', 0.85);
+                    try {
+                        localStorage.setItem('hoshino_custom_bg', customBg);
+                        applyBackgroundAndOpacity();
+                    } catch (err) {
+                        alert("Uhe~ That image is still too heavy for local storage, Sensei! Try a slightly smaller file. 💦");
+                    }
+                };
+            };
+            reader.readAsDataURL(file);
         }
 
         function updateCardOpacity(val) {
@@ -2886,11 +2734,8 @@
             phoneContainer.style.background = `rgba(255, 255, 255, ${parseFloat(val) / 100})`;
 
             const stickyBgAlpha = Math.min(parseFloat(val) / 100 + 0.15, 0.98);
-            if (nightTheme) {
-                document.documentElement.style.setProperty('--sticky-bg', `rgba(40, 30, 50, ${stickyBgAlpha})`);
-            } else {
-                document.documentElement.style.setProperty('--sticky-bg', `rgba(255, 255, 255, ${stickyBgAlpha})`);
-            }
+            document.documentElement.style.setProperty('--sticky-bg',
+                nightTheme ? `rgba(40, 30, 50, ${stickyBgAlpha})` : `rgba(255, 255, 255, ${stickyBgAlpha})`);
         }
 
         function toggleSettingsPanel() {
@@ -2948,9 +2793,6 @@
 
         applyBalanceVisibility();
 
-        // ==========================================
-        // NOTE TOGGLE
-        // ==========================================
         function toggleNoteInput() {
             const wrap = document.getElementById('noteInputWrap');
             const arrow = document.getElementById('noteToggleArrow');
@@ -2962,6 +2804,84 @@
                 arrow.textContent = '▼';
                 setTimeout(() => document.getElementById('note').focus(), 100);
             }
+        }
+
+        // ==========================================
+        // ADAPTIVE DENOM LABELS
+        // ==========================================
+        function getDenomLabels() {
+            const type = document.getElementById('type').value;
+            if (!withChangeMode) {
+                if (type === 'gain') {
+                    return {
+                        primary: '💰 Bills Received',
+                        secondary: null,
+                        historyPrimary: 'Received',
+                        historySecondary: null
+                    };
+                }
+                return {
+                    primary: '💸 Bills Paid',
+                    secondary: null,
+                    historyPrimary: 'Paid',
+                    historySecondary: null
+                };
+            }
+
+            if (type === 'gain') {
+                return {
+                    primary: '💰 Bills Received',
+                    secondary: '💸 Change Given',
+                    historyPrimary: 'Received',
+                    historySecondary: 'Given'
+                };
+            }
+            return {
+                primary: '💸 Bills Paid',
+                secondary: '💰 Change Received',
+                historyPrimary: 'Paid',
+                historySecondary: 'Change'
+            };
+        }
+
+        function updateDenomLabels() {
+            const labels = getDenomLabels();
+            const primaryLabelEl = document.getElementById('primaryBlockLabel');
+            const secondaryLabelEl = document.getElementById('secondaryBlockLabel');
+
+            if (primaryLabelEl) primaryLabelEl.textContent = labels.primary;
+            if (secondaryLabelEl && labels.secondary) secondaryLabelEl.textContent = labels.secondary;
+
+            // Recompute preview (direction depends on type when change is on)
+            calculateTotalFromDenoms();
+        }
+
+        function toggleWithChangeMode(enabled) {
+            withChangeMode = !!enabled;
+            const billsInSection = document.getElementById('billsInSection');
+            const netPreview = document.getElementById('netPreview');
+
+            if (withChangeMode) {
+                billsInSection.style.display = 'block';
+                netPreview.style.display = 'block';
+                renderDenomInputs();
+            } else {
+                billsInSection.style.display = 'none';
+                netPreview.style.display = 'none';
+                document.querySelectorAll('#changeDenomContainer input').forEach(inp => inp.value = '0');
+            }
+
+            updateDenomLabels();
+        }
+
+        function resetWithChangeMode() {
+            withChangeMode = false;
+            const toggle = document.getElementById('withChangeToggle');
+            if (toggle) toggle.checked = false;
+            const billsInSection = document.getElementById('billsInSection');
+            const netPreview = document.getElementById('netPreview');
+            if (billsInSection) billsInSection.style.display = 'none';
+            if (netPreview) netPreview.style.display = 'none';
         }
 
         // ==========================================
@@ -2983,22 +2903,16 @@
         function setHistoryFilter(filter) {
             historyFilter = filter;
             document.querySelectorAll('.filter-chip').forEach(chip => {
-                if (chip.dataset.filter === filter) chip.classList.add('active');
-                else chip.classList.remove('active');
+                chip.classList.toggle('active', chip.dataset.filter === filter);
             });
             renderHistory();
         }
 
         function getFilteredTransactions(wallet) {
             let list = wallet.transactions.slice();
-
-            if (historyFilter === 'gain') {
-                list = list.filter(t => t.type === 'gain');
-            } else if (historyFilter === 'spend') {
-                list = list.filter(t => t.type === 'spend');
-            } else if (historyFilter === 'noted') {
-                list = list.filter(t => t.note && t.note.trim() !== '');
-            }
+            if (historyFilter === 'gain') list = list.filter(t => t.type === 'gain');
+            else if (historyFilter === 'spend') list = list.filter(t => t.type === 'spend');
+            else if (historyFilter === 'noted') list = list.filter(t => t.note && t.note.trim() !== '');
 
             if (historySearchQuery) {
                 const q = historySearchQuery;
@@ -3009,7 +2923,6 @@
                     return desc.includes(q) || note.includes(q) || dateStr.includes(q);
                 });
             }
-
             return list;
         }
 
@@ -3025,12 +2938,9 @@
             const todayLogCount = wallet.transactions.filter(t => t.date === todayStr).length;
 
             const lastLogDate = streakData.lastLogDate;
-            let daysSinceLog = 0;
+            let daysSinceLog = 999;
             if (lastLogDate) {
-                const diffMs = now - new Date(lastLogDate);
-                daysSinceLog = Math.floor(diffMs / 86400000);
-            } else {
-                daysSinceLog = 999;
+                daysSinceLog = Math.floor((now - new Date(lastLogDate)) / 86400000);
             }
 
             let todaySpent = 0;
@@ -3041,41 +2951,23 @@
             const hour = now.getHours();
             const isLateNight = hour >= 0 && hour < 5;
 
-            if (daysSinceLog >= 999) {
-                return { expr: 'normal', text: "Uhe~ Let's log our first transaction together, Sensei! 🌸" };
-            }
-            if (daysSinceLog >= 2) {
-                return { expr: 'sleepy', text: `Sensei... you haven't logged in ${daysSinceLog} days. I was worried... 💤` };
-            }
-            if (daysSinceLog === 1) {
-                return { expr: 'joking', text: "Oh, you're back? I was starting to think you forgot about me~ 🛋️" };
-            }
-            if (isLateNight && todayLogCount > 0) {
-                return { expr: 'sleepy', text: "Sensei, it's late... but you logged today, so I'll allow it. 💤" };
-            }
-            if (todaySpent >= 100000) {
-                return { expr: 'surprised', text: "Sensei, today's spending is really high... please be careful! 💥" };
-            }
-            if (todaySpent >= 50000) {
-                return { expr: 'embarrassed', text: "Uhe~ That's a lot spent today. I'm keeping an eye on you... 💦" };
-            }
-            if (streakData.count >= 5) {
-                return { expr: 'happy', text: `${streakData.count} days in a row! You're amazing, Sensei~ ✨` };
-            }
-            if (todayLogCount > 0) {
-                return { expr: 'happy', text: "You've already logged today. I'm proud of you, Sensei! 💖" };
-            }
+            if (daysSinceLog >= 999) return { expr: 'normal', text: "Uhe~ Let's log our first transaction together, Sensei! 🌸" };
+            if (daysSinceLog >= 2) return { expr: 'sleepy', text: `Sensei... you haven't logged in ${daysSinceLog} days. I was worried... 💤` };
+            if (daysSinceLog === 1) return { expr: 'joking', text: "Oh, you're back? I was starting to think you forgot about me~ 🛋️" };
+            if (isLateNight && todayLogCount > 0) return { expr: 'sleepy', text: "Sensei, it's late... but you logged today, so I'll allow it. 💤" };
+            if (todaySpent >= 100000) return { expr: 'surprised', text: "Sensei, today's spending is really high... please be careful! 💥" };
+            if (todaySpent >= 50000) return { expr: 'embarrassed', text: "Uhe~ That's a lot spent today. I'm keeping an eye on you... 💦" };
+            if (streakData.count >= 5) return { expr: 'happy', text: `${streakData.count} days in a row! You're amazing, Sensei~ ✨` };
+            if (todayLogCount > 0) return { expr: 'happy', text: "You've already logged today. I'm proud of you, Sensei! 💖" };
             return { expr: 'normal', text: "Have you logged anything today, Sensei? I'm waiting~ 🌸" };
         }
 
         function applyMoodOvertime(force) {
             const mood = computeMood();
             if (!mood) return;
-
             const now = Date.now();
             if (!force && lastDialogueChangeTime && (now - lastDialogueChangeTime < 8000)) return;
             if (currentTypingTimer && !force) return;
-
             updateHoshinoDisplay(mood.expr, mood.text);
         }
 
@@ -3105,24 +2997,21 @@
             setInterval(() => {
                 const lastNotifDate = localStorage.getItem('hoshino_last_notif_date');
                 const todayStr = new Date().toISOString().slice(0, 10);
-                if (lastNotifDate !== todayStr) {
-                    if (Notification.permission === "granted") {
-                        try {
-                            navigator.serviceWorker.ready.then(registration => {
-                                registration.showNotification("🌸 Hoshino's Daily Reminder", {
-                                    body: "Time to check your wallet and log today's expenses, Sensei! Uhe~ 🐋",
-                                    icon: "icon-192.png",
-                                    badge: "icon-192.png"
-                                });
-                            });
-                        } catch (e) {
-                            new Notification("🌸 Hoshino's Daily Reminder", {
+                if (lastNotifDate !== todayStr && Notification.permission === "granted") {
+                    try {
+                        navigator.serviceWorker.ready.then(registration => {
+                            registration.showNotification("🌸 Hoshino's Daily Reminder", {
                                 body: "Time to check your wallet and log today's expenses, Sensei! Uhe~ 🐋",
-                                icon: "icon-192.png"
+                                icon: "icon-192.png", badge: "icon-192.png"
                             });
-                        }
-                        localStorage.setItem('hoshino_last_notif_date', todayStr);
+                        });
+                    } catch (e) {
+                        new Notification("🌸 Hoshino's Daily Reminder", {
+                            body: "Time to check your wallet and log today's expenses, Sensei! Uhe~ 🐋",
+                            icon: "icon-192.png"
+                        });
                     }
+                    localStorage.setItem('hoshino_last_notif_date', todayStr);
                 }
             }, 60 * 60 * 1000);
         }
@@ -3138,10 +3027,7 @@
         if (isNaN(gameVolume)) gameVolume = 0.5;
         document.getElementById('volumeSlider').value = gameVolume;
 
-        Object.values(audioTracks).forEach(audio => {
-            audio.loop = true;
-            audio.volume = gameVolume;
-        });
+        Object.values(audioTracks).forEach(audio => { audio.loop = true; audio.volume = gameVolume; });
         loginGreetingAudio.volume = gameVolume;
         squishAudio.volume = gameVolume;
 
@@ -3220,16 +3106,12 @@
         function updateVolume(val) {
             gameVolume = parseFloat(val);
             localStorage.setItem("hoshinoGameVolume", gameVolume);
-            Object.values(audioTracks).forEach(audio => {
-                audio.volume = gameVolume;
-            });
+            Object.values(audioTracks).forEach(audio => { audio.volume = gameVolume; });
             loginGreetingAudio.volume = gameVolume;
             squishAudio.volume = gameVolume;
 
             const activeAudio = audioTracks[currentPeriod] || audioTracks.morning;
-            if (activeAudio.paused && gameVolume > 0 && isPlaying) {
-                activeAudio.play().catch(e => {});
-            }
+            if (activeAudio.paused && gameVolume > 0 && isPlaying) activeAudio.play().catch(e => {});
         }
 
         // ==========================================
@@ -3242,12 +3124,10 @@
         let activeEditTxId = null;
 
         // ==========================================
-        // STREAK SYSTEM
+        // STREAK
         // ==========================================
         let streakData = JSON.parse(localStorage.getItem('hoshino_streak')) || {
-            count: 0,
-            lastLogDate: null,
-            longestStreak: 0
+            count: 0, lastLogDate: null, longestStreak: 0
         };
 
         function updateStreakOnLog(txDate) {
@@ -3257,16 +3137,11 @@
             if (txDate !== today) return;
             if (streakData.lastLogDate === today) return;
 
-            if (streakData.lastLogDate === yesterday) {
-                streakData.count += 1;
-            } else {
-                streakData.count = 1;
-            }
+            if (streakData.lastLogDate === yesterday) streakData.count += 1;
+            else streakData.count = 1;
 
             streakData.lastLogDate = today;
-            if (streakData.count > streakData.longestStreak) {
-                streakData.longestStreak = streakData.count;
-            }
+            if (streakData.count > streakData.longestStreak) streakData.longestStreak = streakData.count;
 
             localStorage.setItem('hoshino_streak', JSON.stringify(streakData));
             renderStreakBadge();
@@ -3307,9 +3182,7 @@
                 100: "100 days?! I... I don't know what to say... 😳"
             };
             if (milestones[streakData.count]) {
-                setTimeout(() => {
-                    updateHoshinoDisplay('happy', milestones[streakData.count]);
-                }, 1200);
+                setTimeout(() => updateHoshinoDisplay('happy', milestones[streakData.count]), 1200);
             }
         }
 
@@ -3317,53 +3190,35 @@
             const count = streakData.count;
             const today = new Date().toISOString().slice(0, 10);
             const loggedToday = streakData.lastLogDate === today;
-
             let reaction = null;
 
-            if (count === 0) {
-                reaction = { expr: 'normal', text: "A fresh start, Sensei! Let's build a new streak today 🌸" };
-            } else if (count === 1) {
-                reaction = { expr: 'normal', text: "Day 1 of a new streak~ Let's keep it going! 🌱" };
-            } else if (count === 2) {
-                reaction = { expr: 'joking', text: "Two days in a row! Don't break it now, Sensei~ 😆" };
-            } else if (count >= 3 && count <= 4) {
-                reaction = { expr: 'happy', text: `🔥 ${count} days! You're warming up, Sensei~` };
-            } else if (count >= 5 && count <= 6) {
-                reaction = { expr: 'happy', text: `${count} days strong! A week is so close 💖` };
-            } else if (count >= 7 && count <= 13) {
-                reaction = { expr: 'happy', text: `${count}-day streak! Amazing consistency, Sensei ✨` };
-            } else if (count >= 14 && count <= 29) {
-                reaction = { expr: 'surprised', text: `${count} days?! That's seriously impressive! 😲` };
-            } else if (count >= 30 && count <= 99) {
-                reaction = { expr: 'embarrassed', text: `${count} days... I'm blushing from how proud I am 💦` };
-            } else if (count >= 100) {
-                reaction = { expr: 'surprised', text: `${count} days straight! Sensei, you're a legend! 🐋` };
-            }
+            if (count === 0) reaction = { expr: 'normal', text: "A fresh start, Sensei! Let's build a new streak today 🌸" };
+            else if (count === 1) reaction = { expr: 'normal', text: "Day 1 of a new streak~ Let's keep it going! 🌱" };
+            else if (count === 2) reaction = { expr: 'joking', text: "Two days in a row! Don't break it now, Sensei~ 😆" };
+            else if (count >= 3 && count <= 4) reaction = { expr: 'happy', text: `🔥 ${count} days! You're warming up, Sensei~` };
+            else if (count >= 5 && count <= 6) reaction = { expr: 'happy', text: `${count} days strong! A week is so close 💖` };
+            else if (count >= 7 && count <= 13) reaction = { expr: 'happy', text: `${count}-day streak! Amazing consistency, Sensei ✨` };
+            else if (count >= 14 && count <= 29) reaction = { expr: 'surprised', text: `${count} days?! That's seriously impressive! 😲` };
+            else if (count >= 30 && count <= 99) reaction = { expr: 'embarrassed', text: `${count} days... I'm blushing from how proud I am 💦` };
+            else if (count >= 100) reaction = { expr: 'surprised', text: `${count} days straight! Sensei, you're a legend! 🐋` };
 
             if (!reaction) return;
-
-            if (!loggedToday && count > 0) {
-                reaction.text += " (Don't forget today!)";
-            }
-
-            setTimeout(() => {
-                updateHoshinoDisplay(reaction.expr, reaction.text);
-            }, 500);
+            if (!loggedToday && count > 0) reaction.text += " (Don't forget today!)";
+            setTimeout(() => updateHoshinoDisplay(reaction.expr, reaction.text), 500);
         }
 
         checkStreakReset();
 
         // ==========================================
-        // CUSTOM CHIP SYSTEM
+        // CHIPS
         // ==========================================
         const DEFAULT_CHIPS = [
-            { id: 'chip_default_coffee', label: '☕ Coffee',    amount: 500,   type: 'spend', desc: 'Canned coffee ☕', useDenom: false },
-            { id: 'chip_default_snack',  label: '🍡 Snack',     amount: 300,   type: 'spend', desc: 'Snack 🍡',         useDenom: false },
-            { id: 'chip_default_allow',  label: '💰 Allowance', amount: 50000, type: 'gain',  desc: 'Allowance 💰',     useDenom: true }
+            { id: 'chip_default_coffee', label: '☕ Coffee', amount: 500, type: 'spend', desc: 'Canned coffee ☕', useDenom: false },
+            { id: 'chip_default_snack', label: '🍡 Snack', amount: 300, type: 'spend', desc: 'Snack 🍡', useDenom: false },
+            { id: 'chip_default_allow', label: '💰 Allowance', amount: 50000, type: 'gain', desc: 'Allowance 💰', useDenom: true }
         ];
 
         let chips = JSON.parse(localStorage.getItem('hoshino_chips')) || [...DEFAULT_CHIPS];
-
         chips = chips.map(chip => ({
             ...chip,
             useDenom: typeof chip.useDenom === 'boolean' ? chip.useDenom : false
@@ -3386,38 +3241,23 @@
                 el.dataset.chipId = chip.id;
 
                 const denomBadge = (chip.useDenom && walletUsesDenoms) ? ' 💳' : '';
-                const chipCurrency = getCurrentCurrency();
-                el.textContent = `${chip.label} · ${formatMoney(chip.amount, chipCurrency)}${denomBadge}`;
+                el.textContent = `${chip.label} · ${formatMoney(chip.amount, getCurrentCurrency())}${denomBadge}`;
                 el.title = 'Tap to fill · Long-press / right-click to edit';
 
-                if (chip.useDenom && walletUsesDenoms) {
-                    el.classList.add('denom-chip');
-                }
-
+                if (chip.useDenom && walletUsesDenoms) el.classList.add('denom-chip');
                 el.onclick = () => applyQuickAdd(chip);
 
-                let pressTimer = null;
-                let wasLongPress = false;
+                let pressTimer = null, wasLongPress = false;
                 el.addEventListener('touchstart', () => {
                     wasLongPress = false;
-                    pressTimer = setTimeout(() => {
-                        wasLongPress = true;
-                        openChipEditor(chip.id);
-                    }, 600);
+                    pressTimer = setTimeout(() => { wasLongPress = true; openChipEditor(chip.id); }, 600);
                 }, { passive: true });
                 el.addEventListener('touchend', (e) => {
                     clearTimeout(pressTimer);
-                    if (wasLongPress) {
-                        e.preventDefault();
-                        wasLongPress = false;
-                    }
+                    if (wasLongPress) { e.preventDefault(); wasLongPress = false; }
                 });
                 el.addEventListener('touchmove', () => clearTimeout(pressTimer));
-
-                el.oncontextmenu = (e) => {
-                    e.preventDefault();
-                    openChipEditor(chip.id);
-                };
+                el.oncontextmenu = (e) => { e.preventDefault(); openChipEditor(chip.id); };
 
                 row.appendChild(el);
             });
@@ -3443,18 +3283,12 @@
         function breakIntoDenoms(amountInCents) {
             const wallet = getCurrentWallet();
             const currency = CURRENCIES[wallet.currency || 'IDR'];
-
             if (!currency.denoms) return null;
 
             const smallest = Math.min(...Object.values(currency.denoms));
-            if (!amountInCents || amountInCents <= 0 || amountInCents % smallest !== 0) {
-                return null;
-            }
+            if (!amountInCents || amountInCents <= 0 || amountInCents % smallest !== 0) return null;
 
-            // Sort descending by value
-            const orderedEntries = Object.entries(currency.denoms)
-                .sort((a, b) => b[1] - a[1]);
-
+            const orderedEntries = Object.entries(currency.denoms).sort((a, b) => b[1] - a[1]);
             const result = {};
             orderedEntries.forEach(([k]) => result[k] = 0);
 
@@ -3466,7 +3300,6 @@
                     remaining -= count * value;
                 }
             }
-
             if (remaining !== 0) return null;
             return result;
         }
@@ -3488,57 +3321,89 @@
         function applyQuickAdd(chip) {
             const wallet = getCurrentWallet();
             const currency = CURRENCIES[wallet.currency || 'IDR'];
-
-            document.getElementById('type').value = chip.type;
-            document.getElementById('description').value = chip.desc;
-            if (!document.getElementById('date').value) {
-                document.getElementById('date').valueAsDate = new Date();
-            }
+            const currentType = document.getElementById('type').value;
 
             if (!wallet.useDenom) {
-                // Normal mode: chip.amount is already in cents (storage unit)
+                document.getElementById('type').value = chip.type;
+                document.getElementById('description').value = chip.desc;
+                if (!document.getElementById('date').value) document.getElementById('date').valueAsDate = new Date();
                 amountInput.value = fromCents(chip.amount, currency.code);
                 amountInput.focus();
                 return;
             }
 
-            // Denom mode
-            if (chip.useDenom) {
-                const breakdown = breakIntoDenoms(chip.amount);
-                if (breakdown === null) {
-                    showChipToast(`⚠️ Can't break ${formatMoney(chip.amount, currency.code)} into bills`);
-                    return;
-                }
-                fillDenomInputs(breakdown);
-                showChipToast(`✨ ${chip.label} → filled ${formatMoney(chip.amount, currency.code)} worth of bills`);
+            // === Denom mode ===
+            // Rule: chip fills ONLY the grid that matches its TYPE given the current state.
+            // Never auto-enables the toggle. User has to enable change mode manually.
+            const labels = getDenomLabels();
+            const typeAfter = chip.type;
+
+            if (!chip.useDenom) {
+                // Non-denom chip: fill the raw amount, don't touch grids
+                document.getElementById('description').value = chip.desc;
+                if (!document.getElementById('date').value) document.getElementById('date').valueAsDate = new Date();
+                amountInput.value = fromCents(chip.amount, currency.code);
+                showChipToast(`✨ ${chip.label} → filled amount. Add bills if needed.`);
                 return;
             }
 
             const breakdown = breakIntoDenoms(chip.amount);
-            if (breakdown !== null) {
-                fillDenomInputs(breakdown);
-                showChipToast(`✨ Auto-filled bills for ${formatMoney(chip.amount, currency.code)}`);
+            if (breakdown === null) {
+                showChipToast(`⚠️ Can't break ${formatMoney(chip.amount, currency.code)} into bills`);
                 return;
             }
 
-            showChipToast(`⚠️ ${formatMoney(chip.amount, currency.code)} can't be broken into bills`);
+            // Determine which grid this chip targets:
+            //   - Gain chip → the "incoming" grid (Bills Received when Type=Gain, or Change Received when Type=Spend & with-change ON)
+            //   - Spend chip → the "outgoing" grid (Bills Paid when Type=Spend, or Change Given when Type=Gain & with-change ON)
+            const chipIsGain = chip.type === 'gain';
+            const isChangeModeOn = withChangeMode;
+
+            // If toggle is OFF, only the primary grid is visible. Primary = "Bills Received" if currentType=gain, else "Bills Paid".
+            if (!isChangeModeOn) {
+                // Chip type must match the current Type dropdown, otherwise the only visible grid is the wrong direction.
+                if (chipIsGain && currentType !== 'gain') {
+                    showChipToast(`🔄 Switch Type to Gain first to use this chip.`);
+                    return;
+                }
+                if (!chipIsGain && currentType !== 'spend') {
+                    showChipToast(`🔄 Switch Type to Spend first to use this chip.`);
+                    return;
+                }
+                // Type matches → fill primary grid
+                fillDenomInputs(breakdown, 'primary');
+                showChipToast(`✨ ${chip.label} → filled ${labels.primary}`);
+                return;
+            }
+
+            // With-change mode ON: both grids exist
+            //   - If chip type = currentType → chip fills the PRIMARY grid
+            //   - If chip type != currentType → chip fills the SECONDARY (change) grid
+            if (chip.type === currentType) {
+                fillDenomInputs(breakdown, 'primary');
+                showChipToast(`✨ ${chip.label} → filled ${labels.primary}. Fill the change grid if needed.`);
+            } else {
+                fillDenomInputs(breakdown, 'secondary');
+                showChipToast(`✨ ${chip.label} → filled ${labels.secondary}. Fill ${labels.primary} manually!`);
+            }
         }
 
-        function fillDenomInputs(breakdown) {
+        function fillDenomInputs(breakdown, which) {
             const wallet = getCurrentWallet();
             const currency = CURRENCIES[wallet.currency || 'IDR'];
 
-            // Clear all inputs
-            document.querySelectorAll('#denomContainer input').forEach(inp => {
-                inp.value = '0';
-            });
+            const containerId = (which === 'secondary') ? 'changeDenomContainer' : 'denomContainer';
+            const container = document.getElementById(containerId);
+            if (!container) return;
 
-            // Fill based on breakdown
+            container.querySelectorAll('input').forEach(inp => { inp.value = '0'; });
+
             if (breakdown) {
                 Object.entries(breakdown).forEach(([label, count]) => {
                     if (count > 0 && currency.denoms[label]) {
                         const denomValue = currency.denoms[label];
-                        const inp = document.getElementById('denom_input_' + denomValue);
+                        const prefix = (which === 'secondary') ? 'change_denom_input_' : 'denom_input_';
+                        const inp = document.getElementById(prefix + denomValue);
                         if (inp) inp.value = count;
                     }
                 });
@@ -3548,7 +3413,7 @@
         }
 
         // ==========================================
-        // MODAL CHIP EDITOR
+        // CHIP MODAL
         // ==========================================
         let editingChipId = null;
         let pendingNewChipId = null;
@@ -3558,7 +3423,6 @@
             const chip = isNew
                 ? { id: 'chip_' + Date.now(), label: '', amount: '', type: 'spend', desc: '', useDenom: false }
                 : chips.find(c => c.id === chipId);
-
             if (!chip) return;
 
             editingChipId = isNew ? null : chip.id;
@@ -3566,22 +3430,16 @@
 
             document.getElementById('chipModalTitle').textContent = isNew ? 'New Chip ✨' : 'Edit Chip ✨';
             document.getElementById('chipNameInput').value = chip.label || '';
-            const chipCurr = getCurrentCurrency();
-            document.getElementById('chipAmountInput').value = chip.amount ? fromCents(chip.amount, chipCurr) : '';
+            document.getElementById('chipAmountInput').value = chip.amount ? fromCents(chip.amount, getCurrentCurrency()) : '';
             document.getElementById('chipTypeInput').value = chip.type || 'spend';
             document.getElementById('chipDescInput').value = chip.desc || '';
             document.getElementById('chipUseDenomInput').checked = chip.useDenom === true;
 
             const deleteBtn = document.getElementById('chipModalDelete');
-            if (isNew) {
-                deleteBtn.classList.add('hidden');
-            } else {
-                deleteBtn.classList.remove('hidden');
-            }
+            deleteBtn.classList.toggle('hidden', isNew);
 
             setModalError('');
             document.getElementById('chipModalOverlay').classList.add('active');
-
             setTimeout(() => document.getElementById('chipNameInput').focus(), 250);
         }
 
@@ -3595,8 +3453,7 @@
         function setModalError(msg) {
             const el = document.getElementById('chipModalError');
             el.textContent = msg;
-            if (msg) el.classList.add('show');
-            else el.classList.remove('show');
+            el.classList.toggle('show', !!msg);
         }
 
         function saveChipFromModal() {
@@ -3608,21 +3465,10 @@
             const desc = document.getElementById('chipDescInput').value.trim();
             const useDenom = document.getElementById('chipUseDenomInput').checked;
 
-            if (!label) {
-                setModalError('Please give the chip a name! 💦');
-                document.getElementById('chipNameInput').focus();
-                return;
-            }
-            if (!amount || amount <= 0) {
-                setModalError('Amount must be a positive number! 💸');
-                document.getElementById('chipAmountInput').focus();
-                return;
-            }
-            if (type !== 'gain' && type !== 'spend') {
-                setModalError('Type must be gain or spend! ✨');
-                return;
-            }
-            // Check if amount can be broken into bills for current currency
+            if (!label) { setModalError('Please give the chip a name! 💦'); document.getElementById('chipNameInput').focus(); return; }
+            if (!amount || amount <= 0) { setModalError('Amount must be a positive number! 💸'); document.getElementById('chipAmountInput').focus(); return; }
+            if (type !== 'gain' && type !== 'spend') { setModalError('Type must be gain or spend! ✨'); return; }
+
             if (useDenom) {
                 const currConfig = CURRENCIES[currentCurr];
                 if (currConfig && currConfig.denoms) {
@@ -3638,21 +3484,13 @@
             const finalDesc = desc || label;
 
             if (editingChipId === null) {
-                const newChip = {
+                chips.push({
                     id: pendingNewChipId || ('chip_' + Date.now()),
-                    label: label,
-                    amount: amount,
-                    type: type,
-                    desc: finalDesc,
-                    useDenom: useDenom
-                };
-                chips.push(newChip);
+                    label, amount, type, desc: finalDesc, useDenom
+                });
             } else {
                 const chip = chips.find(c => c.id === editingChipId);
-                if (!chip) {
-                    setModalError('Chip not found! 😢');
-                    return;
-                }
+                if (!chip) { setModalError('Chip not found! 😢'); return; }
                 chip.label = label;
                 chip.amount = amount;
                 chip.type = type;
@@ -3683,25 +3521,18 @@
             buildQuickAddChips();
         }
 
-        // === Wallet Editor Modal ===
+        // ==========================================
+        // WALLET MODAL
+        // ==========================================
         let editingWalletId = null;
 
         function openWalletEditor(walletId) {
             const wallet = wallets.find(w => w.id === walletId);
             if (!wallet) return;
-
             editingWalletId = walletId;
-
             document.getElementById('walletModalTitle').textContent = `Edit "${wallet.name}"`;
             document.getElementById('walletCurrencySelect').value = wallet.currency || 'IDR';
-
-            const removePhotoBtn = document.getElementById('walletRemovePhotoBtn');
-            if (wallet.photo) {
-                removePhotoBtn.style.display = 'flex';
-            } else {
-                removePhotoBtn.style.display = 'none';
-            }
-
+            document.getElementById('walletRemovePhotoBtn').style.display = wallet.photo ? 'flex' : 'none';
             document.getElementById('walletModalOverlay').classList.add('active');
         }
 
@@ -3713,11 +3544,8 @@
 
         function changeWalletCurrency(newCurrency) {
             if (!CURRENCIES[newCurrency]) return;
-
             const wallet = wallets.find(w => w.id === editingWalletId);
-            if (!wallet) return;
-
-            if (wallet.currency === newCurrency) return;
+            if (!wallet || wallet.currency === newCurrency) return;
 
             const confirmed = confirm(
                 `Change currency to ${CURRENCIES[newCurrency].name}?\n\n` +
@@ -3732,10 +3560,7 @@
             }
 
             wallet.currency = newCurrency;
-            // If switching to a currency without denoms, disable denoms
-            if (!CURRENCIES[newCurrency].denoms) {
-                wallet.useDenom = false;
-            }
+            if (!CURRENCIES[newCurrency].denoms) wallet.useDenom = false;
             saveAndRender();
             closeWalletModal();
         }
@@ -3770,15 +3595,10 @@
         function walletActionDelete() {
             const wallet = wallets.find(w => w.id === editingWalletId);
             if (!wallet) return;
-            if (wallets.length === 1) {
-                alert("You need to keep at least one wallet, Sensei! 🌸");
-                return;
-            }
+            if (wallets.length === 1) { alert("You need to keep at least one wallet, Sensei! 🌸"); return; }
             if (confirm(`Delete "${wallet.name}" and all its history? 🗑️`)) {
                 wallets = wallets.filter(w => w.id !== editingWalletId);
-                if (currentWalletId === editingWalletId) {
-                    currentWalletId = wallets[0].id;
-                }
+                if (currentWalletId === editingWalletId) currentWalletId = wallets[0].id;
                 activeEditTxId = null;
                 saveAndRender();
                 closeWalletModal();
@@ -3793,14 +3613,9 @@
                 if (e.key === 'Escape') closeWalletModal();
                 return;
             }
-
             if (!chipOverlay.classList.contains('active')) return;
-
-            if (e.key === 'Escape') {
-                closeChipModal();
-            } else if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-                saveChipFromModal();
-            }
+            if (e.key === 'Escape') closeChipModal();
+            else if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') saveChipFromModal();
         });
 
         buildQuickAddChips();
@@ -3958,7 +3773,6 @@
         function updateHoshinoDisplay(exprKey, text) {
             lastDialogueChangeTime = Date.now();
             typeDialogue(text);
-
             hoshinoSpriteImg.style.display = 'block';
             hoshinoSpriteImg.src = expressionSprites[exprKey] || 'expression/normal.png';
 
@@ -3972,23 +3786,18 @@
         updateHoshinoDisplay(initialExpr, startupText);
 
         setTimeout(() => {
-            if (hoshinoTapHint && !hoshinoTapHint.classList.contains('hidden')) {
-                hoshinoTapHint.classList.add('hidden');
-            }
+            if (hoshinoTapHint && !hoshinoTapHint.classList.contains('hidden')) hoshinoTapHint.classList.add('hidden');
         }, 15000);
 
         function pokeHoshino() {
-            const img = document.getElementById('hoshinoSpriteImg');
-            const box = document.getElementById('hoshinoSpriteBox');
+            hoshinoSpriteImg.classList.remove('squish-anim');
+            hoshinoSpriteBox.classList.remove('tapped');
+            void hoshinoSpriteImg.offsetWidth;
+            void hoshinoSpriteBox.offsetWidth;
 
-            img.classList.remove('squish-anim');
-            box.classList.remove('tapped');
-            void img.offsetWidth;
-            void box.offsetWidth;
-
-            img.classList.add('squish-anim');
-            box.classList.add('tapped');
-            setTimeout(() => box.classList.remove('tapped'), 500);
+            hoshinoSpriteImg.classList.add('squish-anim');
+            hoshinoSpriteBox.classList.add('tapped');
+            setTimeout(() => hoshinoSpriteBox.classList.remove('tapped'), 500);
 
             squishAudio.currentTime = 0;
             squishAudio.play().catch(e => {});
@@ -3997,81 +3806,149 @@
             const chosenText = getRandomDialogue(randomPoke.expr);
             updateHoshinoDisplay(randomPoke.expr, chosenText);
 
-            if (hoshinoTapHint && !hoshinoTapHint.classList.contains('hidden')) {
-                hoshinoTapHint.classList.add('hidden');
-            }
+            if (hoshinoTapHint && !hoshinoTapHint.classList.contains('hidden')) hoshinoTapHint.classList.add('hidden');
         }
 
-        // These are now dynamic per-wallet via CURRENCIES config
-        // Legacy references kept for backward compatibility where possible
-        function getDenomKeys() {
-            const c = getCurrentCurrencyConfig();
-            return Object.keys(c.denoms || {});
-        }
-        function getDenomValues() {
-            const c = getCurrentCurrencyConfig();
-            return c.denoms || {};
-        }
-
+        // ==========================================
+        // DENOM MATH
+        // ==========================================
         function calculateTotalFromDenoms() {
             const wallet = getCurrentWallet();
             if (!wallet.useDenom) return;
 
-            const inputs = document.querySelectorAll('#denomContainer input');
-            let totalCents = 0;
-            inputs.forEach(inp => {
+            const currency = getCurrentCurrencyConfig();
+            if (!currency.denoms) return;
+
+            const currentType = document.getElementById('type').value;
+            let totalPrimary = 0;
+            let totalSecondary = 0;
+
+            document.querySelectorAll('#denomContainer input').forEach(inp => {
                 const denomValue = parseInt(inp.dataset.denomValue) || 0;
                 const count = parseInt(inp.value) || 0;
-                totalCents += denomValue * count;
+                totalPrimary += denomValue * count;
             });
 
-            const currency = getCurrentCurrencyConfig();
-            if (totalCents > 0) {
-                amountInput.value = fromCents(totalCents, currency.code);
-            } else {
+            if (withChangeMode) {
+                document.querySelectorAll('#changeDenomContainer input').forEach(inp => {
+                    const denomValue = parseInt(inp.dataset.denomValue) || 0;
+                    const count = parseInt(inp.value) || 0;
+                    totalSecondary += denomValue * count;
+                });
+            }
+
+            const primaryTotalEl = document.getElementById('primaryBlockTotal');
+            const secondaryTotalEl = document.getElementById('secondaryBlockTotal');
+            const netPreview = document.getElementById('netPreview');
+
+            if (primaryTotalEl) primaryTotalEl.textContent = totalPrimary > 0 ? formatMoney(totalPrimary, currency.code) : '—';
+
+            if (!withChangeMode) {
+                // Single-side mode: primary grid value is the amount directly
+                if (totalPrimary > 0) amountInput.value = fromCents(totalPrimary, currency.code);
+                else amountInput.value = '';
+                return;
+            }
+
+            if (secondaryTotalEl) secondaryTotalEl.textContent = totalSecondary > 0 ? formatMoney(totalSecondary, currency.code) : '—';
+
+            // With-change mode: net = primary − secondary (both in cents)
+            //   Spend: primary = paid, secondary = change received → net = paid − change → positive = spent
+            //   Gain:  primary = received, secondary = change given → net = received − change → positive = gained
+            const net = totalPrimary - totalSecondary;
+
+            if (totalPrimary === 0 && totalSecondary === 0) {
                 amountInput.value = '';
+                if (netPreview) netPreview.textContent = 'Net: —';
+            } else if (net === 0) {
+                amountInput.value = '';
+                if (netPreview) netPreview.innerHTML = `Net: <span style="color:var(--dark-pink);">0</span> (add or remove bills)`;
+            } else {
+                const absNet = Math.abs(net);
+                amountInput.value = fromCents(absNet, currency.code);
+                if (netPreview) {
+                    const isSpend = (currentType === 'spend' && net > 0) || (currentType === 'gain' && net < 0);
+                    if (isSpend) {
+                        netPreview.innerHTML = `Net: <span class="net-spend">− ${formatMoney(absNet, currency.code)} (Spend)</span>`;
+                    } else {
+                        netPreview.innerHTML = `Net: <span class="net-gain">+ ${formatMoney(absNet, currency.code)} (Gain)</span>`;
+                    }
+                }
             }
         }
 
         function renderDenomInputs() {
-            const container = document.getElementById('denomContainer');
-            if (!container) return;
-
             const wallet = getCurrentWallet();
             const currency = CURRENCIES[wallet.currency || 'IDR'];
 
+            const containerOut = document.getElementById('denomContainer');
+            const containerIn = document.getElementById('changeDenomContainer');
+            if (!containerOut || !containerIn) return;
+
             if (!currency.denoms) {
-                container.innerHTML = '';
+                containerOut.innerHTML = '';
+                containerIn.innerHTML = '';
                 return;
             }
 
-            container.innerHTML = '';
+            // Preserve existing values before wiping
+            const existingPrimary = {};
+            const existingSecondary = {};
+            containerOut.querySelectorAll('input').forEach(inp => {
+                existingPrimary[inp.dataset.denomValue] = inp.value;
+            });
+            containerIn.querySelectorAll('input').forEach(inp => {
+                existingSecondary[inp.dataset.denomValue] = inp.value;
+            });
+
+            containerOut.innerHTML = '';
+            containerIn.innerHTML = '';
+
             const denomEntries = Object.entries(currency.denoms);
 
             denomEntries.forEach(([label, value]) => {
-                const item = document.createElement('div');
-                item.className = 'denom-item';
+                // Primary
+                const itemOut = document.createElement('div');
+                itemOut.className = 'denom-item';
+                const lblOut = document.createElement('label');
+                lblOut.textContent = currency.denomLabels[label] || label;
+                const inpOut = document.createElement('input');
+                inpOut.type = 'tel';
+                inpOut.inputMode = 'numeric';
+                inpOut.pattern = '[0-9]*';
+                inpOut.dataset.denomValue = value;
+                inpOut.dataset.denomKey = label;
+                inpOut.id = 'denom_input_' + value;
+                inpOut.value = existingPrimary[value] || '0';
+                inpOut.addEventListener('focus', () => { if (inpOut.value === '0') inpOut.value = ''; });
+                inpOut.addEventListener('blur', () => { if (inpOut.value === '') inpOut.value = '0'; });
+                inpOut.addEventListener('input', calculateTotalFromDenoms);
+                itemOut.appendChild(lblOut);
+                itemOut.appendChild(inpOut);
+                containerOut.appendChild(itemOut);
 
-                const lbl = document.createElement('label');
-                lbl.textContent = currency.denomLabels[label] || label;
-
-                const inp = document.createElement('input');
-                inp.type = 'tel';
-                inp.inputMode = 'numeric';
-                inp.pattern = '[0-9]*';
-                inp.dataset.denomValue = value;
-                inp.dataset.denomKey = label;
-                inp.id = 'denom_input_' + value;
-                inp.value = '0';
-
-                inp.addEventListener('focus', () => { if (inp.value === '0') inp.value = ''; });
-                inp.addEventListener('blur', () => { if (inp.value === '') inp.value = '0'; });
-                inp.addEventListener('input', calculateTotalFromDenoms);
-
-                item.appendChild(lbl);
-                item.appendChild(inp);
-                container.appendChild(item);
+                // Secondary
+                const itemIn = document.createElement('div');
+                itemIn.className = 'denom-item';
+                const lblIn = document.createElement('label');
+                lblIn.textContent = currency.denomLabels[label] || label;
+                const inpIn = document.createElement('input');
+                inpIn.type = 'tel';
+                inpIn.inputMode = 'numeric';
+                inpIn.pattern = '[0-9]*';
+                inpIn.dataset.denomValue = value;
+                inpIn.dataset.denomKey = label;
+                inpIn.id = 'change_denom_input_' + value;
+                inpIn.value = existingSecondary[value] || '0';
+                inpIn.addEventListener('focus', () => { if (inpIn.value === '0') inpIn.value = ''; });
+                inpIn.addEventListener('blur', () => { if (inpIn.value === '') inpIn.value = '0'; });
+                inpIn.addEventListener('input', calculateTotalFromDenoms);
+                itemIn.appendChild(lblIn);
+                itemIn.appendChild(inpIn);
+                containerIn.appendChild(itemIn);
             });
+
+            calculateTotalFromDenoms();
         }
 
         function saveAndRender() {
@@ -4086,6 +3963,9 @@
         function switchWallet(id) {
             currentWalletId = id;
             activeEditTxId = null;
+            withChangeMode = false;
+            const toggle = document.getElementById('withChangeToggle');
+            if (toggle) toggle.checked = false;
             render();
         }
 
@@ -4094,15 +3974,9 @@
             if (!name || name.trim() === '') return;
 
             const currPrompt = prompt(
-                "Currency?\n\n" +
-                "1. IDR 🇮🇩 (Rupiah)\n" +
-                "2. USD 🇺🇸 (Dollar)\n" +
-                "3. JPY 🇯🇵 (Yen)\n" +
-                "4. EUR 🇪🇺 (Euro)\n\n" +
-                "Enter number (default: 1):",
+                "Currency?\n\n1. IDR 🇮🇩 (Rupiah)\n2. USD 🇺🇸 (Dollar)\n3. JPY 🇯🇵 (Yen)\n4. EUR 🇪🇺 (Euro)\n\nEnter number (default: 1):",
                 "1"
             );
-
             const map = { '1': 'IDR', '2': 'USD', '3': 'JPY', '4': 'EUR' };
             const currency = map[(currPrompt || '1').trim()] || 'IDR';
 
@@ -4123,7 +3997,10 @@
         function toggleDenomSystem() {
             const wallet = getCurrentWallet();
             wallet.useDenom = !wallet.useDenom;
-            if (!wallet.useDenom) amountInput.value = '';
+            if (!wallet.useDenom) {
+                amountInput.value = '';
+                withChangeMode = false;
+            }
             saveAndRender();
         }
 
@@ -4132,7 +4009,7 @@
         // ==========================================
         function exportData() {
             const backup = {
-                version: 7,
+                version: 9,
                 exportedAt: new Date().toISOString(),
                 wallets: wallets,
                 chips: chips,
@@ -4151,23 +4028,18 @@
                 }
             };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "Hoshino_Daily_" + new Date().toISOString().slice(0, 10) + ".json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+            const a = document.createElement('a');
+            a.setAttribute("href", dataStr);
+            a.setAttribute("download", "Hoshino_Daily_" + new Date().toISOString().slice(0, 10) + ".json");
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
         }
 
         function importData(event) {
             const file = event.target.files[0];
             const inputEl = event.target;
-
-            if (!file) {
-                inputEl.value = '';
-                return;
-            }
-
+            if (!file) { inputEl.value = ''; return; }
             if (!file.name.toLowerCase().endsWith('.json')) {
                 alert("Please pick a .json backup file, Sensei! 📂");
                 inputEl.value = '';
@@ -4178,24 +4050,14 @@
             reader.onload = function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
-
                     if (!imported.wallets || !Array.isArray(imported.wallets) || imported.wallets.length === 0) {
                         alert("Invalid backup file structure! ❌");
                         inputEl.value = '';
                         return;
                     }
+                    if (!confirm("Overwrite current data with backup? 📂")) { inputEl.value = ''; return; }
 
-                    if (!confirm("Overwrite current data with backup? 📂")) {
-                        inputEl.value = '';
-                        return;
-                    }
-
-                    wallets = imported.wallets;
-                    // Migration: ensure every wallet has a currency
-                    wallets = wallets.map(w => ({
-                        ...w,
-                        currency: w.currency || 'IDR'
-                    }));
+                    wallets = imported.wallets.map(w => ({ ...w, currency: w.currency || 'IDR' }));
                     currentWalletId = wallets[0].id;
                     activeEditTxId = null;
 
@@ -4206,28 +4068,14 @@
                         }));
                     }
 
-                    // Theme
-                    if (typeof imported.theme === 'string' && THEMES.includes(imported.theme)) {
-                        currentTheme = imported.theme;
-                    } else if (typeof imported.nightTheme === 'boolean') {
-                        currentTheme = imported.nightTheme ? 'night' : 'pink';
-                    }
+                    if (typeof imported.theme === 'string' && THEMES.includes(imported.theme)) currentTheme = imported.theme;
+                    else if (typeof imported.nightTheme === 'boolean') currentTheme = imported.nightTheme ? 'night' : 'pink';
 
-                    if (typeof imported.customOpacity === 'string' || typeof imported.customOpacity === 'number') {
-                        customOpacity = String(imported.customOpacity);
-                    }
-                    if (typeof imported.gameVolume === 'number') {
-                        gameVolume = imported.gameVolume;
-                    }
-                    if (typeof imported.customBg === 'string') {
-                        customBg = imported.customBg;
-                    }
-                    if (imported.streak && typeof imported.streak === 'object') {
-                        streakData = imported.streak;
-                    }
-                    if (typeof imported.balanceHidden === 'boolean') {
-                        balanceHidden = imported.balanceHidden;
-                    }
+                    if (typeof imported.customOpacity === 'string' || typeof imported.customOpacity === 'number') customOpacity = String(imported.customOpacity);
+                    if (typeof imported.gameVolume === 'number') gameVolume = imported.gameVolume;
+                    if (typeof imported.customBg === 'string') customBg = imported.customBg;
+                    if (imported.streak && typeof imported.streak === 'object') streakData = imported.streak;
+                    if (typeof imported.balanceHidden === 'boolean') balanceHidden = imported.balanceHidden;
                     if (imported.settings && typeof imported.settings === 'object') {
                         const s = imported.settings;
                         if (typeof s.dialogueSpeed === 'number') dialogueSpeed = s.dialogueSpeed;
@@ -4252,7 +4100,6 @@
 
                     alert("Backup imported successfully! Reloading... ✨");
                     location.reload();
-
                 } catch (err) {
                     console.error('Import error:', err);
                     alert("Could not read the backup file properly. ⚠️\n\n" + err.message);
@@ -4297,13 +4144,11 @@
         function updateMonthlySummary() {
             const card = document.getElementById('monthlyCard');
             const icon = document.getElementById('monthlyToggleIcon');
-
             if (!monthlyExpanded) {
                 card.style.display = 'none';
                 icon.textContent = '▼ Show';
                 return;
             }
-
             card.style.display = 'flex';
             icon.textContent = '▲ Hide';
 
@@ -4319,12 +4164,8 @@
                 return d >= monthStart && d.getFullYear() === currentYear;
             });
 
-            let income = 0;
-            let spending = 0;
-            thisMonthTx.forEach(t => {
-                if (t.type === 'gain') income += t.amount;
-                else spending += t.amount;
-            });
+            let income = 0, spending = 0;
+            thisMonthTx.forEach(t => { if (t.type === 'gain') income += t.amount; else spending += t.amount; });
             const net = income - spending;
 
             const days = [];
@@ -4340,34 +4181,20 @@
             }
 
             const maxSpent = Math.max(...days.map(d => d.spent), 1);
-
             const barRows = days.map(d => {
                 const filled = d.spent === 0 ? 0 : Math.max(1, Math.round((d.spent / maxSpent) * 10));
                 const bar = '▓'.repeat(filled) + `<span class="empty">${'░'.repeat(10 - filled)}</span>`;
                 const amtDisplay = d.spent > 0 ? formatMoney(d.spent, getCurrentCurrency()) : '—';
-                return `
-                    <div class="monthly-bar-row">
-                        <span class="day-label">${d.dayName}</span>
-                        <span class="bar">${bar}</span>
-                        <span class="bar-amount">${amtDisplay}</span>
-                    </div>
-                `;
+                return `<div class="monthly-bar-row"><span class="day-label">${d.dayName}</span><span class="bar">${bar}</span><span class="bar-amount">${amtDisplay}</span></div>`;
             }).join('');
 
             const daySpending = {};
             thisMonthTx.forEach(t => {
-                if (t.type === 'spend') {
-                    daySpending[t.date] = (daySpending[t.date] || 0) + t.amount;
-                }
+                if (t.type === 'spend') daySpending[t.date] = (daySpending[t.date] || 0) + t.amount;
             });
-
-            let highestDay = null;
-            let highestAmount = 0;
+            let highestDay = null, highestAmount = 0;
             Object.entries(daySpending).forEach(([date, amt]) => {
-                if (amt > highestAmount) {
-                    highestAmount = amt;
-                    highestDay = date;
-                }
+                if (amt > highestAmount) { highestAmount = amt; highestDay = date; }
             });
 
             const weekdaySpend = { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 };
@@ -4378,13 +4205,9 @@
                     weekdaySpend[dayName] += t.amount;
                 }
             });
-            let topWeekday = null;
-            let topWeekdayAmt = 0;
+            let topWeekday = null, topWeekdayAmt = 0;
             Object.entries(weekdaySpend).forEach(([day, amt]) => {
-                if (amt > topWeekdayAmt) {
-                    topWeekdayAmt = amt;
-                    topWeekday = day;
-                }
+                if (amt > topWeekdayAmt) { topWeekdayAmt = amt; topWeekday = day; }
             });
 
             let highestDayDisplay = '—';
@@ -4407,39 +4230,19 @@
             }
 
             card.innerHTML = `
-                <h4>
-                    <span>📊 This Month (${currentMonthName} ${currentYear})</span>
-                </h4>
-
+                <h4><span>📊 This Month (${currentMonthName} ${currentYear})</span></h4>
                 <div class="monthly-totals">
-                    <div class="monthly-total-row gain">
-                        <span class="label">📈 Income</span>
-                        <span class="value">+${formatMoney(income, getCurrentCurrency())}</span>
-                    </div>
-                    <div class="monthly-total-row spend">
-                        <span class="label">📉 Spending</span>
-                        <span class="value">-${formatMoney(spending, getCurrentCurrency())}</span>
-                    </div>
-                    <div class="monthly-total-row net">
-                        <span class="label">💰 Net</span>
-                        <span class="value">${net >= 0 ? '+' : ''}${formatMoney(net, getCurrentCurrency())}</span>
-                    </div>
+                    <div class="monthly-total-row gain"><span class="label">📈 Income</span><span class="value">+${formatMoney(income, getCurrentCurrency())}</span></div>
+                    <div class="monthly-total-row spend"><span class="label">📉 Spending</span><span class="value">-${formatMoney(spending, getCurrentCurrency())}</span></div>
+                    <div class="monthly-total-row net"><span class="label">💰 Net</span><span class="value">${net >= 0 ? '+' : ''}${formatMoney(net, getCurrentCurrency())}</span></div>
                 </div>
-
                 <div class="monthly-bar-section">
                     <div class="monthly-bar-title">Last 7 Days (Spending)</div>
                     ${barRows}
                 </div>
-
                 <div class="monthly-highlights">
-                    <div class="monthly-highlight-row">
-                        <span class="hl-label">🔥 Highest spend</span>
-                        <span class="hl-value">${highestDayDisplay}</span>
-                    </div>
-                    <div class="monthly-highlight-row">
-                        <span class="hl-label">📅 Top weekday</span>
-                        <span class="hl-value">${topWeekdayDisplay}</span>
-                    </div>
+                    <div class="monthly-highlight-row"><span class="hl-label">🔥 Highest spend</span><span class="hl-value">${highestDayDisplay}</span></div>
+                    <div class="monthly-highlight-row"><span class="hl-label">📅 Top weekday</span><span class="hl-value">${topWeekdayDisplay}</span></div>
                 </div>
             `;
         }
@@ -4451,33 +4254,76 @@
             e.preventDefault();
             const wallet = getCurrentWallet();
             const currency = CURRENCIES[wallet.currency || 'IDR'];
-            const type = document.getElementById('type').value;
-            const amountDisplay = parseFloat(amountInput.value);
-            const amountCents = toCents(amountDisplay, currency.code);
+
+            let type, amountCents, denomsPrimary, denomsSecondary;
+
+            if (wallet.useDenom && currency.denoms) {
+                denomsPrimary = {};
+                denomsSecondary = {};
+                let totalPrimary = 0;
+                let totalSecondary = 0;
+
+                Object.entries(currency.denoms).forEach(([key, value]) => {
+                    const inpP = document.getElementById('denom_input_' + value);
+                    const cP = inpP ? (parseInt(inpP.value) || 0) : 0;
+                    denomsPrimary[key] = cP;
+                    totalPrimary += cP * value;
+
+                    if (withChangeMode) {
+                        const inpS = document.getElementById('change_denom_input_' + value);
+                        const cS = inpS ? (parseInt(inpS.value) || 0) : 0;
+                        denomsSecondary[key] = cS;
+                        totalSecondary += cS * value;
+                    }
+                });
+
+                if (!withChangeMode) {
+                    if (totalPrimary <= 0) {
+                        alert("Please fill in bill counts, Sensei! 💸");
+                        return;
+                    }
+                    type = document.getElementById('type').value;
+                    amountCents = totalPrimary;
+                    denomsSecondary = null;
+                } else {
+                    if (totalPrimary === 0 && totalSecondary === 0) {
+                        alert("Please fill in bill counts, Sensei! 💸");
+                        return;
+                    }
+                    const net = totalPrimary - totalSecondary;
+                    if (net === 0) {
+                        alert("Primary and change grids cancel out to zero. Add something to log, Sensei! 💸");
+                        return;
+                    }
+                    const currentType = document.getElementById('type').value;
+                    if (currentType === 'spend') {
+                        if (net > 0) { type = 'spend'; amountCents = net; }
+                        else { type = 'gain'; amountCents = Math.abs(net); }
+                    } else {
+                        if (net > 0) { type = 'gain'; amountCents = net; }
+                        else { type = 'spend'; amountCents = Math.abs(net); }
+                    }
+                }
+            } else {
+                const amountDisplay = parseFloat(amountInput.value);
+                amountCents = toCents(amountDisplay, currency.code);
+                if (!amountCents || amountCents <= 0) {
+                    alert("Please enter a valid amount, Sensei! 💸");
+                    return;
+                }
+                type = document.getElementById('type').value;
+                denomsPrimary = null;
+                denomsSecondary = null;
+            }
+
             const date = document.getElementById('date').value;
             const description = document.getElementById('description').value;
             const note = document.getElementById('note').value.trim();
             const now = new Date();
             const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
 
-            if (!amountCents || amountCents <= 0) {
-                alert("Please enter a valid amount, Sensei! 💸");
-                return;
-            }
-
-            let denoms = null;
-            if (wallet.useDenom && currency.denoms) {
-                denoms = {};
-                Object.entries(currency.denoms).forEach(([key]) => {
-                    const inp = document.getElementById('denom_input_' + currency.denoms[key]);
-                    denoms[key] = inp ? (parseInt(inp.value) || 0) : 0;
-                });
-            }
-
             let balanceBefore = 0;
-            wallet.transactions.forEach(t => {
-                balanceBefore += t.type === 'gain' ? t.amount : -t.amount;
-            });
+            wallet.transactions.forEach(t => { balanceBefore += t.type === 'gain' ? t.amount : -t.amount; });
 
             const todayStr = new Date().toISOString().slice(0, 10);
             let todaySpentBefore = 0;
@@ -4485,7 +4331,17 @@
                 if (t.type === 'spend' && t.date === todayStr) todaySpentBefore += t.amount;
             });
 
-            wallet.transactions.unshift({ id: Date.now(), type, amount: amountCents, date, time: timeStr, description, note, denoms });
+            wallet.transactions.unshift({
+                id: Date.now(),
+                type,
+                amount: amountCents,
+                date,
+                time: timeStr,
+                description,
+                note,
+                denoms: denomsPrimary,
+                changeDenoms: denomsSecondary
+            });
             activeEditTxId = null;
             saveAndRender();
 
@@ -4503,7 +4359,15 @@
             }
 
             if (wallet.useDenom && currency.denoms) {
-                document.querySelectorAll('#denomContainer input').forEach(inp => inp.value = '0');
+                document.querySelectorAll('#denomContainer input, #changeDenomContainer input').forEach(inp => inp.value = '0');
+                withChangeMode = false;
+                const toggle = document.getElementById('withChangeToggle');
+                if (toggle) toggle.checked = false;
+                const billsInSection = document.getElementById('billsInSection');
+                const netPreview = document.getElementById('netPreview');
+                if (billsInSection) billsInSection.style.display = 'none';
+                if (netPreview) netPreview.style.display = 'none';
+                updateDenomLabels();
             }
 
             triggerTransactionReaction(type, amountCents, balanceBefore, todaySpentBefore + (type === 'spend' ? amountCents : 0));
@@ -4523,26 +4387,19 @@
                     isBigSingle = amount >= 50000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);
                     isBigDay = todaySpentAfter >= 100000;
                 } else if (currency.code === 'USD' || currency.code === 'EUR') {
-                    isBigSingle = amount >= 5000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);  // $50
-                    isBigDay = todaySpentAfter >= 10000;  // $100
+                    isBigSingle = amount >= 5000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);
+                    isBigDay = todaySpentAfter >= 10000;
                 } else if (currency.code === 'JPY') {
-                    isBigSingle = amount >= 5000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);  // ¥5,000
-                    isBigDay = todaySpentAfter >= 10000;  // ¥10,000
+                    isBigSingle = amount >= 5000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);
+                    isBigDay = todaySpentAfter >= 10000;
                 } else {
                     isBigSingle = amount >= 50000 || (balanceBefore > 0 && amount >= balanceBefore * 0.3);
                     isBigDay = todaySpentAfter >= 100000;
                 }
 
-                if (isBigDay) {
-                    exprKey = 'surprised';
-                    dialogue = getRandomTransactionDialogue('dailyBigSpend');
-                } else if (isBigSingle) {
-                    exprKey = 'surprised';
-                    dialogue = getRandomTransactionDialogue('bigSpend');
-                } else {
-                    exprKey = 'joking';
-                    dialogue = getRandomTransactionDialogue('spend');
-                }
+                if (isBigDay) { exprKey = 'surprised'; dialogue = getRandomTransactionDialogue('dailyBigSpend'); }
+                else if (isBigSingle) { exprKey = 'surprised'; dialogue = getRandomTransactionDialogue('bigSpend'); }
+                else { exprKey = 'joking'; dialogue = getRandomTransactionDialogue('spend'); }
             }
 
             hoshinoSpriteImg.classList.remove('squish-anim');
@@ -4560,12 +4417,9 @@
         }
 
         // ==========================================
-        // UNDO DELETE SYSTEM
+        // UNDO DELETE
         // ==========================================
-        let undoTimeout = null;
-        let undoDeletedTx = null;
-        let undoDeletedWalletId = null;
-        let undoDeletedIndex = -1;
+        let undoTimeout = null, undoDeletedTx = null, undoDeletedWalletId = null, undoDeletedIndex = -1;
 
         function deleteTransaction(txId) {
             const wallet = getCurrentWallet();
@@ -4598,19 +4452,14 @@
                 toast = document.createElement('div');
                 toast.id = 'undoToast';
                 toast.className = 'undo-toast';
-                toast.innerHTML = `
-                    <span class="undo-msg">🗑️ Entry deleted</span>
-                    <button class="undo-btn" onclick="undoDelete()">Undo</button>
-                `;
+                toast.innerHTML = `<span class="undo-msg">🗑️ Entry deleted</span><button class="undo-btn" onclick="undoDelete()">Undo</button>`;
                 document.body.appendChild(toast);
             }
-
             toast.classList.remove('show');
             void toast.offsetWidth;
             toast.classList.add('show');
 
             if (undoTimeout) clearTimeout(undoTimeout);
-
             undoTimeout = setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => {
@@ -4623,24 +4472,17 @@
 
         function undoDelete() {
             if (!undoDeletedTx || !undoDeletedWalletId) return;
-
             const wallet = wallets.find(w => w.id === undoDeletedWalletId);
             if (!wallet) return;
 
-            const idx = undoDeletedIndex >= 0 && undoDeletedIndex <= wallet.transactions.length
-                ? undoDeletedIndex
-                : 0;
+            const idx = undoDeletedIndex >= 0 && undoDeletedIndex <= wallet.transactions.length ? undoDeletedIndex : 0;
             wallet.transactions.splice(idx, 0, undoDeletedTx);
 
             undoDeletedTx = null;
             undoDeletedWalletId = null;
             undoDeletedIndex = -1;
 
-            if (undoTimeout) {
-                clearTimeout(undoTimeout);
-                undoTimeout = null;
-            }
-
+            if (undoTimeout) { clearTimeout(undoTimeout); undoTimeout = null; }
             const toast = document.getElementById('undoToast');
             if (toast) toast.classList.remove('show');
 
@@ -4657,11 +4499,7 @@
         }
 
         function toggleTransactionDrawer(txId) {
-            if (activeEditTxId === txId) {
-                activeEditTxId = null;
-            } else {
-                activeEditTxId = txId;
-            }
+            activeEditTxId = (activeEditTxId === txId) ? null : txId;
             render();
         }
 
@@ -4682,7 +4520,6 @@
                 return;
             }
 
-            // Convert display → cents
             tx.amount = toCents(newAmountDisplay, currency.code);
             tx.description = newDesc;
             tx.type = newType;
@@ -4690,18 +4527,47 @@
             tx.note = newNote;
 
             if (wallet.useDenom && currency.denoms) {
+                let totalPrimary = 0;
+                let totalSecondary = 0;
+                const hasSecondaryField = document.getElementById(`edit_change_${Object.keys(currency.denoms)[0]}_${txId}`);
+                const useSecondary = !!hasSecondaryField;
+
                 if (!tx.denoms) tx.denoms = {};
-                let calculatedFromEdit = 0;
+                if (!tx.changeDenoms) tx.changeDenoms = {};
+
                 Object.entries(currency.denoms).forEach(([key, value]) => {
-                    const editDenomInput = document.getElementById(`edit_${key}_${txId}`);
-                    if (editDenomInput) {
-                        const val = parseInt(editDenomInput.value) || 0;
+                    const inpP = document.getElementById(`edit_${key}_${txId}`);
+                    if (inpP) {
+                        const val = parseInt(inpP.value) || 0;
                         tx.denoms[key] = val;
-                        calculatedFromEdit += val * value;
+                        totalPrimary += val * value;
+                    }
+                    if (useSecondary) {
+                        const inpS = document.getElementById(`edit_change_${key}_${txId}`);
+                        if (inpS) {
+                            const val = parseInt(inpS.value) || 0;
+                            tx.changeDenoms[key] = val;
+                            totalSecondary += val * value;
+                        }
                     }
                 });
-                if (calculatedFromEdit > 0) {
-                    tx.amount = calculatedFromEdit;
+
+                if (useSecondary && tx.changeDenoms && Object.values(tx.changeDenoms).some(v => v > 0)) {
+                    const net = totalPrimary - totalSecondary;
+                    if (net === 0) {
+                        alert("Primary and change grids cancel to zero. Please adjust the counts. 💦");
+                        return;
+                    }
+                    if (tx.type === 'spend') {
+                        if (net > 0) tx.amount = net;
+                        else { tx.type = 'gain'; tx.amount = Math.abs(net); }
+                    } else {
+                        if (net > 0) tx.amount = net;
+                        else { tx.type = 'spend'; tx.amount = Math.abs(net); }
+                    }
+                } else if (totalPrimary > 0) {
+                    tx.amount = totalPrimary;
+                    tx.changeDenoms = {};
                 }
             }
 
@@ -4723,7 +4589,6 @@
             }
 
             const filtered = getFilteredTransactions(wallet);
-
             if (filtered.length === 0) {
                 historyList.innerHTML = '<div class="history-empty-filter">No matching transactions~ 🌸</div>';
                 return;
@@ -4741,31 +4606,53 @@
                 const amountClass = t.type === 'gain' ? 'amount-gain' : 'amount-spend';
                 const timeDisplay = t.time ? ` • ${t.time}` : '';
 
-                let denomTextStr = '';
                 const historyCurrency = CURRENCIES[wallet.currency || 'IDR'];
-                if (t.denoms && wallet.useDenom && historyCurrency.denoms) {
-                    let parts = [];
-                    Object.keys(historyCurrency.denoms).forEach(key => {
-                        if (t.denoms[key] > 0) {
-                            parts.push(`${t.denoms[key]} × ${historyCurrency.denomLabels[key]}`);
-                        }
-                    });
-                    if (parts.length > 0) denomTextStr = `(${parts.join(', ')})`;
+
+                // History denom labels depend on tx.type
+                const historyLabels = t.type === 'gain'
+                    ? { primary: 'Received', secondary: 'Given' }
+                    : { primary: 'Paid', secondary: 'Change' };
+
+                let denomTextStr = '';
+                if (wallet.useDenom && historyCurrency.denoms) {
+                    let primaryParts = [];
+                    if (t.denoms) {
+                        Object.keys(historyCurrency.denoms).forEach(key => {
+                            if (t.denoms[key] > 0) primaryParts.push(`${t.denoms[key]} × ${historyCurrency.denomLabels[key]}`);
+                        });
+                    }
+                    let secondaryParts = [];
+                    if (t.changeDenoms) {
+                        Object.keys(historyCurrency.denoms).forEach(key => {
+                            if (t.changeDenoms[key] > 0) secondaryParts.push(`${t.changeDenoms[key]} × ${historyCurrency.denomLabels[key]}`);
+                        });
+                    }
+                    const segments = [];
+                    if (primaryParts.length > 0) segments.push(`${historyLabels.primary}: (${primaryParts.join(', ')})`);
+                    if (secondaryParts.length > 0) segments.push(`${historyLabels.secondary}: (${secondaryParts.join(', ')})`);
+                    if (segments.length > 0) denomTextStr = segments.join(' • ');
                 }
 
                 const noteBadge = t.note ? `<span class="history-note-badge">📎 ${t.note}</span>` : '';
-
                 const isOpen = activeEditTxId === t.id;
 
                 let editDenomsHtml = '';
                 if (wallet.useDenom && historyCurrency.denoms) {
-                    let fieldsHtml = '';
+                    let primaryFields = '', secondaryFields = '';
                     Object.entries(historyCurrency.denoms).forEach(([k, value]) => {
-                        let currentVal = (t.denoms && t.denoms[k]) ? t.denoms[k] : 0;
                         const labelText = historyCurrency.denomLabels[k] || k;
-                        fieldsHtml += `<div style="flex:1; min-width:45px;"><label style="font-size:0.6rem;">${labelText}</label><input type="number" id="edit_${k}_${t.id}" value="${currentVal}" min="0"></div>`;
+                        const pVal = (t.denoms && t.denoms[k]) ? t.denoms[k] : 0;
+                        const sVal = (t.changeDenoms && t.changeDenoms[k]) ? t.changeDenoms[k] : 0;
+                        primaryFields += `<div style="flex:1; min-width:45px;"><label style="font-size:0.6rem;">${labelText}</label><input type="number" id="edit_${k}_${t.id}" value="${pVal}" min="0"></div>`;
+                        secondaryFields += `<div style="flex:1; min-width:45px;"><label style="font-size:0.6rem;">${labelText}</label><input type="number" id="edit_change_${k}_${t.id}" value="${sVal}" min="0"></div>`;
                     });
-                    editDenomsHtml = `<label>Bill Counts:</label><div style="display:flex; gap:4px; flex-wrap:wrap;">${fieldsHtml}</div>`;
+
+                    editDenomsHtml = `
+                        <label>${t.type === 'gain' ? '💰 Bills Received' : '💸 Bills Paid'}:</label>
+                        <div style="display:flex; gap:4px; flex-wrap:wrap;">${primaryFields}</div>
+                        <label>${t.type === 'gain' ? '💸 Change Given' : '💰 Change Received'}:</label>
+                        <div style="display:flex; gap:4px; flex-wrap:wrap;">${secondaryFields}</div>
+                    `;
                 }
 
                 container.innerHTML = `
@@ -4823,31 +4710,19 @@
                 const tab = document.createElement('button');
                 tab.className = `wallet-tab ${w.id === currentWalletId ? 'active' : ''}`;
                 tab.textContent = w.name;
-
                 tab.onclick = () => switchWallet(w.id);
 
-                let pressTimer = null;
-                let wasLongPress = false;
+                let pressTimer = null, wasLongPress = false;
                 tab.addEventListener('touchstart', () => {
                     wasLongPress = false;
-                    pressTimer = setTimeout(() => {
-                        wasLongPress = true;
-                        openWalletEditor(w.id);
-                    }, 600);
+                    pressTimer = setTimeout(() => { wasLongPress = true; openWalletEditor(w.id); }, 600);
                 }, { passive: true });
                 tab.addEventListener('touchend', (e) => {
                     clearTimeout(pressTimer);
-                    if (wasLongPress) {
-                        e.preventDefault();
-                        wasLongPress = false;
-                    }
+                    if (wasLongPress) { e.preventDefault(); wasLongPress = false; }
                 });
                 tab.addEventListener('touchmove', () => clearTimeout(pressTimer));
-
-                tab.oncontextmenu = (e) => {
-                    e.preventDefault();
-                    openWalletEditor(w.id);
-                };
+                tab.oncontextmenu = (e) => { e.preventDefault(); openWalletEditor(w.id); };
 
                 walletNav.appendChild(tab);
             });
@@ -4863,8 +4738,11 @@
 
             currentWalletTitle.textContent = `${wallet.name} Balance (${currencyConfig.code}) 💰`;
 
-            // Show or hide denom toggle based on currency support
             const hasDenoms = currencyConfig.denoms && Object.keys(currencyConfig.denoms).length > 0;
+
+            const withChangeRow = document.querySelector('.with-change-toggle-row');
+            const billsInSection = document.getElementById('billsInSection');
+            const netPreview = document.getElementById('netPreview');
 
             if (!hasDenoms) {
                 toggleDenomBtn.style.display = 'none';
@@ -4873,6 +4751,10 @@
                 amountInput.readOnly = false;
                 amountInput.style.backgroundColor = nightTheme ? "#2e2238" : "#fff";
                 amountInput.placeholder = "0";
+                withChangeMode = false;
+                if (withChangeRow) withChangeRow.style.display = 'none';
+                if (billsInSection) billsInSection.style.display = 'none';
+                if (netPreview) netPreview.style.display = 'none';
             } else {
                 toggleDenomBtn.style.display = '';
                 if (wallet.useDenom) {
@@ -4881,8 +4763,16 @@
                     denomInputSection.style.display = "block";
                     amountInput.readOnly = true;
                     amountInput.style.backgroundColor = nightTheme ? "#1f1729" : "#f9f0f3";
-                    amountInput.placeholder = "Auto-calculated from bills 💳";
+                    amountInput.placeholder = withChangeMode ? "Auto-calculated (Net) 💳" : "Auto-calculated 💳";
+
+                    // Re-render grids and re-apply labels/toggle state
                     renderDenomInputs();
+                    if (withChangeRow) withChangeRow.style.display = 'flex';
+                    const toggle = document.getElementById('withChangeToggle');
+                    if (toggle) toggle.checked = withChangeMode;
+                    if (billsInSection) billsInSection.style.display = withChangeMode ? 'block' : 'none';
+                    if (netPreview) netPreview.style.display = withChangeMode ? 'block' : 'none';
+                    updateDenomLabels();
                 } else {
                     toggleDenomBtn.textContent = "⚙️ Denoms: OFF";
                     toggleDenomBtn.style.color = "var(--dark-pink)";
@@ -4890,6 +4780,10 @@
                     amountInput.readOnly = false;
                     amountInput.style.backgroundColor = nightTheme ? "#2e2238" : "#fff";
                     amountInput.placeholder = "0";
+                    if (withChangeRow) withChangeRow.style.display = 'none';
+                    if (billsInSection) billsInSection.style.display = 'none';
+                    if (netPreview) netPreview.style.display = 'none';
+                    withChangeMode = false;
                 }
             }
 
@@ -4904,19 +4798,30 @@
             applyBalanceVisibility();
 
             let total = 0;
-            let totalDenoms = {};
+            let totalDenomsPrimary = {};
+            let totalDenomsSecondary = {};
             if (currencyConfig.denoms) {
-                Object.keys(currencyConfig.denoms).forEach(k => totalDenoms[k] = 0);
+                Object.keys(currencyConfig.denoms).forEach(k => {
+                    totalDenomsPrimary[k] = 0;
+                    totalDenomsSecondary[k] = 0;
+                });
             }
 
             wallet.transactions.forEach(t => {
                 const multiplier = t.type === 'gain' ? 1 : -1;
                 total += t.amount * multiplier;
 
-                if (t.denoms && wallet.useDenom && currencyConfig.denoms) {
-                    Object.keys(currencyConfig.denoms).forEach(key => {
-                        totalDenoms[key] += (t.denoms[key] || 0) * multiplier;
-                    });
+                if (wallet.useDenom && currencyConfig.denoms) {
+                    if (t.denoms) {
+                        Object.keys(currencyConfig.denoms).forEach(key => {
+                            totalDenomsPrimary[key] += (t.denoms[key] || 0) * multiplier;
+                        });
+                    }
+                    if (t.changeDenoms) {
+                        Object.keys(currencyConfig.denoms).forEach(key => {
+                            totalDenomsSecondary[key] += (t.changeDenoms[key] || 0) * (-multiplier);
+                        });
+                    }
                 }
             });
 
@@ -4924,9 +4829,10 @@
 
             if (wallet.useDenom && currencyConfig.denoms) {
                 let denomBadges = [];
-                Object.entries(currencyConfig.denoms).forEach(([key, value]) => {
-                    if (totalDenoms[key] !== 0) {
-                        denomBadges.push(`<span class="denom-badge">${totalDenoms[key]} × ${currencyConfig.denomLabels[key]}</span>`);
+                Object.entries(currencyConfig.denoms).forEach(([key]) => {
+                    const netCount = (totalDenomsPrimary[key] || 0) + (totalDenomsSecondary[key] || 0);
+                    if (netCount !== 0) {
+                        denomBadges.push(`<span class="denom-badge">${netCount} × ${currencyConfig.denomLabels[key]}</span>`);
                     }
                 });
                 denomSummary.innerHTML = denomBadges.length > 0 ? denomBadges.join(' ') : `<span class="denom-badge" style="color:var(--dark-pink); font-weight:600;">0 bills tracked 💳</span>`;
@@ -4943,20 +4849,17 @@
         render();
 
         // ==========================================
-        // MOOD OVERTIME
+        // INIT
         // ==========================================
         localStorage.setItem('hoshino_last_open', Date.now());
 
         setTimeout(() => {
-            if (streakData.count > 0) {
-                streakOpenReaction();
-            } else {
-                applyMoodOvertime(true);
-            }
+            if (streakData.count > 0) streakOpenReaction();
+            else applyMoodOvertime(true);
         }, 2500);
 
         // ==========================================
-        // SERVICE WORKER + UPDATE BUTTON
+        // SERVICE WORKER
         // ==========================================
         let swRegistration = null;
 
@@ -4980,33 +4883,25 @@
 
         async function checkForUpdates() {
             const btn = document.getElementById('updateBtn');
-
             if (!('serviceWorker' in navigator) || !swRegistration) {
                 showChipToast('❌ Service worker not ready');
                 return;
             }
-
             btn.classList.add('spinning');
             showChipToast('🔍 Checking for updates...');
 
-            try {
-                await swRegistration.update();
-            } catch (e) {
-                console.log('Update check failed:', e);
-            }
+            try { await swRegistration.update(); }
+            catch (e) { console.log('Update check failed:', e); }
 
             setTimeout(() => {
                 btn.classList.remove('spinning');
-
                 if (swRegistration.waiting) {
                     showChipToast('✨ Update found! Reloading...');
                     swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
                 } else if (swRegistration.installing) {
                     showChipToast('✨ Downloading update...');
                     swRegistration.installing.addEventListener('statechange', (e) => {
-                        if (e.target.state === 'activated') {
-                            window.location.reload();
-                        }
+                        if (e.target.state === 'activated') window.location.reload();
                     });
                 } else {
                     showChipToast('✅ Already up to date!');
