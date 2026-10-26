@@ -485,43 +485,158 @@
             51%, 100% { opacity: 0; }
         }
 
+        /* === MUSIC BAR === */
         .music-bar {
             margin: 10px 16px 0 16px;
             background: var(--accent-pink);
             border: 1px dashed var(--primary-pink);
-            padding: 8px 12px;
-            border-radius: 12px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .music-title-row {
+            text-align: center;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-color);
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .music-progress-row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        #progressSlider {
+            width: 100%;
+            height: 18px;
+            accent-color: var(--dark-pink);
+            cursor: pointer;
+            background: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        #progressSlider::-webkit-slider-runnable-track {
+            height: 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid var(--primary-pink);
+        }
+
+        #progressSlider::-moz-range-track {
+            height: 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid var(--primary-pink);
+        }
+
+        #progressSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--dark-pink);
+            border: 2px solid #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            margin-top: -5px;
+            cursor: pointer;
+        }
+
+        #progressSlider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--dark-pink);
+            border: 2px solid #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        #progressSlider:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        body.night-theme #progressSlider::-webkit-slider-runnable-track {
+            background: rgba(46, 34, 56, 0.9);
+        }
+
+        body.night-theme #progressSlider::-moz-range-track {
+            background: rgba(46, 34, 56, 0.9);
+        }
+
+        .music-time-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.75rem;
-            color: var(--gray-text);
-            gap: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--dark-pink);
+            padding: 0 2px;
+            font-variant-numeric: tabular-nums;
         }
 
-        .music-controls-group {
+        .music-controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding-top: 2px;
+            position: relative;
+        }
+
+        .music-controls-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .music-controls-center {
             display: flex;
             align-items: center;
             gap: 8px;
-            flex-grow: 1;
-            min-width: 0;
-            flex-wrap: wrap;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .music-controls-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
         }
 
         .music-play-btn {
             background: var(--dark-pink);
             color: #fff;
             border: none;
-            width: 26px;
-            height: 26px;
-            min-width: 26px;
-            min-height: 26px;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            min-height: 30px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             box-shadow: 0 2px 5px rgba(255,77,109,0.3);
             flex-shrink: 0;
             transition: transform 0.1s;
@@ -535,16 +650,16 @@
             background: var(--accent-pink);
             color: var(--dark-pink);
             border: 1.5px solid var(--primary-pink);
-            width: 26px;
-            height: 26px;
-            min-width: 26px;
-            min-height: 26px;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            min-height: 30px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             flex-shrink: 0;
             transition: transform 0.1s, background 0.15s;
         }
@@ -558,36 +673,77 @@
             transform: scale(0.9);
         }
 
-        .music-info {
-            white-space: normal;
-            overflow: visible;
-            text-overflow: clip;
-            word-break: break-word;
-            line-height: 1.25;
-            flex: 1 1 auto;
-            min-width: 0;
-        }
-
-        .music-info span {
-            font-weight: 600;
-            color: var(--text-color);
-        }
-
-        .volume-control-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            flex-shrink: 0;
-            margin-left: 8px;
+        .music-volume-label {
+            font-size: 0.65rem;
+            font-weight: 700;
             color: var(--dark-pink);
+            flex-shrink: 0;
         }
 
-        .volume-slider {
-            width: 75px;
+        .music-volume-slider {
+            width: 60px;
             accent-color: var(--dark-pink);
             cursor: pointer;
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: var(--accent-pink);
+            border: 1px solid var(--primary-pink);
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.78rem;
+        }
+
+        .playlist-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+            flex-grow: 1;
+        }
+
+        .playlist-item-title {
+            font-weight: 700;
+            color: var(--text-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .playlist-item-meta {
+            font-size: 0.65rem;
+            color: var(--dark-pink);
+            opacity: 0.85;
+        }
+
+        .playlist-item-actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .playlist-icon-btn {
+            background: transparent;
+            border: 1px solid var(--primary-pink);
+            color: var(--dark-pink);
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+
+        .playlist-icon-btn:hover {
+            background: var(--primary-pink);
+            color: #fff;
         }
 
         .wallet-nav-wrap {
@@ -2169,14 +2325,26 @@
         </div>
 
         <div class="music-bar">
-            <div class="music-controls-group">
-                <button class="music-play-btn" id="musicPlayBtn" onclick="togglePlayMusic()">▶</button>
-                <button class="music-next-btn" id="musicNextBtn" onclick="nextTrack()" title="Next track">⏭️</button>
-                <div class="music-info" id="currentTrackDisplay"><span>🎵 Loading music...</span></div>
+            <div class="music-title-row" id="currentTrackDisplay">🎵 Loading music...</div>
+            <div class="music-progress-row">
+                <input type="range" id="progressSlider" min="0" max="100" value="0" step="0.1" disabled>
             </div>
-            <div class="volume-control-container">
-                <span>🔊 Vol</span>
-                <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.5" class="volume-slider" oninput="updateVolume(this.value)">
+            <div class="music-time-row">
+                <span id="currentTimeLabel">0:00</span>
+                <span id="totalTimeLabel">0:00</span>
+            </div>
+            <div class="music-controls-row">
+                <div class="music-controls-left">
+                    <button class="music-next-btn" id="myPlaylistBtn" onclick="openPlaylistModal()" title="My Playlist">🎧</button>
+                </div>
+                <div class="music-controls-center">
+                    <button class="music-play-btn" id="musicPlayBtn" onclick="togglePlayMusic()">▶</button>
+                    <button class="music-next-btn" id="musicNextBtn" onclick="nextTrack()" title="Next track">⏭️</button>
+                </div>
+                <div class="music-controls-right">
+                    <span class="music-volume-label">🔊</span>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.5" class="music-volume-slider" oninput="updateVolume(this.value)">
+                </div>
             </div>
         </div>
 
@@ -2458,6 +2626,38 @@
         </div>
     </div>
 
+    <!-- My Playlist Modal -->
+    <div class="modal-overlay" id="playlistModalOverlay" onclick="closePlaylistModal(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>🎧 My Playlist</h2>
+                <button class="modal-close" onclick="closePlaylistModal()">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="checkbox-hint" style="padding-left: 0; margin-bottom: 4px;">
+                    Custom songs play after the 5 time-of-day tracks in the ⏭️ cycle. Reload snaps back to time-of-day.
+                </div>
+
+                <div id="playlistList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+
+                <button class="submit-btn" style="margin-top: 8px;" onclick="document.getElementById('playlistFileInput').click()">
+                    ＋ Add Custom Song
+                </button>
+                <input type="file" id="playlistFileInput" accept="audio/*" onchange="handlePlaylistUpload(event)">
+                <div class="checkbox-hint" style="padding-left: 0; margin-top: 4px;">
+                    Max 10 MB per song · OGG, MP3, M4A, WAV supported by most browsers
+                </div>
+
+                <div class="modal-error" id="playlistModalError"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" onclick="closePlaylistModal()">Done ✨</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==========================================
         // MULTI-CURRENCY CONFIG
@@ -2539,7 +2739,90 @@
         const squishAudio = new Audio('audio/squish.ogg');
 
         // ==========================================
-        // TRACK METADATA (real song titles)
+        // CUSTOM AUDIO — IndexedDB storage
+        // ==========================================
+        const AUDIO_DB_NAME = 'hoshino-audio-db';
+        const AUDIO_DB_VERSION = 1;
+        const AUDIO_STORE = 'customTracks';
+        const MAX_CUSTOM_TRACK_BYTES = 10 * 1024 * 1024;
+
+        let customTracks = [];
+
+        function openAudioDB() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(AUDIO_DB_NAME, AUDIO_DB_VERSION);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(AUDIO_STORE)) {
+                        db.createObjectStore(AUDIO_STORE, { keyPath: 'id' });
+                    }
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function loadCustomTracksFromDB() {
+            try {
+                const db = await openAudioDB();
+                return await new Promise((resolve, reject) => {
+                    const tx = db.transaction(AUDIO_STORE, 'readonly');
+                    const store = tx.objectStore(AUDIO_STORE);
+                    const req = store.getAll();
+                    req.onsuccess = () => resolve(req.result || []);
+                    req.onerror = () => reject(req.error);
+                });
+            } catch (err) {
+                console.warn('Could not load custom tracks:', err);
+                return [];
+            }
+        }
+
+        async function saveCustomTrackToDB(record) {
+            const db = await openAudioDB();
+            return await new Promise((resolve, reject) => {
+                const tx = db.transaction(AUDIO_STORE, 'readwrite');
+                tx.objectStore(AUDIO_STORE).put(record);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+        }
+
+        async function deleteCustomTrackFromDB(id) {
+            const db = await openAudioDB();
+            return await new Promise((resolve, reject) => {
+                const tx = db.transaction(AUDIO_STORE, 'readwrite');
+                tx.objectStore(AUDIO_STORE).delete(id);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+        }
+
+        let customObjectURLs = [];
+        function rebuildCustomAudio() {
+            customObjectURLs.forEach(u => { try { URL.revokeObjectURL(u); } catch(e){} });
+            customObjectURLs = [];
+
+            Object.keys(audioTracks).forEach(k => {
+                if (k.startsWith('custom_')) delete audioTracks[k];
+            });
+
+            customTracks.forEach(t => {
+                try {
+                    const url = URL.createObjectURL(t.blob);
+                    customObjectURLs.push(url);
+                    const a = new Audio(url);
+                    a.loop = true;
+                    a.volume = gameVolume;
+                    audioTracks['custom_' + t.id] = a;
+                } catch (err) {
+                    console.warn('Could not create Audio for', t.name, err);
+                }
+            });
+        }
+
+        // ==========================================
+        // TRACK METADATA
         // ==========================================
         const trackTitles = {
             morning:   'ReoNa - Amore',
@@ -2557,11 +2840,27 @@
             latenight: 'Late Night 🌌'
         };
 
+        const DEFAULT_TRACKS = ['morning', 'noon', 'afternoon', 'night', 'latenight'];
+        let TRACK_ORDER = [...DEFAULT_TRACKS];
+
+        function rebuildTrackOrder() {
+            TRACK_ORDER = [...DEFAULT_TRACKS, ...customTracks.map(t => 'custom_' + t.id)];
+        }
+
+        function getTrackTitle(trackKey) {
+            if (trackKey.startsWith('custom_')) {
+                const id = trackKey.slice('custom_'.length);
+                const t = customTracks.find(x => String(x.id) === id);
+                return t ? `🎧 ${t.name} · (Custom)` : '🎧 Custom';
+            }
+            const title = trackTitles[trackKey] || '';
+            const period = trackPeriodLabel[trackKey] || '';
+            return `🎵 ${title} · (${period})`;
+        }
+
         function renderTrackLabel() {
-            const title = trackTitles[currentPeriod] || '';
-            const period = trackPeriodLabel[currentPeriod] || '';
             const el = document.getElementById('currentTrackDisplay');
-            if (el) el.innerHTML = `<span>🎵 ${title} · (${period})</span>`;
+            if (el) el.textContent = getTrackTitle(currentPeriod);
         }
 
         // ==========================================
@@ -2870,35 +3169,15 @@
             const type = document.getElementById('type').value;
             if (!withChangeMode) {
                 if (type === 'gain') {
-                    return {
-                        primary: '💰 Bills Received',
-                        secondary: null,
-                        historyPrimary: 'Received',
-                        historySecondary: null
-                    };
+                    return { primary: '💰 Bills Received', secondary: null, historyPrimary: 'Received', historySecondary: null };
                 }
-                return {
-                    primary: '💸 Bills Paid',
-                    secondary: null,
-                    historyPrimary: 'Paid',
-                    historySecondary: null
-                };
+                return { primary: '💸 Bills Paid', secondary: null, historyPrimary: 'Paid', historySecondary: null };
             }
 
             if (type === 'gain') {
-                return {
-                    primary: '💰 Bills Received',
-                    secondary: '💸 Change Given',
-                    historyPrimary: 'Received',
-                    historySecondary: 'Given'
-                };
+                return { primary: '💰 Bills Received', secondary: '💸 Change Given', historyPrimary: 'Received', historySecondary: 'Given' };
             }
-            return {
-                primary: '💸 Bills Paid',
-                secondary: '💰 Change Received',
-                historyPrimary: 'Paid',
-                historySecondary: 'Change'
-            };
+            return { primary: '💸 Bills Paid', secondary: '💰 Change Received', historyPrimary: 'Paid', historySecondary: 'Change' };
         }
 
         function updateDenomLabels() {
@@ -2925,16 +3204,6 @@
                 document.querySelectorAll('#changeDenomContainer input').forEach(inp => inp.value = '0');
             }
             updateDenomLabels();
-        }
-
-        function resetWithChangeMode() {
-            withChangeMode = false;
-            const toggle = document.getElementById('withChangeToggle');
-            if (toggle) toggle.checked = false;
-            const billsInSection = document.getElementById('billsInSection');
-            const netPreview = document.getElementById('netPreview');
-            if (billsInSection) billsInSection.style.display = 'none';
-            if (netPreview) netPreview.style.display = 'none';
         }
 
         // ==========================================
@@ -3088,11 +3357,8 @@
         let currentPeriod = 'morning';
         let greetingPlayed = false;
         let bgmUnlockArmed = false;
-        let manualOverride = false;  // set true when user presses ⏭️ — disables clock-following
+        let manualOverride = false;
         const musicPlayBtn = document.getElementById('musicPlayBtn');
-        const currentTrackDisplay = document.getElementById('currentTrackDisplay');
-
-        const TRACK_ORDER = ['morning', 'noon', 'afternoon', 'night', 'latenight'];
 
         function getTimePeriod() {
             const hour = new Date().getHours();
@@ -3109,6 +3375,119 @@
                 || document.referrer.includes('android-app://');
         }
 
+        // === PROGRESS SLIDER STATE ===
+        const progressSlider = document.getElementById('progressSlider');
+        const currentTimeLabel = document.getElementById('currentTimeLabel');
+        const totalTimeLabel = document.getElementById('totalTimeLabel');
+        let progressSeeking = false;
+        let progressAudioRef = null;
+        let progressDurationFixAttempted = false;
+
+        function formatTime(sec) {
+            if (!Number.isFinite(sec) || sec < 0) return '0:00';
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return m + ':' + String(s).padStart(2, '0');
+        }
+
+        function ensureDurationKnown(audio) {
+            if (!audio) return;
+            const d = audio.duration;
+            if (Number.isFinite(d) && d > 0) return;
+            if (progressDurationFixAttempted) return;
+            progressDurationFixAttempted = true;
+            try {
+                audio.currentTime = 1e101;
+                const reset = () => {
+                    audio.currentTime = 0;
+                    audio.removeEventListener('timeupdate', reset);
+                };
+                audio.addEventListener('timeupdate', reset, { once: true });
+            } catch (e) {}
+        }
+
+        function updateProgressUI() {
+            const audio = audioTracks[currentPeriod];
+            if (!audio) {
+                progressSlider.disabled = true;
+                progressSlider.value = 0;
+                currentTimeLabel.textContent = '0:00';
+                totalTimeLabel.textContent = '0:00';
+                return;
+            }
+
+            ensureDurationKnown(audio);
+
+            const dur = Number.isFinite(audio.duration) ? audio.duration : 0;
+            if (dur > 0) {
+                progressSlider.disabled = false;
+                progressSlider.max = dur;
+            } else {
+                progressSlider.disabled = true;
+                progressSlider.max = 100;
+            }
+
+            if (!progressSeeking) {
+                const cur = Number.isFinite(audio.currentTime) ? audio.currentTime : 0;
+                progressSlider.value = cur;
+                currentTimeLabel.textContent = formatTime(cur);
+            }
+            totalTimeLabel.textContent = dur > 0 ? formatTime(dur) : '0:00';
+        }
+
+        function attachProgressToAudio(audio) {
+            if (progressAudioRef === audio) {
+                progressDurationFixAttempted = false;
+                updateProgressUI();
+                return;
+            }
+            progressAudioRef = audio;
+            progressDurationFixAttempted = false;
+
+            progressSlider.value = 0;
+            currentTimeLabel.textContent = '0:00';
+            totalTimeLabel.textContent = '0:00';
+
+            if (!audio) {
+                progressSlider.disabled = true;
+                return;
+            }
+
+            audio.addEventListener('loadedmetadata', updateProgressUI);
+            audio.addEventListener('durationchange', updateProgressUI);
+            audio.addEventListener('timeupdate', () => { if (!progressSeeking) updateProgressUI(); });
+
+            ensureDurationKnown(audio);
+            updateProgressUI();
+        }
+
+        setInterval(() => {
+            const audio = audioTracks[currentPeriod];
+            if (audio && !audio.paused && !progressSeeking) updateProgressUI();
+        }, 500);
+
+        progressSlider.addEventListener('input', () => {
+            progressSeeking = true;
+            const audio = audioTracks[currentPeriod];
+            if (!audio) return;
+            const target = parseFloat(progressSlider.value);
+            currentTimeLabel.textContent = formatTime(target);
+            if (Number.isFinite(audio.duration) && audio.duration > 0) {
+                try { audio.currentTime = target; } catch (e) {}
+            }
+        });
+
+        progressSlider.addEventListener('change', () => {
+            progressSeeking = false;
+            updateProgressUI();
+        });
+
+        ['pointerup', 'touchend', 'mouseup'].forEach(evt => {
+            progressSlider.addEventListener(evt, () => {
+                setTimeout(() => { progressSeeking = false; updateProgressUI(); }, 80);
+            });
+        });
+
         async function startBGM() {
             currentPeriod = getTimePeriod();
 
@@ -3120,8 +3499,8 @@
             renderTrackLabel();
 
             const activeAudio = audioTracks[currentPeriod] || audioTracks.morning;
+            attachProgressToAudio(activeAudio);
 
-            // Attempt 1: unmuted
             activeAudio.volume = gameVolume;
             try {
                 await activeAudio.play();
@@ -3130,7 +3509,6 @@
                 return true;
             } catch (err) {}
 
-            // Attempt 2: muted autoplay + unlock on first gesture
             activeAudio.volume = 0;
             try {
                 await activeAudio.play();
@@ -3181,8 +3559,12 @@
             if (!isPlaying) startBGM();
         }
 
-        // Boot BGM
         (async () => {
+            customTracks = await loadCustomTracksFromDB();
+            rebuildCustomAudio();
+            rebuildTrackOrder();
+            renderTrackLabel();
+
             const ok = await startBGM();
             if (ok && isStandalonePWA()) {
                 greetingPlayed = true;
@@ -3196,40 +3578,46 @@
             }
         })();
 
-        renderTrackLabel();
-
         function togglePlayMusic() {
             const activeAudio = audioTracks[currentPeriod] || audioTracks.morning;
             if (isPlaying) {
                 Object.values(audioTracks).forEach(audio => audio.pause());
                 isPlaying = false;
                 musicPlayBtn.textContent = "▶";
+                updateProgressUI();
             } else {
                 activeAudio.volume = gameVolume;
                 activeAudio.play().then(() => {
                     isPlaying = true;
                     musicPlayBtn.textContent = "❚❚";
+                    attachProgressToAudio(activeAudio);
                 }).catch(e => {});
             }
         }
 
-        // ⏭️ Next track — stop + reset current, start next in cycle
         function nextTrack() {
             const currentIdx = TRACK_ORDER.indexOf(currentPeriod);
             const nextIdx = (currentIdx + 1) % TRACK_ORDER.length;
             currentPeriod = TRACK_ORDER[nextIdx];
 
-            // User manually picked → disable clock-following for this session
             manualOverride = true;
 
-            Object.keys(audioTracks).forEach(period => {
-                audioTracks[period].pause();
-                audioTracks[period].currentTime = 0;
+            Object.keys(audioTracks).forEach(key => {
+                audioTracks[key].pause();
+                audioTracks[key].currentTime = 0;
             });
 
             renderTrackLabel();
 
-            const activeAudio = audioTracks[currentPeriod] || audioTracks.morning;
+            const activeAudio = audioTracks[currentPeriod];
+            if (!activeAudio) {
+                isPlaying = false;
+                musicPlayBtn.textContent = "▶";
+                return;
+            }
+
+            attachProgressToAudio(activeAudio);
+
             activeAudio.volume = gameVolume;
             activeAudio.play().then(() => {
                 isPlaying = true;
@@ -3247,20 +3635,23 @@
             });
         }
 
-        // 🕐 Clock-following: every 60s check if the period changed,
-        // and auto-switch — unless user pressed ⏭️ (manualOverride).
         setInterval(() => {
             if (manualOverride) return;
+            if (!DEFAULT_TRACKS.includes(currentPeriod)) return;
+
             const natural = getTimePeriod();
             if (natural !== currentPeriod) {
-                // Direct swap without going through startBGM's "reset all" loop spam
-                Object.keys(audioTracks).forEach(period => {
-                    audioTracks[period].pause();
-                    audioTracks[period].currentTime = 0;
+                Object.keys(audioTracks).forEach(key => {
+                    audioTracks[key].pause();
+                    audioTracks[key].currentTime = 0;
                 });
                 currentPeriod = natural;
                 renderTrackLabel();
-                const activeAudio = audioTracks[currentPeriod] || audioTracks.morning;
+                const activeAudio = audioTracks[currentPeriod];
+                if (!activeAudio) return;
+
+                attachProgressToAudio(activeAudio);
+
                 activeAudio.volume = gameVolume;
                 activeAudio.play().then(() => {
                     isPlaying = true;
@@ -3766,12 +4157,195 @@
             }
         }
 
+        // ==========================================
+        // MY PLAYLIST MODAL
+        // ==========================================
+        function openPlaylistModal() {
+            renderPlaylistList();
+            document.getElementById('playlistModalError').classList.remove('show');
+            document.getElementById('playlistModalError').textContent = '';
+            document.getElementById('playlistModalOverlay').classList.add('active');
+        }
+
+        function closePlaylistModal(event) {
+            if (event && event.target !== document.getElementById('playlistModalOverlay')) return;
+            document.getElementById('playlistModalOverlay').classList.remove('active');
+        }
+
+        function renderPlaylistList() {
+            const list = document.getElementById('playlistList');
+            list.innerHTML = '';
+
+            if (customTracks.length === 0) {
+                list.innerHTML = '<div class="history-empty-filter">No custom songs yet~ 🎧 Tap + to add one.</div>';
+                return;
+            }
+
+            customTracks.forEach(t => {
+                const row = document.createElement('div');
+                row.className = 'playlist-item';
+                const sizeMB = (t.blob.size / (1024 * 1024)).toFixed(1);
+                row.innerHTML = `
+                    <div class="playlist-item-info">
+                        <span class="playlist-item-title">🎧 ${escapeHtml(t.name)}</span>
+                        <span class="playlist-item-meta">${sizeMB} MB · plays after defaults in ⏭️</span>
+                    </div>
+                    <div class="playlist-item-actions">
+                        <button class="playlist-icon-btn" title="Play this song" onclick="playCustomTrack('${t.id}')">▶</button>
+                        <button class="playlist-icon-btn" title="Rename" onclick="renameCustomTrack('${t.id}')">✏️</button>
+                        <button class="playlist-icon-btn" title="Delete" onclick="confirmDeleteCustomTrack('${t.id}')">🗑️</button>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        async function handlePlaylistUpload(event) {
+            const file = event.target.files[0];
+            event.target.value = '';
+            if (!file) return;
+
+            const errEl = document.getElementById('playlistModalError');
+            const showErr = (msg) => {
+                errEl.textContent = msg;
+                errEl.classList.add('show');
+            };
+            errEl.classList.remove('show');
+            errEl.textContent = '';
+
+            if (!file.type.startsWith('audio/')) {
+                showErr('Please pick an audio file (OGG, MP3, M4A, WAV…). 💦');
+                return;
+            }
+            if (file.size > MAX_CUSTOM_TRACK_BYTES) {
+                showErr(`That file is ${(file.size / (1024 * 1024)).toFixed(1)} MB — max is 10 MB. 💦`);
+                return;
+            }
+
+            const guessed = file.name.replace(/\.[^.]+$/, '');
+            const name = prompt('Song title:', guessed);
+            if (name === null) return;
+            const finalName = (name || guessed).trim() || guessed;
+
+            try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch(e){}
+
+            const id = 'custom_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+            const record = { id, name: finalName, blob: file, mime: file.type };
+
+            try {
+                await saveCustomTrackToDB(record);
+                customTracks.push({ id, name: finalName, blob: file, mime: file.type });
+                rebuildCustomAudio();
+                rebuildTrackOrder();
+                renderPlaylistList();
+                renderTrackLabel();
+            } catch (err) {
+                console.error(err);
+                showErr('Could not save the song. Storage may be full. 💦');
+            }
+        }
+
+        function playCustomTrack(id) {
+            const key = 'custom_' + id;
+            if (!audioTracks[key]) return;
+            currentPeriod = key;
+            manualOverride = true;
+
+            Object.keys(audioTracks).forEach(k => {
+                audioTracks[k].pause();
+                audioTracks[k].currentTime = 0;
+            });
+            renderTrackLabel();
+
+            const activeAudio = audioTracks[key];
+            attachProgressToAudio(activeAudio);
+
+            activeAudio.volume = gameVolume;
+            activeAudio.play().then(() => {
+                isPlaying = true;
+                musicPlayBtn.textContent = "❚❚";
+                closePlaylistModal();
+            }).catch(() => {
+                activeAudio.volume = 0;
+                activeAudio.play().then(() => {
+                    isPlaying = true;
+                    musicPlayBtn.textContent = "❚❚";
+                    armBgmUnlock(activeAudio);
+                    closePlaylistModal();
+                }).catch(() => {});
+            });
+        }
+
+        async function renameCustomTrack(id) {
+            const t = customTracks.find(x => String(x.id) === String(id));
+            if (!t) return;
+            const newName = prompt('Rename song:', t.name);
+            if (newName === null) return;
+            const trimmed = newName.trim();
+            if (!trimmed || trimmed === t.name) return;
+
+            try {
+                const rec = { ...t, name: trimmed };
+                await saveCustomTrackToDB(rec);
+                t.name = trimmed;
+                if (currentPeriod === 'custom_' + id) renderTrackLabel();
+                renderPlaylistList();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function confirmDeleteCustomTrack(id) {
+            const t = customTracks.find(x => String(x.id) === String(id));
+            if (!t) return;
+            if (!confirm(`Delete "${t.name}"? 🗑️`)) return;
+
+            try {
+                await deleteCustomTrackFromDB(id);
+                customTracks = customTracks.filter(x => String(x.id) !== String(id));
+                rebuildCustomAudio();
+                rebuildTrackOrder();
+
+                if (currentPeriod === 'custom_' + id) {
+                    currentPeriod = getTimePeriod();
+                    manualOverride = false;
+                    Object.keys(audioTracks).forEach(k => { audioTracks[k].pause(); audioTracks[k].currentTime = 0; });
+                    renderTrackLabel();
+                    const activeAudio = audioTracks[currentPeriod];
+                    if (activeAudio) {
+                        attachProgressToAudio(activeAudio);
+                        activeAudio.volume = gameVolume;
+                        activeAudio.play().then(() => {
+                            isPlaying = true;
+                            musicPlayBtn.textContent = "❚❚";
+                        }).catch(() => {});
+                    }
+                } else {
+                    renderTrackLabel();
+                }
+                renderPlaylistList();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
         document.addEventListener('keydown', (e) => {
             const chipOverlay = document.getElementById('chipModalOverlay');
             const walletOverlay = document.getElementById('walletModalOverlay');
+            const playlistOverlay = document.getElementById('playlistModalOverlay');
 
             if (walletOverlay.classList.contains('active')) {
                 if (e.key === 'Escape') closeWalletModal();
+                return;
+            }
+            if (playlistOverlay.classList.contains('active')) {
+                if (e.key === 'Escape') closePlaylistModal();
                 return;
             }
             if (!chipOverlay.classList.contains('active')) return;
@@ -4156,7 +4730,7 @@
         // ==========================================
         function exportData() {
             const backup = {
-                version: 10,
+                version: 13,
                 exportedAt: new Date().toISOString(),
                 wallets: wallets,
                 chips: chips,
@@ -4167,6 +4741,11 @@
                 gameVolume: gameVolume,
                 streak: streakData,
                 balanceHidden: balanceHidden,
+                customTracksMeta: customTracks.map(t => ({
+                    name: t.name,
+                    mime: t.mime,
+                    size: t.blob.size
+                })),
                 settings: {
                     dialogueSpeed: dialogueSpeed,
                     pageScale: pageScale,
@@ -4229,6 +4808,21 @@
                         if (typeof s.pageScale === 'number') pageScale = s.pageScale;
                         if (typeof s.typewriter === 'boolean') typewriterEnabled = s.typewriter;
                         if (typeof s.moodOvertime === 'boolean') moodOvertimeEnabled = s.moodOvertime;
+                    }
+
+                    let missingCustomTracks = [];
+                    if (Array.isArray(imported.customTracksMeta)) {
+                        const existingNames = new Set(customTracks.map(t => t.name));
+                        imported.customTracksMeta.forEach(m => {
+                            if (m && typeof m.name === 'string' && !existingNames.has(m.name)) {
+                                missingCustomTracks.push(m.name);
+                            }
+                        });
+                    }
+                    if (missingCustomTracks.length > 0) {
+                        localStorage.setItem('hoshino_missing_custom_tracks', JSON.stringify(missingCustomTracks));
+                    } else {
+                        localStorage.removeItem('hoshino_missing_custom_tracks');
                     }
 
                     localStorage.setItem('hoshino_wallets', JSON.stringify(wallets));
@@ -4986,9 +5580,25 @@
 
         render();
 
-        // ==========================================
-        // INIT
-        // ==========================================
+        (function showMissingCustomTracksBanner() {
+            const raw = localStorage.getItem('hoshino_missing_custom_tracks');
+            if (!raw) return;
+            try {
+                const names = JSON.parse(raw);
+                if (!Array.isArray(names) || names.length === 0) return;
+                const list = names.map(n => `"${n}"`).join(', ');
+                setTimeout(() => {
+                    const proceed = confirm(
+                        `⚠️ These custom songs were in the backup but aren't on this device:\n\n${list}\n\n` +
+                        `Re-upload them via 🎧 My Playlist to hear them again. The rest of your backup is fully restored.\n\n` +
+                        `Open My Playlist now?`
+                    );
+                    if (proceed) openPlaylistModal();
+                    localStorage.removeItem('hoshino_missing_custom_tracks');
+                }, 800);
+            } catch (e) {}
+        })();
+
         localStorage.setItem('hoshino_last_open', Date.now());
 
         setTimeout(() => {
