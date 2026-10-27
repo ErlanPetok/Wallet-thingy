@@ -2443,9 +2443,8 @@
 
         <div class="backup-controls">
             <button onclick="toggleSettingsPanel()" id="settingsBtn">⚙️ Settings</button>
-            <button onclick="exportData()">💾 Download</button>
-            <button onclick="saveToDrive()" id="driveBtn">☁️ Save to Drive</button>
-            <button onclick="document.getElementById('importInput').click()">📂 Import</button>
+            <button onclick="openBackupMenu('export')">💾 Export</button>
+            <button onclick="openBackupMenu('import')">📂 Import</button>
         </div>
 
         <input type="file" id="fileInput" accept="image/*" onchange="handleImageUpload(event)">
@@ -2661,12 +2660,31 @@
         </div>
     </div>
 
+    <!-- Backup Menu Modal -->
+    <div class="modal-overlay" id="backupMenuOverlay" onclick="closeBackupMenu(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="backupMenuTitle">💾 Export</h2>
+                <button class="modal-close" onclick="closeBackupMenu()">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div id="backupMenuBody" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                <div class="modal-error" id="backupMenuError"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" onclick="closeBackupMenu()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==========================================
         // GOOGLE DRIVE CONFIG
         // ⚠️ REPLACE THIS WITH YOUR CLIENT ID FROM GOOGLE CLOUD CONSOLE ⚠️
         // ==========================================
-        const GOOGLE_CLIENT_ID = '955732224316-ulc65kio2u7l0mvfb8h3sipms8qen8cb.apps.googleusercontent.com';
+        const GOOGLE_CLIENT_ID = '955732224316-ulc65kio2u7l0mvfb8h3sipms8qen8cb.apps.googleusercontent.com';'
         const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
         const DRIVE_FILE_NAME = 'hoshino-daily-backup.json';
 
@@ -2677,15 +2695,21 @@
 
         function gapiLoaded() {
             if (typeof gapi === 'undefined') return;
-            gapi.load('client', async () => {
-                try {
-                    await gapi.client.init({
-                        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
-                    });
-                    gapiReady = true;
-                } catch (err) {
-                    console.warn('gapi init failed:', err);
-                }
+            gapi.load('client', {
+                callback: async () => {
+                    try {
+                        await gapi.client.init({
+                            discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+                        });
+                        gapiReady = true;
+                        console.log('✅ GAPI ready');
+                    } catch (err) {
+                        console.warn('gapi init failed:', err);
+                    }
+                },
+                onerror: () => console.warn('gapi.load failed'),
+                timeout: 10000,
+                ontimeout: () => console.warn('gapi.load timed out')
             });
         }
 
@@ -2695,9 +2719,10 @@
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: GOOGLE_CLIENT_ID,
                     scope: DRIVE_SCOPE,
-                    callback: () => {}  // set per-request
+                    callback: () => {}
                 });
                 gisReady = true;
+                console.log('✅ GIS ready');
             } catch (err) {
                 console.warn('GIS init failed:', err);
             }
@@ -2729,45 +2754,43 @@
             });
         }
 
+        async function ensureGapiReady(maxWaitMs = 10000) {
+            if (gapiReady) return;
+            const steps = Math.ceil(maxWaitMs / 500);
+            for (let i = 0; i < steps; i++) {
+                await new Promise(r => setTimeout(r, 500));
+                if (gapiReady) return;
+            }
+            if (!gapiReady) throw new Error('Google API failed to load. Check your internet connection and reload the page.');
+        }
+
+        // ==========================================
+        // DRIVE: SAVE
+        // ==========================================
         async function saveToDrive() {
-            const btn = document.getElementById('driveBtn');
-            const originalText = btn.textContent;
-            btn.disabled = true;
-            btn.textContent = '☁️ Connecting...';
+            closeBackupMenu();
+            const btnLabel = '☁️ Save to Drive';
+            showChipToast('☁️ Connecting to Google...');
 
             try {
-                if (!gapiReady) {
-                    throw new Error('Google API still loading. Wait a moment and try again.');
-                }
-
+                await ensureGapiReady();
                 await requestDriveToken();
-                btn.textContent = '☁️ Uploading...';
 
                 gapi.client.setToken({ access_token: driveAccessToken });
 
                 const backup = buildBackupObject();
                 const dataStr = JSON.stringify(backup, null, 2);
 
-                // Find existing file with this name
+                // Look for existing file
                 const listResp = await gapi.client.drive.files.list({
                     q: `name='${DRIVE_FILE_NAME}' and trashed=false`,
                     fields: 'files(id,name)',
                     spaces: 'drive'
                 });
                 const existingFiles = (listResp.result && listResp.result.files) || [];
-
-                let fileId;
-                if (existingFiles.length > 0) {
-                    fileId = existingFiles[0].id;
-                }
-
-                const metadata = {
-                    name: DRIVE_FILE_NAME,
-                    mimeType: 'application/json'
-                };
+                const fileId = existingFiles.length > 0 ? existingFiles[0].id : null;
 
                 if (fileId) {
-                    // Update existing file
                     await gapi.client.request({
                         path: `/upload/drive/v3/files/${fileId}`,
                         method: 'PATCH',
@@ -2776,10 +2799,10 @@
                         headers: { 'Content-Type': 'application/json' }
                     });
                 } else {
-                    // Create new file (multipart: metadata + content)
                     const boundary = '-------314159265358979323846';
                     const delimiter = `\r\n--${boundary}\r\n`;
                     const closeDelimiter = `\r\n--${boundary}--`;
+                    const metadata = { name: DRIVE_FILE_NAME, mimeType: 'application/json' };
                     const body =
                         delimiter +
                         'Content-Type: application/json\r\n\r\n' +
@@ -2803,10 +2826,112 @@
             } catch (err) {
                 console.error('Drive save error:', err);
                 showChipToast(`❌ Drive save failed: ${err.message || err}`);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = originalText;
             }
+        }
+
+        // ==========================================
+        // DRIVE: LOAD
+        // ==========================================
+        async function loadFromDrive() {
+            closeBackupMenu();
+            showChipToast('☁️ Connecting to Google...');
+
+            try {
+                await ensureGapiReady();
+                await requestDriveToken();
+
+                gapi.client.setToken({ access_token: driveAccessToken });
+
+                const listResp = await gapi.client.drive.files.list({
+                    q: `name='${DRIVE_FILE_NAME}' and trashed=false`,
+                    fields: 'files(id,name,modifiedTime)',
+                    spaces: 'drive',
+                    orderBy: 'modifiedTime desc'
+                });
+                const files = (listResp.result && listResp.result.files) || [];
+                if (files.length === 0) {
+                    throw new Error('No backup file found in your Drive yet. Save one first!');
+                }
+
+                const fileId = files[0].id;
+                const fileResp = await gapi.client.drive.files.get({
+                    fileId: fileId,
+                    alt: 'media'
+                });
+
+                // gapi returns body as string for alt=media in most cases
+                let text = fileResp.body;
+                if (typeof text !== 'string') {
+                    text = JSON.stringify(text);
+                }
+
+                const imported = JSON.parse(text);
+                if (!imported.wallets || !Array.isArray(imported.wallets) || imported.wallets.length === 0) {
+                    throw new Error('Backup file in Drive is empty or invalid.');
+                }
+                if (!confirm(`Load backup from Google Drive?\n\nThis will overwrite your current data.`)) {
+                    return;
+                }
+                applyImportedBackup(imported);
+                showChipToast('☁️ Backup loaded! Reloading...');
+                setTimeout(() => location.reload(), 800);
+            } catch (err) {
+                console.error('Drive load error:', err);
+                showChipToast(`❌ Drive load failed: ${err.message || err}`);
+            }
+        }
+
+        // ==========================================
+        // BACKUP MENU
+        // ==========================================
+        function openBackupMenu(mode) {
+            const overlay = document.getElementById('backupMenuOverlay');
+            const title = document.getElementById('backupMenuTitle');
+            const body = document.getElementById('backupMenuBody');
+            const err = document.getElementById('backupMenuError');
+            err.textContent = '';
+            err.classList.remove('show');
+            body.innerHTML = '';
+
+            if (mode === 'export') {
+                title.textContent = '💾 Export Backup';
+
+                const localBtn = document.createElement('button');
+                localBtn.className = 'wallet-action-btn';
+                localBtn.innerHTML = '💾 <div><div>Save to this device</div><div class="checkbox-hint" style="padding-left: 0; margin-top: 2px;">Downloads a JSON file to your Downloads folder</div></div>';
+                localBtn.onclick = () => { closeBackupMenu(); exportData(); };
+                body.appendChild(localBtn);
+
+                const driveBtn = document.createElement('button');
+                driveBtn.className = 'wallet-action-btn';
+                driveBtn.innerHTML = '☁️ <div><div>Save to Google Drive</div><div class="checkbox-hint" style="padding-left: 0; margin-top: 2px;">Uploads to your Drive (needs Google login)</div></div>';
+                driveBtn.onclick = () => saveToDrive();
+                body.appendChild(driveBtn);
+            } else {
+                title.textContent = '📂 Import Backup';
+
+                const localBtn = document.createElement('button');
+                localBtn.className = 'wallet-action-btn';
+                localBtn.innerHTML = '📂 <div><div>Load from this device</div><div class="checkbox-hint" style="padding-left: 0; margin-top: 2px;">Pick a JSON file from your phone/PC</div></div>';
+                localBtn.onclick = () => {
+                    closeBackupMenu();
+                    document.getElementById('importInput').click();
+                };
+                body.appendChild(localBtn);
+
+                const driveBtn = document.createElement('button');
+                driveBtn.className = 'wallet-action-btn';
+                driveBtn.innerHTML = '☁️ <div><div>Load from Google Drive</div><div class="checkbox-hint" style="padding-left: 0; margin-top: 2px;">Fetch the latest backup from your Drive</div></div>';
+                driveBtn.onclick = () => loadFromDrive();
+                body.appendChild(driveBtn);
+            }
+
+            overlay.classList.add('active');
+        }
+
+        function closeBackupMenu(event) {
+            if (event && event.target !== document.getElementById('backupMenuOverlay')) return;
+            document.getElementById('backupMenuOverlay').classList.remove('active');
         }
 
         // ==========================================
@@ -2889,7 +3014,7 @@
         const squishAudio = new Audio('audio/squish.ogg');
 
         // ==========================================
-        // CUSTOM AUDIO — IndexedDB storage
+        // CUSTOM AUDIO — IndexedDB
         // ==========================================
         const AUDIO_DB_NAME = 'hoshino-audio-db';
         const AUDIO_DB_VERSION = 1;
@@ -4488,6 +4613,7 @@
             const chipOverlay = document.getElementById('chipModalOverlay');
             const walletOverlay = document.getElementById('walletModalOverlay');
             const playlistOverlay = document.getElementById('playlistModalOverlay');
+            const backupOverlay = document.getElementById('backupMenuOverlay');
 
             if (walletOverlay.classList.contains('active')) {
                 if (e.key === 'Escape') closeWalletModal();
@@ -4495,6 +4621,10 @@
             }
             if (playlistOverlay.classList.contains('active')) {
                 if (e.key === 'Escape') closePlaylistModal();
+                return;
+            }
+            if (backupOverlay.classList.contains('active')) {
+                if (e.key === 'Escape') closeBackupMenu();
                 return;
             }
             if (!chipOverlay.classList.contains('active')) return;
@@ -4875,7 +5005,7 @@
         }
 
         // ==========================================
-        // BACKUP BUILDER (shared by export & Drive)
+        // BACKUP BUILDER
         // ==========================================
         function buildBackupObject() {
             return {
@@ -4904,8 +5034,66 @@
             };
         }
 
+        function applyImportedBackup(imported) {
+            wallets = imported.wallets.map(w => ({ ...w, currency: w.currency || 'IDR' }));
+            currentWalletId = wallets[0].id;
+            activeEditTxId = null;
+
+            if (imported.chips && Array.isArray(imported.chips)) {
+                chips = imported.chips.map(chip => ({
+                    ...chip,
+                    useDenom: typeof chip.useDenom === 'boolean' ? chip.useDenom : false
+                }));
+            }
+
+            if (typeof imported.theme === 'string' && THEMES.includes(imported.theme)) currentTheme = imported.theme;
+            else if (typeof imported.nightTheme === 'boolean') currentTheme = imported.nightTheme ? 'night' : 'pink';
+
+            if (typeof imported.customOpacity === 'string' || typeof imported.customOpacity === 'number') customOpacity = String(imported.customOpacity);
+            if (typeof imported.gameVolume === 'number') gameVolume = imported.gameVolume;
+            if (typeof imported.customBg === 'string') customBg = imported.customBg;
+            if (imported.streak && typeof imported.streak === 'object') streakData = imported.streak;
+            if (typeof imported.balanceHidden === 'boolean') balanceHidden = imported.balanceHidden;
+            if (imported.settings && typeof imported.settings === 'object') {
+                const s = imported.settings;
+                if (typeof s.dialogueSpeed === 'number') dialogueSpeed = s.dialogueSpeed;
+                if (typeof s.pageScale === 'number') pageScale = s.pageScale;
+                if (typeof s.typewriter === 'boolean') typewriterEnabled = s.typewriter;
+                if (typeof s.moodOvertime === 'boolean') moodOvertimeEnabled = s.moodOvertime;
+            }
+
+            let missingCustomTracks = [];
+            if (Array.isArray(imported.customTracksMeta)) {
+                const existingNames = new Set(customTracks.map(t => t.name));
+                imported.customTracksMeta.forEach(m => {
+                    if (m && typeof m.name === 'string' && !existingNames.has(m.name)) {
+                        missingCustomTracks.push(m.name);
+                    }
+                });
+            }
+            if (missingCustomTracks.length > 0) {
+                localStorage.setItem('hoshino_missing_custom_tracks', JSON.stringify(missingCustomTracks));
+            } else {
+                localStorage.removeItem('hoshino_missing_custom_tracks');
+            }
+
+            localStorage.setItem('hoshino_wallets', JSON.stringify(wallets));
+            localStorage.setItem('hoshino_chips', JSON.stringify(chips));
+            localStorage.setItem('hoshino_theme', currentTheme);
+            localStorage.setItem('hoshino_night_theme', String(DARK_THEMES.includes(currentTheme)));
+            localStorage.setItem('hoshino_bg_opacity', customOpacity);
+            localStorage.setItem('hoshinoGameVolume', gameVolume);
+            localStorage.setItem('hoshino_custom_bg', customBg);
+            localStorage.setItem('hoshino_streak', JSON.stringify(streakData));
+            localStorage.setItem('hoshino_dialogue_speed', dialogueSpeed);
+            localStorage.setItem('hoshino_page_scale', pageScale);
+            localStorage.setItem('hoshino_typewriter', typewriterEnabled);
+            localStorage.setItem('hoshino_mood_overtime', moodOvertimeEnabled);
+            localStorage.setItem('hoshino_balance_hidden', balanceHidden);
+        }
+
         // ==========================================
-        // EXPORT / IMPORT
+        // EXPORT / IMPORT (LOCAL)
         // ==========================================
         function exportData() {
             const backup = buildBackupObject();
@@ -4938,63 +5126,7 @@
                         return;
                     }
                     if (!confirm("Overwrite current data with backup? 📂")) { inputEl.value = ''; return; }
-
-                    wallets = imported.wallets.map(w => ({ ...w, currency: w.currency || 'IDR' }));
-                    currentWalletId = wallets[0].id;
-                    activeEditTxId = null;
-
-                    if (imported.chips && Array.isArray(imported.chips)) {
-                        chips = imported.chips.map(chip => ({
-                            ...chip,
-                            useDenom: typeof chip.useDenom === 'boolean' ? chip.useDenom : false
-                        }));
-                    }
-
-                    if (typeof imported.theme === 'string' && THEMES.includes(imported.theme)) currentTheme = imported.theme;
-                    else if (typeof imported.nightTheme === 'boolean') currentTheme = imported.nightTheme ? 'night' : 'pink';
-
-                    if (typeof imported.customOpacity === 'string' || typeof imported.customOpacity === 'number') customOpacity = String(imported.customOpacity);
-                    if (typeof imported.gameVolume === 'number') gameVolume = imported.gameVolume;
-                    if (typeof imported.customBg === 'string') customBg = imported.customBg;
-                    if (imported.streak && typeof imported.streak === 'object') streakData = imported.streak;
-                    if (typeof imported.balanceHidden === 'boolean') balanceHidden = imported.balanceHidden;
-                    if (imported.settings && typeof imported.settings === 'object') {
-                        const s = imported.settings;
-                        if (typeof s.dialogueSpeed === 'number') dialogueSpeed = s.dialogueSpeed;
-                        if (typeof s.pageScale === 'number') pageScale = s.pageScale;
-                        if (typeof s.typewriter === 'boolean') typewriterEnabled = s.typewriter;
-                        if (typeof s.moodOvertime === 'boolean') moodOvertimeEnabled = s.moodOvertime;
-                    }
-
-                    let missingCustomTracks = [];
-                    if (Array.isArray(imported.customTracksMeta)) {
-                        const existingNames = new Set(customTracks.map(t => t.name));
-                        imported.customTracksMeta.forEach(m => {
-                            if (m && typeof m.name === 'string' && !existingNames.has(m.name)) {
-                                missingCustomTracks.push(m.name);
-                            }
-                        });
-                    }
-                    if (missingCustomTracks.length > 0) {
-                        localStorage.setItem('hoshino_missing_custom_tracks', JSON.stringify(missingCustomTracks));
-                    } else {
-                        localStorage.removeItem('hoshino_missing_custom_tracks');
-                    }
-
-                    localStorage.setItem('hoshino_wallets', JSON.stringify(wallets));
-                    localStorage.setItem('hoshino_chips', JSON.stringify(chips));
-                    localStorage.setItem('hoshino_theme', currentTheme);
-                    localStorage.setItem('hoshino_night_theme', String(DARK_THEMES.includes(currentTheme)));
-                    localStorage.setItem('hoshino_bg_opacity', customOpacity);
-                    localStorage.setItem('hoshinoGameVolume', gameVolume);
-                    localStorage.setItem('hoshino_custom_bg', customBg);
-                    localStorage.setItem('hoshino_streak', JSON.stringify(streakData));
-                    localStorage.setItem('hoshino_dialogue_speed', dialogueSpeed);
-                    localStorage.setItem('hoshino_page_scale', pageScale);
-                    localStorage.setItem('hoshino_typewriter', typewriterEnabled);
-                    localStorage.setItem('hoshino_mood_overtime', moodOvertimeEnabled);
-                    localStorage.setItem('hoshino_balance_hidden', balanceHidden);
-
+                    applyImportedBackup(imported);
                     alert("Backup imported successfully! Reloading... ✨");
                     location.reload();
                 } catch (err) {
