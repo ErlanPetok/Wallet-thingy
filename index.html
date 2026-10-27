@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#ffb3c6">
     <title>Hoshino's Daily</title>
+    <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
     <style>
         :root {
             --bg-color: #fff0f3;
@@ -485,7 +487,6 @@
             51%, 100% { opacity: 0; }
         }
 
-        /* === MUSIC BAR === */
         .music-bar {
             margin: 10px 16px 0 16px;
             background: var(--accent-pink);
@@ -845,6 +846,7 @@
             justify-content: flex-end;
             gap: 12px;
             padding: 2px 16px 0 16px;
+            flex-wrap: wrap;
         }
 
         input[type="file"] { display: none; }
@@ -2441,7 +2443,8 @@
 
         <div class="backup-controls">
             <button onclick="toggleSettingsPanel()" id="settingsBtn">⚙️ Settings</button>
-            <button onclick="exportData()">💾 Export</button>
+            <button onclick="exportData()">💾 Download</button>
+            <button onclick="saveToDrive()" id="driveBtn">☁️ Save to Drive</button>
             <button onclick="document.getElementById('importInput').click()">📂 Import</button>
         </div>
 
@@ -2660,6 +2663,153 @@
 
     <script>
         // ==========================================
+        // GOOGLE DRIVE CONFIG
+        // ⚠️ REPLACE THIS WITH YOUR CLIENT ID FROM GOOGLE CLOUD CONSOLE ⚠️
+        // ==========================================
+        const GOOGLE_CLIENT_ID = '955732224316-ulc65kio2u7l0mvfb8h3sipms8qen8cb.apps.googleusercontent.com';
+        const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+        const DRIVE_FILE_NAME = 'hoshino-daily-backup.json';
+
+        let gapiReady = false;
+        let gisReady = false;
+        let tokenClient = null;
+        let driveAccessToken = null;
+
+        function gapiLoaded() {
+            if (typeof gapi === 'undefined') return;
+            gapi.load('client', async () => {
+                try {
+                    await gapi.client.init({
+                        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+                    });
+                    gapiReady = true;
+                } catch (err) {
+                    console.warn('gapi init failed:', err);
+                }
+            });
+        }
+
+        function gisLoaded() {
+            if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) return;
+            try {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: GOOGLE_CLIENT_ID,
+                    scope: DRIVE_SCOPE,
+                    callback: () => {}  // set per-request
+                });
+                gisReady = true;
+            } catch (err) {
+                console.warn('GIS init failed:', err);
+            }
+        }
+
+        function requestDriveToken() {
+            return new Promise((resolve, reject) => {
+                if (!gisReady || !tokenClient) {
+                    reject(new Error('Google sign-in not ready yet. Try again in a moment.'));
+                    return;
+                }
+                if (GOOGLE_CLIENT_ID.includes('PASTE_YOUR_CLIENT_ID_HERE')) {
+                    reject(new Error('Client ID not configured. Edit index.html and paste your Google Client ID.'));
+                    return;
+                }
+                tokenClient.callback = (resp) => {
+                    if (resp.error) {
+                        reject(new Error(resp.error === 'popup_closed_by_user' ? 'Google popup closed.' : resp.error));
+                        return;
+                    }
+                    driveAccessToken = resp.access_token;
+                    resolve(driveAccessToken);
+                };
+                try {
+                    tokenClient.requestAccessToken({ prompt: '' });
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
+        async function saveToDrive() {
+            const btn = document.getElementById('driveBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '☁️ Connecting...';
+
+            try {
+                if (!gapiReady) {
+                    throw new Error('Google API still loading. Wait a moment and try again.');
+                }
+
+                await requestDriveToken();
+                btn.textContent = '☁️ Uploading...';
+
+                gapi.client.setToken({ access_token: driveAccessToken });
+
+                const backup = buildBackupObject();
+                const dataStr = JSON.stringify(backup, null, 2);
+
+                // Find existing file with this name
+                const listResp = await gapi.client.drive.files.list({
+                    q: `name='${DRIVE_FILE_NAME}' and trashed=false`,
+                    fields: 'files(id,name)',
+                    spaces: 'drive'
+                });
+                const existingFiles = (listResp.result && listResp.result.files) || [];
+
+                let fileId;
+                if (existingFiles.length > 0) {
+                    fileId = existingFiles[0].id;
+                }
+
+                const metadata = {
+                    name: DRIVE_FILE_NAME,
+                    mimeType: 'application/json'
+                };
+
+                if (fileId) {
+                    // Update existing file
+                    await gapi.client.request({
+                        path: `/upload/drive/v3/files/${fileId}`,
+                        method: 'PATCH',
+                        params: { uploadType: 'media' },
+                        body: dataStr,
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                } else {
+                    // Create new file (multipart: metadata + content)
+                    const boundary = '-------314159265358979323846';
+                    const delimiter = `\r\n--${boundary}\r\n`;
+                    const closeDelimiter = `\r\n--${boundary}--`;
+                    const body =
+                        delimiter +
+                        'Content-Type: application/json\r\n\r\n' +
+                        JSON.stringify(metadata) +
+                        delimiter +
+                        'Content-Type: application/json\r\n\r\n' +
+                        dataStr +
+                        closeDelimiter;
+
+                    await gapi.client.request({
+                        path: '/upload/drive/v3/files',
+                        method: 'POST',
+                        params: { uploadType: 'multipart' },
+                        headers: { 'Content-Type': `multipart/related; boundary="${boundary}"` },
+                        body: body
+                    });
+                }
+
+                showChipToast('☁️ Backup saved to Google Drive!');
+                updateHoshinoDisplay('happy', 'Your wallet is safe in the cloud now, Sensei~ ☁️✨');
+            } catch (err) {
+                console.error('Drive save error:', err);
+                showChipToast(`❌ Drive save failed: ${err.message || err}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        // ==========================================
         // MULTI-CURRENCY CONFIG
         // ==========================================
         const CURRENCIES = {
@@ -2829,7 +2979,7 @@
             noon:      'Sheena n Mimi - Cookie & Cream',
             afternoon: 'Ari n Seiran - Statice',
             night:     'Sajou no Hana - Eternel',
-            latenight: 'ReoNa - Amore (piano cover)'
+            latenight: 'Sajou no Hana - Eternel'
         };
 
         const trackPeriodLabel = {
@@ -3375,7 +3525,6 @@
                 || document.referrer.includes('android-app://');
         }
 
-        // === PROGRESS SLIDER STATE ===
         const progressSlider = document.getElementById('progressSlider');
         const currentTimeLabel = document.getElementById('currentTimeLabel');
         const totalTimeLabel = document.getElementById('totalTimeLabel');
@@ -4726,11 +4875,11 @@
         }
 
         // ==========================================
-        // EXPORT / IMPORT
+        // BACKUP BUILDER (shared by export & Drive)
         // ==========================================
-        function exportData() {
-            const backup = {
-                version: 13,
+        function buildBackupObject() {
+            return {
+                version: 14,
                 exportedAt: new Date().toISOString(),
                 wallets: wallets,
                 chips: chips,
@@ -4753,10 +4902,17 @@
                     moodOvertime: moodOvertimeEnabled
                 }
             };
+        }
+
+        // ==========================================
+        // EXPORT / IMPORT
+        // ==========================================
+        function exportData() {
+            const backup = buildBackupObject();
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
             const a = document.createElement('a');
             a.setAttribute("href", dataStr);
-            a.setAttribute("download", "Hoshino_Daily_" + new Date().toISOString().slice(0, 10) + ".json");
+            a.setAttribute("download", "hoshino-daily-backup-" + new Date().toISOString().slice(0, 10) + ".json");
             document.body.appendChild(a);
             a.click();
             a.remove();
