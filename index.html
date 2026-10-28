@@ -485,7 +485,6 @@
             51%, 100% { opacity: 0; }
         }
 
-        /* === MUSIC BAR === */
         .music-bar {
             margin: 10px 16px 0 16px;
             background: var(--accent-pink);
@@ -845,6 +844,7 @@
             justify-content: flex-end;
             gap: 12px;
             padding: 2px 16px 0 16px;
+            flex-wrap: wrap;
         }
 
         input[type="file"] { display: none; }
@@ -2441,8 +2441,8 @@
 
         <div class="backup-controls">
             <button onclick="toggleSettingsPanel()" id="settingsBtn">⚙️ Settings</button>
-            <button onclick="exportData()">💾 Export</button>
-            <button onclick="document.getElementById('importInput').click()">📂 Import</button>
+            <button onclick="openBackupMenu('export')">💾 Export</button>
+            <button onclick="openBackupMenu('import')">📂 Import</button>
         </div>
 
         <input type="file" id="fileInput" accept="image/*" onchange="handleImageUpload(event)">
@@ -2658,7 +2658,357 @@
         </div>
     </div>
 
+    <!-- Backup Menu Modal -->
+    <div class="modal-overlay" id="backupMenuOverlay" onclick="closeBackupMenu(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="backupMenuTitle">💾 Export</h2>
+                <button class="modal-close" onclick="closeBackupMenu()">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div id="backupMenuBody" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                <div class="modal-error" id="backupMenuError"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" onclick="closeBackupMenu()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ==========================================
+        // DROPBOX CONFIG
+        // ⚠️ Replace PASTE_YOUR_DROPBOX_APP_KEY_HERE with your App Key from
+        //    https://www.dropbox.com/developers/apps → your app → Settings → App key
+        // ⚠️ DROPBOX_REDIRECT_URI must EXACTLY match the Redirect URI you added
+        //    in Dropbox App Console (including trailing slash).
+        // ==========================================
+        const DROPBOX_APP_KEY = 'xp8d0hspuo41ts8';
+        const DROPBOX_REDIRECT_URI = 'https://erlanpetok.github.io/Wallet-thingy/';
+        const DROPBOX_BACKUP_FILENAME = '/hoshino-daily-backup.json';
+
+        // Storage keys
+        const LS_DBX_REFRESH = 'hoshino_dbx_refresh';
+        const SS_DBX_VERIFIER = 'hoshino_dbx_verifier';
+        const SS_DBX_STATE = 'hoshino_dbx_state';
+        const SS_DBX_ACTION = 'hoshino_dbx_action';
+
+        // PKCE helpers
+        function base64UrlEncode(bytes) {
+            let str = '';
+            for (let i = 0; i < bytes.length; i++) str += String.fromCharCode(bytes[i]);
+            return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+
+        function generateRandomString(length) {
+            const arr = new Uint8Array(length);
+            crypto.getRandomValues(arr);
+            return base64UrlEncode(arr);
+        }
+
+        async function generateCodeChallenge(verifier) {
+            const data = new TextEncoder().encode(verifier);
+            const digest = await crypto.subtle.digest('SHA-256', data);
+            return base64UrlEncode(new Uint8Array(digest));
+        }
+
+        // Start Dropbox auth
+        async function startDropboxAuth(action) {
+            if (!DROPBOX_APP_KEY || DROPBOX_APP_KEY === 'PASTE_YOUR_DROPBOX_APP_KEY_HERE') {
+                showChipToast('❌ Dropbox App Key not configured. Edit index.html.');
+                return;
+            }
+            const verifier = generateRandomString(64);
+            sessionStorage.setItem(SS_DBX_VERIFIER, verifier);
+            const state = generateRandomString(16);
+            sessionStorage.setItem(SS_DBX_STATE, state);
+            sessionStorage.setItem(SS_DBX_ACTION, action);
+
+            const challenge = await generateCodeChallenge(verifier);
+            const url = new URL('https://www.dropbox.com/oauth2/authorize');
+            url.searchParams.set('client_id', DROPBOX_APP_KEY);
+            url.searchParams.set('response_type', 'code');
+            url.searchParams.set('redirect_uri', DROPBOX_REDIRECT_URI);
+            url.searchParams.set('code_challenge', challenge);
+            url.searchParams.set('code_challenge_method', 'S256');
+            url.searchParams.set('token_access_type', 'offline');
+            url.searchParams.set('state', state);
+
+            window.location.href = url.toString();
+        }
+
+        // Handle redirect back from Dropbox
+        async function handleDropboxRedirect() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            const state = params.get('state');
+            const error = params.get('error');
+
+            if (error) {
+                showChipToast(`❌ Dropbox auth error: ${error}`);
+                cleanDropboxUrl();
+                return;
+            }
+            if (!code) return;
+
+            const expectedState = sessionStorage.getItem(SS_DBX_STATE);
+            if (!expectedState || state !== expectedState) {
+                showChipToast('❌ Dropbox auth state mismatch. Try again.');
+                cleanDropboxUrl();
+                return;
+            }
+
+            const verifier = sessionStorage.getItem(SS_DBX_VERIFIER);
+            const action = sessionStorage.getItem(SS_DBX_ACTION) || 'export';
+
+            if (!verifier) {
+                showChipToast('❌ Missing PKCE verifier. Try again.');
+                cleanDropboxUrl();
+                return;
+            }
+
+            try {
+                const body = new URLSearchParams();
+                body.set('code', code);
+                body.set('grant_type', 'authorization_code');
+                body.set('client_id', DROPBOX_APP_KEY);
+                body.set('redirect_uri', DROPBOX_REDIRECT_URI);
+                body.set('code_verifier', verifier);
+
+                const resp = await fetch('https://api.dropboxapi.com/oauth2/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: body.toString()
+                });
+
+                if (!resp.ok) {
+                    const text = await resp.text();
+                    throw new Error(`Token exchange failed (${resp.status}): ${text}`);
+                }
+
+                const data = await resp.json();
+                if (data.refresh_token) {
+                    localStorage.setItem(LS_DBX_REFRESH, data.refresh_token);
+                }
+                if (data.access_token) {
+                    sessionStorage.setItem('hoshino_dbx_access', data.access_token);
+                    sessionStorage.setItem('hoshino_dbx_access_expires', String(Date.now() + (data.expires_in || 14400) * 1000));
+                }
+                cleanDropboxUrl();
+
+                if (action === 'export') {
+                    showChipToast('☁️ Connected! Saving backup...');
+                    setTimeout(() => saveToDropbox(), 300);
+                } else if (action === 'import') {
+                    showChipToast('☁️ Connected! Loading backup...');
+                    setTimeout(() => loadFromDropbox(), 300);
+                }
+            } catch (err) {
+                console.error('Dropbox token exchange failed:', err);
+                showChipToast(`❌ Dropbox token failed: ${err.message || err}`);
+                cleanDropboxUrl();
+            }
+        }
+
+        function cleanDropboxUrl() {
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('code');
+                url.searchParams.delete('state');
+                url.searchParams.delete('error');
+                window.history.replaceState({}, '', url.toString());
+            } catch (e) {}
+        }
+
+        // Get a valid access token (refresh if needed)
+        async function getDropboxAccessToken(interactive = false) {
+            const cached = sessionStorage.getItem('hoshino_dbx_access');
+            const cachedExp = parseInt(sessionStorage.getItem('hoshino_dbx_access_expires') || '0', 10);
+            if (cached && Date.now() < cachedExp - 60000) {
+                return cached;
+            }
+
+            const refresh = localStorage.getItem(LS_DBX_REFRESH);
+            if (!refresh) {
+                if (interactive) {
+                    await startDropboxAuth('export');
+                    return null;
+                }
+                throw new Error('Not connected to Dropbox. Tap Save to Dropbox first.');
+            }
+
+            const body = new URLSearchParams();
+            body.set('grant_type', 'refresh_token');
+            body.set('refresh_token', refresh);
+            body.set('client_id', DROPBOX_APP_KEY);
+
+            const resp = await fetch('https://api.dropboxapi.com/oauth2/token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body.toString()
+            });
+
+            if (!resp.ok) {
+                const text = await resp.text();
+                localStorage.removeItem(LS_DBX_REFRESH);
+                throw new Error(`Refresh failed (${resp.status}): ${text}`);
+            }
+
+            const data = await resp.json();
+            if (data.access_token) {
+                sessionStorage.setItem('hoshino_dbx_access', data.access_token);
+                sessionStorage.setItem('hoshino_dbx_access_expires', String(Date.now() + (data.expires_in || 14400) * 1000));
+            }
+            return data.access_token;
+        }
+
+        // Save backup to Dropbox
+        async function saveToDropbox() {
+            closeBackupMenu();
+            let token;
+            try {
+                token = await getDropboxAccessToken(true);
+                if (!token) return;
+            } catch (err) {
+                showChipToast(`❌ ${err.message || err}`);
+                return;
+            }
+
+            showChipToast('☁️ Uploading to Dropbox...');
+            const backup = buildBackupObject();
+            const dataStr = JSON.stringify(backup, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+
+            try {
+                const resp = await fetch('https://content.dropboxapi.com/2/files/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/octet-stream',
+                        'Dropbox-API-Arg': JSON.stringify({
+                            path: DROPBOX_BACKUP_FILENAME,
+                            mode: 'overwrite',
+                            autorename: false,
+                            mute: false
+                        })
+                    },
+                    body: blob
+                });
+
+                if (!resp.ok) {
+                    const text = await resp.text();
+                    throw new Error(`Upload failed (${resp.status}): ${text}`);
+                }
+                showChipToast('☁️ Backup saved to Dropbox!');
+                updateHoshinoDisplay('happy', 'Your wallet is safe in Dropbox now, Sensei~ ☁️✨');
+            } catch (err) {
+                console.error('Dropbox save error:', err);
+                showChipToast(`❌ Dropbox save failed: ${err.message || err}`);
+            }
+        }
+
+        // Load backup from Dropbox
+        async function loadFromDropbox() {
+            closeBackupMenu();
+            let token;
+            try {
+                token = await getDropboxAccessToken(true);
+                if (!token) return;
+            } catch (err) {
+                showChipToast(`❌ ${err.message || err}`);
+                return;
+            }
+
+            showChipToast('☁️ Fetching from Dropbox...');
+            try {
+                const resp = await fetch('https://content.dropboxapi.com/2/files/download', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Dropbox-API-Arg': JSON.stringify({ path: DROPBOX_BACKUP_FILENAME })
+                    }
+                });
+
+                if (!resp.ok) {
+                    if (resp.status === 409) {
+                        throw new Error('No backup file found in Dropbox yet. Save one first!');
+                    }
+                    const text = await resp.text();
+                    throw new Error(`Download failed (${resp.status}): ${text}`);
+                }
+
+                const text = await resp.text();
+                const imported = JSON.parse(text);
+                if (!imported.wallets || !Array.isArray(imported.wallets) || imported.wallets.length === 0) {
+                    throw new Error('Backup file in Dropbox is empty or invalid.');
+                }
+                if (!confirm('Load backup from Dropbox?\n\nThis will overwrite your current data.')) {
+                    return;
+                }
+                applyImportedBackup(imported);
+                showChipToast('☁️ Backup loaded! Reloading...');
+                setTimeout(() => location.reload(), 800);
+            } catch (err) {
+                console.error('Dropbox load error:', err);
+                showChipToast(`❌ Dropbox load failed: ${err.message || err}`);
+            }
+        }
+
+        // ==========================================
+        // BACKUP MENU
+        // ==========================================
+        function openBackupMenu(mode) {
+            const overlay = document.getElementById('backupMenuOverlay');
+            const title = document.getElementById('backupMenuTitle');
+            const body = document.getElementById('backupMenuBody');
+            const err = document.getElementById('backupMenuError');
+            err.textContent = '';
+            err.classList.remove('show');
+            body.innerHTML = '';
+
+            if (mode === 'export') {
+                title.textContent = '💾 Export Backup';
+
+                const localBtn = document.createElement('button');
+                localBtn.className = 'wallet-action-btn';
+                localBtn.innerHTML = '<span>💾</span><div style="flex:1;"><div style="font-weight:700;">Save to this device</div><div class="checkbox-hint" style="padding-left:0;margin-top:2px;">Downloads a JSON file to your Downloads folder</div></div>';
+                localBtn.onclick = () => { closeBackupMenu(); exportData(); };
+                body.appendChild(localBtn);
+
+                const dbxBtn = document.createElement('button');
+                dbxBtn.className = 'wallet-action-btn';
+                dbxBtn.innerHTML = '<span>☁️</span><div style="flex:1;"><div style="font-weight:700;">Save to Dropbox</div><div class="checkbox-hint" style="padding-left:0;margin-top:2px;">Uploads to your Dropbox Apps folder (needs Dropbox login)</div></div>';
+                dbxBtn.onclick = () => { closeBackupMenu(); startDropboxAuth('export'); };
+                body.appendChild(dbxBtn);
+            } else {
+                title.textContent = '📂 Import Backup';
+
+                const localBtn = document.createElement('button');
+                localBtn.className = 'wallet-action-btn';
+                localBtn.innerHTML = '<span>📂</span><div style="flex:1;"><div style="font-weight:700;">Load from this device</div><div class="checkbox-hint" style="padding-left:0;margin-top:2px;">Pick a JSON file from your phone or PC</div></div>';
+                localBtn.onclick = () => {
+                    closeBackupMenu();
+                    document.getElementById('importInput').click();
+                };
+                body.appendChild(localBtn);
+
+                const dbxBtn = document.createElement('button');
+                dbxBtn.className = 'wallet-action-btn';
+                dbxBtn.innerHTML = '<span>☁️</span><div style="flex:1;"><div style="font-weight:700;">Load from Dropbox</div><div class="checkbox-hint" style="padding-left:0;margin-top:2px;">Fetch the latest backup from your Dropbox</div></div>';
+                dbxBtn.onclick = () => { closeBackupMenu(); startDropboxAuth('import'); };
+                body.appendChild(dbxBtn);
+            }
+
+            overlay.classList.add('active');
+        }
+
+        function closeBackupMenu(event) {
+            if (event && event.target !== document.getElementById('backupMenuOverlay')) return;
+            document.getElementById('backupMenuOverlay').classList.remove('active');
+        }
+
         // ==========================================
         // MULTI-CURRENCY CONFIG
         // ==========================================
@@ -3375,7 +3725,6 @@
                 || document.referrer.includes('android-app://');
         }
 
-        // === PROGRESS SLIDER STATE ===
         const progressSlider = document.getElementById('progressSlider');
         const currentTimeLabel = document.getElementById('currentTimeLabel');
         const totalTimeLabel = document.getElementById('totalTimeLabel');
@@ -3560,6 +3909,9 @@
         }
 
         (async () => {
+            // Handle Dropbox redirect (if returning from auth)
+            await handleDropboxRedirect();
+
             customTracks = await loadCustomTracksFromDB();
             rebuildCustomAudio();
             rebuildTrackOrder();
@@ -4339,6 +4691,7 @@
             const chipOverlay = document.getElementById('chipModalOverlay');
             const walletOverlay = document.getElementById('walletModalOverlay');
             const playlistOverlay = document.getElementById('playlistModalOverlay');
+            const backupOverlay = document.getElementById('backupMenuOverlay');
 
             if (walletOverlay.classList.contains('active')) {
                 if (e.key === 'Escape') closeWalletModal();
@@ -4346,6 +4699,10 @@
             }
             if (playlistOverlay.classList.contains('active')) {
                 if (e.key === 'Escape') closePlaylistModal();
+                return;
+            }
+            if (backupOverlay.classList.contains('active')) {
+                if (e.key === 'Escape') closeBackupMenu();
                 return;
             }
             if (!chipOverlay.classList.contains('active')) return;
@@ -4726,11 +5083,11 @@
         }
 
         // ==========================================
-        // EXPORT / IMPORT
+        // BACKUP BUILDER
         // ==========================================
-        function exportData() {
-            const backup = {
-                version: 13,
+        function buildBackupObject() {
+            return {
+                version: 14,
                 exportedAt: new Date().toISOString(),
                 wallets: wallets,
                 chips: chips,
@@ -4753,10 +5110,75 @@
                     moodOvertime: moodOvertimeEnabled
                 }
             };
+        }
+
+        function applyImportedBackup(imported) {
+            wallets = imported.wallets.map(w => ({ ...w, currency: w.currency || 'IDR' }));
+            currentWalletId = wallets[0].id;
+            activeEditTxId = null;
+
+            if (imported.chips && Array.isArray(imported.chips)) {
+                chips = imported.chips.map(chip => ({
+                    ...chip,
+                    useDenom: typeof chip.useDenom === 'boolean' ? chip.useDenom : false
+                }));
+            }
+
+            if (typeof imported.theme === 'string' && THEMES.includes(imported.theme)) currentTheme = imported.theme;
+            else if (typeof imported.nightTheme === 'boolean') currentTheme = imported.nightTheme ? 'night' : 'pink';
+
+            if (typeof imported.customOpacity === 'string' || typeof imported.customOpacity === 'number') customOpacity = String(imported.customOpacity);
+            if (typeof imported.gameVolume === 'number') gameVolume = imported.gameVolume;
+            if (typeof imported.customBg === 'string') customBg = imported.customBg;
+            if (imported.streak && typeof imported.streak === 'object') streakData = imported.streak;
+            if (typeof imported.balanceHidden === 'boolean') balanceHidden = imported.balanceHidden;
+            if (imported.settings && typeof imported.settings === 'object') {
+                const s = imported.settings;
+                if (typeof s.dialogueSpeed === 'number') dialogueSpeed = s.dialogueSpeed;
+                if (typeof s.pageScale === 'number') pageScale = s.pageScale;
+                if (typeof s.typewriter === 'boolean') typewriterEnabled = s.typewriter;
+                if (typeof s.moodOvertime === 'boolean') moodOvertimeEnabled = s.moodOvertime;
+            }
+
+            let missingCustomTracks = [];
+            if (Array.isArray(imported.customTracksMeta)) {
+                const existingNames = new Set(customTracks.map(t => t.name));
+                imported.customTracksMeta.forEach(m => {
+                    if (m && typeof m.name === 'string' && !existingNames.has(m.name)) {
+                        missingCustomTracks.push(m.name);
+                    }
+                });
+            }
+            if (missingCustomTracks.length > 0) {
+                localStorage.setItem('hoshino_missing_custom_tracks', JSON.stringify(missingCustomTracks));
+            } else {
+                localStorage.removeItem('hoshino_missing_custom_tracks');
+            }
+
+            localStorage.setItem('hoshino_wallets', JSON.stringify(wallets));
+            localStorage.setItem('hoshino_chips', JSON.stringify(chips));
+            localStorage.setItem('hoshino_theme', currentTheme);
+            localStorage.setItem('hoshino_night_theme', String(DARK_THEMES.includes(currentTheme)));
+            localStorage.setItem('hoshino_bg_opacity', customOpacity);
+            localStorage.setItem('hoshinoGameVolume', gameVolume);
+            localStorage.setItem('hoshino_custom_bg', customBg);
+            localStorage.setItem('hoshino_streak', JSON.stringify(streakData));
+            localStorage.setItem('hoshino_dialogue_speed', dialogueSpeed);
+            localStorage.setItem('hoshino_page_scale', pageScale);
+            localStorage.setItem('hoshino_typewriter', typewriterEnabled);
+            localStorage.setItem('hoshino_mood_overtime', moodOvertimeEnabled);
+            localStorage.setItem('hoshino_balance_hidden', balanceHidden);
+        }
+
+        // ==========================================
+        // EXPORT / IMPORT (LOCAL)
+        // ==========================================
+        function exportData() {
+            const backup = buildBackupObject();
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
             const a = document.createElement('a');
             a.setAttribute("href", dataStr);
-            a.setAttribute("download", "Hoshino_Daily_" + new Date().toISOString().slice(0, 10) + ".json");
+            a.setAttribute("download", "hoshino-daily-backup-" + new Date().toISOString().slice(0, 10) + ".json");
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -4782,63 +5204,7 @@
                         return;
                     }
                     if (!confirm("Overwrite current data with backup? 📂")) { inputEl.value = ''; return; }
-
-                    wallets = imported.wallets.map(w => ({ ...w, currency: w.currency || 'IDR' }));
-                    currentWalletId = wallets[0].id;
-                    activeEditTxId = null;
-
-                    if (imported.chips && Array.isArray(imported.chips)) {
-                        chips = imported.chips.map(chip => ({
-                            ...chip,
-                            useDenom: typeof chip.useDenom === 'boolean' ? chip.useDenom : false
-                        }));
-                    }
-
-                    if (typeof imported.theme === 'string' && THEMES.includes(imported.theme)) currentTheme = imported.theme;
-                    else if (typeof imported.nightTheme === 'boolean') currentTheme = imported.nightTheme ? 'night' : 'pink';
-
-                    if (typeof imported.customOpacity === 'string' || typeof imported.customOpacity === 'number') customOpacity = String(imported.customOpacity);
-                    if (typeof imported.gameVolume === 'number') gameVolume = imported.gameVolume;
-                    if (typeof imported.customBg === 'string') customBg = imported.customBg;
-                    if (imported.streak && typeof imported.streak === 'object') streakData = imported.streak;
-                    if (typeof imported.balanceHidden === 'boolean') balanceHidden = imported.balanceHidden;
-                    if (imported.settings && typeof imported.settings === 'object') {
-                        const s = imported.settings;
-                        if (typeof s.dialogueSpeed === 'number') dialogueSpeed = s.dialogueSpeed;
-                        if (typeof s.pageScale === 'number') pageScale = s.pageScale;
-                        if (typeof s.typewriter === 'boolean') typewriterEnabled = s.typewriter;
-                        if (typeof s.moodOvertime === 'boolean') moodOvertimeEnabled = s.moodOvertime;
-                    }
-
-                    let missingCustomTracks = [];
-                    if (Array.isArray(imported.customTracksMeta)) {
-                        const existingNames = new Set(customTracks.map(t => t.name));
-                        imported.customTracksMeta.forEach(m => {
-                            if (m && typeof m.name === 'string' && !existingNames.has(m.name)) {
-                                missingCustomTracks.push(m.name);
-                            }
-                        });
-                    }
-                    if (missingCustomTracks.length > 0) {
-                        localStorage.setItem('hoshino_missing_custom_tracks', JSON.stringify(missingCustomTracks));
-                    } else {
-                        localStorage.removeItem('hoshino_missing_custom_tracks');
-                    }
-
-                    localStorage.setItem('hoshino_wallets', JSON.stringify(wallets));
-                    localStorage.setItem('hoshino_chips', JSON.stringify(chips));
-                    localStorage.setItem('hoshino_theme', currentTheme);
-                    localStorage.setItem('hoshino_night_theme', String(DARK_THEMES.includes(currentTheme)));
-                    localStorage.setItem('hoshino_bg_opacity', customOpacity);
-                    localStorage.setItem('hoshinoGameVolume', gameVolume);
-                    localStorage.setItem('hoshino_custom_bg', customBg);
-                    localStorage.setItem('hoshino_streak', JSON.stringify(streakData));
-                    localStorage.setItem('hoshino_dialogue_speed', dialogueSpeed);
-                    localStorage.setItem('hoshino_page_scale', pageScale);
-                    localStorage.setItem('hoshino_typewriter', typewriterEnabled);
-                    localStorage.setItem('hoshino_mood_overtime', moodOvertimeEnabled);
-                    localStorage.setItem('hoshino_balance_hidden', balanceHidden);
-
+                    applyImportedBackup(imported);
                     alert("Backup imported successfully! Reloading... ✨");
                     location.reload();
                 } catch (err) {
