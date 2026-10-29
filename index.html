@@ -2401,6 +2401,11 @@
                 <input type="checkbox" id="moodOvertimeToggle" checked onchange="toggleMoodOvertime(this.checked)">
             </div>
 
+            <div class="setting-toggle">
+                <span>🎵 Keep music in background</span>
+                <input type="checkbox" id="bgMusicToggle" onchange="toggleBackgroundMusic(this.checked)">
+            </div>
+
             <div class="settings-divider"></div>
 
             <h4>🎨 Background</h4>
@@ -3211,6 +3216,9 @@
         function renderTrackLabel() {
             const el = document.getElementById('currentTrackDisplay');
             if (el) el.textContent = getTrackTitle(currentPeriod);
+            if (typeof updateMediaSession === 'function') {
+                try { updateMediaSession(); } catch (e) {}
+            }
         }
 
         // ==========================================
@@ -3222,6 +3230,8 @@
         let moodOvertimeEnabled = localStorage.getItem('hoshino_mood_overtime') !== 'false';
         let monthlyExpanded = localStorage.getItem('hoshino_monthly_expanded') === 'true';
         let balanceHidden = localStorage.getItem('hoshino_balance_hidden') === 'true';
+        let keepBgmInBackground = localStorage.getItem('hoshino_bgm_background') === 'true';
+        let wasPlayingBeforeHide = false;
 
         let historySearchQuery = '';
         let historyFilter = 'all';
@@ -3459,6 +3469,21 @@
             localStorage.setItem('hoshino_mood_overtime', enabled);
             if (enabled) applyMoodOvertime(true);
         }
+
+        function toggleBackgroundMusic(enabled) {
+            keepBgmInBackground = enabled;
+            localStorage.setItem('hoshino_bgm_background', enabled);
+        }
+
+        // Apply saved setting on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const bgToggle = document.getElementById('bgMusicToggle');
+            if (bgToggle) bgToggle.checked = keepBgmInBackground;
+        });
+        setTimeout(() => {
+            const bgToggle = document.getElementById('bgMusicToggle');
+            if (bgToggle) bgToggle.checked = keepBgmInBackground;
+        }, 0);
 
         // ==========================================
         // BALANCE VISIBILITY
@@ -3908,8 +3933,112 @@
             if (!isPlaying) startBGM();
         }
 
+        // ==========================================
+        // BACKGROUND PAUSE + MEDIA SESSION
+        // ==========================================
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                if (!keepBgmInBackground) {
+                    wasPlayingBeforeHide = isPlaying;
+                    if (isPlaying) {
+                        Object.values(audioTracks).forEach(a => a.pause());
+                        isPlaying = false;
+                        musicPlayBtn.textContent = "▶";
+                        updateProgressUI();
+                    }
+                }
+            } else {
+                if (!keepBgmInBackground && wasPlayingBeforeHide) {
+                    wasPlayingBeforeHide = false;
+                    const activeAudio = audioTracks[currentPeriod];
+                    if (activeAudio) {
+                        activeAudio.volume = gameVolume;
+                        activeAudio.play().then(() => {
+                            isPlaying = true;
+                            musicPlayBtn.textContent = "❚❚";
+                        }).catch(() => {});
+                    }
+                }
+            }
+        });
+
+        function updateMediaSession() {
+            if (!('mediaSession' in navigator)) return;
+            const title = getTrackTitle(currentPeriod);
+            try {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: title,
+                    artist: "Hoshino's Daily",
+                    album: "BGM",
+                    artwork: [
+                        { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
+                    ]
+                });
+                navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+            } catch (e) {}
+        }
+
+        function setupMediaSessionHandlers() {
+            if (!('mediaSession' in navigator)) return;
+            try {
+                navigator.mediaSession.setActionHandler('play', () => {
+                    if (!isPlaying) togglePlayMusic();
+                    updateMediaSession();
+                });
+                navigator.mediaSession.setActionHandler('pause', () => {
+                    if (isPlaying) togglePlayMusic();
+                    updateMediaSession();
+                });
+                navigator.mediaSession.setActionHandler('nexttrack', () => {
+                    nextTrack();
+                    updateMediaSession();
+                });
+                navigator.mediaSession.setActionHandler('previoustrack', () => {
+                    const currentIdx = TRACK_ORDER.indexOf(currentPeriod);
+                    const prevIdx = (currentIdx - 1 + TRACK_ORDER.length) % TRACK_ORDER.length;
+                    currentPeriod = TRACK_ORDER[prevIdx];
+                    manualOverride = true;
+                    Object.keys(audioTracks).forEach(key => {
+                        audioTracks[key].pause();
+                        audioTracks[key].currentTime = 0;
+                    });
+                    renderTrackLabel();
+                    const activeAudio = audioTracks[currentPeriod];
+                    if (activeAudio) {
+                        attachProgressToAudio(activeAudio);
+                        activeAudio.volume = gameVolume;
+                        activeAudio.play().then(() => {
+                            isPlaying = true;
+                            musicPlayBtn.textContent = "❚❚";
+                            updateMediaSession();
+                        }).catch(() => {});
+                    }
+                });
+                navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+                    const audio = audioTracks[currentPeriod];
+                    if (!audio) return;
+                    const offset = details.seekOffset || 10;
+                    try { audio.currentTime = Math.max(0, audio.currentTime - offset); } catch(e){}
+                });
+                navigator.mediaSession.setActionHandler('seekforward', (details) => {
+                    const audio = audioTracks[currentPeriod];
+                    if (!audio) return;
+                    const offset = details.seekOffset || 10;
+                    try { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + offset); } catch(e){}
+                });
+                navigator.mediaSession.setActionHandler('seekto', (details) => {
+                    const audio = audioTracks[currentPeriod];
+                    if (!audio || details.seekTime == null) return;
+                    try { audio.currentTime = details.seekTime; } catch(e){}
+                });
+            } catch (err) {
+                console.warn('Media Session handlers failed:', err);
+            }
+        }
+
+        setupMediaSessionHandlers();
+
         (async () => {
-            // Handle Dropbox redirect (if returning from auth)
             await handleDropboxRedirect();
 
             customTracks = await loadCustomTracksFromDB();
@@ -3937,12 +4066,14 @@
                 isPlaying = false;
                 musicPlayBtn.textContent = "▶";
                 updateProgressUI();
+                updateMediaSession();
             } else {
                 activeAudio.volume = gameVolume;
                 activeAudio.play().then(() => {
                     isPlaying = true;
                     musicPlayBtn.textContent = "❚❚";
                     attachProgressToAudio(activeAudio);
+                    updateMediaSession();
                 }).catch(e => {});
             }
         }
@@ -3974,12 +4105,14 @@
             activeAudio.play().then(() => {
                 isPlaying = true;
                 musicPlayBtn.textContent = "❚❚";
+                updateMediaSession();
             }).catch(err => {
                 activeAudio.volume = 0;
                 activeAudio.play().then(() => {
                     isPlaying = true;
                     musicPlayBtn.textContent = "❚❚";
                     armBgmUnlock(activeAudio);
+                    updateMediaSession();
                 }).catch(() => {
                     isPlaying = false;
                     musicPlayBtn.textContent = "▶";
@@ -4008,12 +4141,14 @@
                 activeAudio.play().then(() => {
                     isPlaying = true;
                     musicPlayBtn.textContent = "❚❚";
+                    updateMediaSession();
                 }).catch(() => {
                     activeAudio.volume = 0;
                     activeAudio.play().then(() => {
                         isPlaying = true;
                         musicPlayBtn.textContent = "❚❚";
                         armBgmUnlock(activeAudio);
+                        updateMediaSession();
                     }).catch(() => {});
                 });
             }
@@ -4622,6 +4757,7 @@
             activeAudio.play().then(() => {
                 isPlaying = true;
                 musicPlayBtn.textContent = "❚❚";
+                updateMediaSession();
                 closePlaylistModal();
             }).catch(() => {
                 activeAudio.volume = 0;
@@ -4629,6 +4765,7 @@
                     isPlaying = true;
                     musicPlayBtn.textContent = "❚❚";
                     armBgmUnlock(activeAudio);
+                    updateMediaSession();
                     closePlaylistModal();
                 }).catch(() => {});
             });
@@ -4676,6 +4813,7 @@
                         activeAudio.play().then(() => {
                             isPlaying = true;
                             musicPlayBtn.textContent = "❚❚";
+                            updateMediaSession();
                         }).catch(() => {});
                     }
                 } else {
@@ -5107,7 +5245,8 @@
                     dialogueSpeed: dialogueSpeed,
                     pageScale: pageScale,
                     typewriter: typewriterEnabled,
-                    moodOvertime: moodOvertimeEnabled
+                    moodOvertime: moodOvertimeEnabled,
+                    bgmBackground: keepBgmInBackground
                 }
             };
         }
@@ -5138,6 +5277,7 @@
                 if (typeof s.pageScale === 'number') pageScale = s.pageScale;
                 if (typeof s.typewriter === 'boolean') typewriterEnabled = s.typewriter;
                 if (typeof s.moodOvertime === 'boolean') moodOvertimeEnabled = s.moodOvertime;
+                if (typeof s.bgmBackground === 'boolean') keepBgmInBackground = s.bgmBackground;
             }
 
             let missingCustomTracks = [];
@@ -5168,6 +5308,7 @@
             localStorage.setItem('hoshino_typewriter', typewriterEnabled);
             localStorage.setItem('hoshino_mood_overtime', moodOvertimeEnabled);
             localStorage.setItem('hoshino_balance_hidden', balanceHidden);
+            localStorage.setItem('hoshino_bgm_background', keepBgmInBackground);
         }
 
         // ==========================================
