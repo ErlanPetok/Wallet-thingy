@@ -190,6 +190,7 @@
             align-items: center;
             backdrop-filter: blur(4px);
             z-index: 10;
+            transition: transform 0.2s, background 0.2s;
         }
 
         .theme-toggle-btn:hover {
@@ -223,6 +224,31 @@
 
         .update-btn.spinning {
             animation: spin 1s linear infinite;
+        }
+
+        .tutorial-help-btn {
+            position: absolute;
+            top: 12px;
+            left: 56px;
+            background: rgba(255, 255, 255, 0.55);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: var(--header-text);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.05rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            transition: transform 0.2s, background 0.2s;
+            z-index: 10;
+        }
+
+        .tutorial-help-btn:hover {
+            background: rgba(255, 255, 255, 0.75);
+            transform: scale(1.05);
         }
 
         .streak-badge {
@@ -849,12 +875,8 @@
 
         input[type="file"] { display: none; }
 
+        /* Settings content — now inside modal */
         .settings-panel {
-            margin: 8px 16px 0 16px;
-            background: var(--accent-pink);
-            border: 1px dashed var(--primary-pink);
-            padding: 10px;
-            border-radius: 12px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -1515,6 +1537,27 @@
             gap: 8px;
         }
 
+        .history-month-separator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--dark-pink);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 6px 2px 2px 2px;
+        }
+
+        .history-month-separator::before,
+        .history-month-separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--primary-pink);
+            opacity: 0.6;
+        }
+
         .history-item-container {
             display: flex;
             flex-direction: column;
@@ -1530,13 +1573,16 @@
             padding: 8px 12px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            gap: 8px;
         }
 
         .history-info {
             display: flex;
             flex-direction: column;
             gap: 2px;
+            flex-grow: 1;
+            min-width: 0;
         }
 
         .history-desc {
@@ -1561,16 +1607,16 @@
         }
 
         .history-note-badge {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             color: var(--dark-pink);
-            font-weight: 700;
-            opacity: 0.85;
+            font-weight: 600;
+            opacity: 0.9;
             font-style: italic;
-            max-width: 180px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            margin-top: 2px;
+            margin-top: 3px;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            line-height: 1.35;
         }
 
         .history-amount-group {
@@ -1578,6 +1624,7 @@
             flex-direction: column;
             align-items: flex-end;
             gap: 2px;
+            flex-shrink: 0;
         }
 
         .history-amount {
@@ -2208,16 +2255,6 @@
             transform: translateY(-1px);
         }
 
-        .settings-panel {
-            animation: panelFadeIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
-            transform-origin: top center;
-        }
-
-        @keyframes panelFadeIn {
-            from { opacity: 0; transform: translateY(-10px) scaleY(0.96); }
-            to   { opacity: 1; transform: translateY(0) scaleY(1); }
-        }
-
         .balance-card { animation: balanceFloat 4s ease-in-out infinite; }
 
         @keyframes balanceFloat {
@@ -2296,12 +2333,287 @@
             color: var(--text-color) !important;
             border: none !important;
         }
+
+        /* =========================================
+           TUTORIAL STYLES
+           ========================================= */
+        #tutorialRoot {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            display: none;
+            pointer-events: none;
+        }
+
+        #tutorialRoot.active { display: block; }
+
+        .tutorial-shade {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.72);
+            pointer-events: auto;
+            transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 1;
+        }
+
+        #tutorialRing {
+            position: fixed;
+            border-radius: 14px;
+            border: 3px solid var(--dark-pink, #ff4d6d);
+            box-shadow:
+                0 0 0 4px rgba(255, 77, 109, 0.25),
+                0 0 24px 6px rgba(255, 77, 109, 0.55);
+            pointer-events: none;
+            transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: tutorialPulse 1.6s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        @keyframes tutorialPulse {
+            0%, 100% {
+                box-shadow:
+                    0 0 0 4px rgba(255, 77, 109, 0.25),
+                    0 0 24px 6px rgba(255, 77, 109, 0.45);
+            }
+            50% {
+                box-shadow:
+                    0 0 0 8px rgba(255, 77, 109, 0.12),
+                    0 0 32px 10px rgba(255, 77, 109, 0.65);
+            }
+        }
+
+        #tutorialArrow {
+            position: fixed;
+            font-size: 2rem;
+            color: var(--dark-pink, #ff4d6d);
+            text-shadow: 0 0 12px rgba(255, 77, 109, 0.8), 0 2px 6px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+            transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 4;
+        }
+
+        #tutorialArrow.bounce-up { animation: arrowBounceUp 1s ease-in-out infinite; }
+        #tutorialArrow.bounce-down { animation: arrowBounceDown 1s ease-in-out infinite; }
+
+        @keyframes arrowBounceUp {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -10px); }
+        }
+        @keyframes arrowBounceDown {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, 10px); }
+        }
+
+        #tutorialBar {
+            position: fixed;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(30, 20, 40, 0.97), rgba(20, 12, 28, 0.99));
+            border-top: 2px solid var(--dark-pink, #ff4d6d);
+            color: #fff;
+            padding: 12px 14px 14px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 5;
+            box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.4);
+            transition: top 0.35s cubic-bezier(0.22, 1, 0.36, 1), bottom 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: auto;
+        }
+
+        #tutorialBar.at-bottom { bottom: 0; top: auto; border-top: 2px solid var(--dark-pink, #ff4d6d); border-bottom: none; }
+        #tutorialBar.at-top { top: 0; bottom: auto; border-bottom: 2px solid var(--dark-pink, #ff4d6d); border-top: none; box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4); }
+
+        #tutorialSprite {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--dark-pink, #ff4d6d);
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 3px 12px rgba(255, 77, 109, 0.5);
+            position: relative;
+        }
+
+        #tutorialSprite img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        #tutorialSprite::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 77, 109, 0.6);
+            animation: tutorialSpriteGlow 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes tutorialSpriteGlow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.06); }
+        }
+
+        #tutorialTextWrap {
+            flex-grow: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        #tutorialStepCounter {
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: var(--dark-pink, #ff4d6d);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            text-shadow: 0 0 6px rgba(255, 77, 109, 0.6);
+        }
+
+        #tutorialTitle {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1px;
+        }
+
+        #tutorialText {
+            font-size: 0.76rem;
+            line-height: 1.4;
+            color: #f0e5f5;
+            font-weight: 500;
+        }
+
+        #tutorialText.typing::after {
+            content: '▍';
+            color: var(--dark-pink, #ff4d6d);
+            animation: blink 0.7s infinite;
+            margin-left: 1px;
+        }
+
+        #tutorialButtons {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-shrink: 0;
+            align-items: stretch;
+        }
+
+        #tutorialNextBtn {
+            background: var(--dark-pink, #ff4d6d);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(255, 77, 109, 0.5);
+            transition: transform 0.1s, opacity 0.2s;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        #tutorialNextBtn:active { transform: scale(0.95); }
+        #tutorialNextBtn.hidden { display: none; }
+
+        #tutorialSkipBtn {
+            background: rgba(255, 255, 255, 0.12);
+            color: #f0e5f5;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+
+        #tutorialSkipBtn:hover { background: rgba(255, 255, 255, 0.22); }
+
+        .chapter-card {
+            background: var(--accent-pink);
+            border: 1px solid var(--primary-pink);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.12s, background 0.15s;
+            text-align: left;
+            width: 100%;
+        }
+
+        .chapter-card:hover {
+            background: var(--primary-pink);
+            color: #fff;
+            transform: translateX(3px);
+        }
+
+        .chapter-card:hover .chapter-emoji,
+        .chapter-card:hover .chapter-title,
+        .chapter-card:hover .chapter-desc { color: #fff; }
+
+        .chapter-emoji {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            color: var(--dark-pink);
+        }
+
+        .chapter-body {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+            flex-grow: 1;
+        }
+
+        .chapter-title {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--dark-pink);
+        }
+
+        .chapter-desc {
+            font-size: 0.65rem;
+            opacity: 0.85;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .chapter-card:hover .chapter-desc { color: #fff; opacity: 0.95; }
+
+        .chapter-seen-badge {
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: var(--gain-color);
+            background: rgba(43, 147, 72, 0.12);
+            padding: 2px 6px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 380px) {
+            #tutorialBar { padding: 10px; gap: 8px; }
+            #tutorialSprite { width: 52px; height: 52px; }
+            #tutorialText { font-size: 0.72rem; }
+            #tutorialNextBtn { padding: 7px 12px; font-size: 0.72rem; }
+            #tutorialSkipBtn { padding: 5px 10px; font-size: 0.62rem; }
+        }
     </style>
 </head>
 <body>
     <div class="phone-container" id="phoneContainer">
         <header>
             <button class="update-btn" id="updateBtn" onclick="checkForUpdates()" title="Check for updates">🔄</button>
+            <button class="tutorial-help-btn" id="tutorialHelpBtn" onclick="openTutorialHub()" title="Tutorial chapters">❓</button>
             <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
             <div class="streak-badge" id="streakBadge" style="display: none;"></div>
             <div class="header-title-box">
@@ -2360,92 +2672,8 @@
             </div>
         </div>
 
-        <div class="settings-panel" id="settingsPanel" style="display: none;">
-            <h4>🎨 Theme</h4>
-            <div class="theme-picker-row">
-                <div class="theme-swatch theme-swatch-pink" data-theme="pink" onclick="setTheme('pink')" title="Pink"><span>🌸</span></div>
-                <div class="theme-swatch theme-swatch-night" data-theme="night" onclick="setTheme('night')" title="Night"><span>🌙</span></div>
-                <div class="theme-swatch theme-swatch-ocean" data-theme="ocean" onclick="setTheme('ocean')" title="Ocean"><span>🌊</span></div>
-                <div class="theme-swatch theme-swatch-spring" data-theme="spring" onclick="setTheme('spring')" title="Spring"><span>🌻</span></div>
-            </div>
-
-            <div class="settings-divider"></div>
-
-            <h4>⚙️ Settings</h4>
-
-            <div class="setting-row">
-                <div class="setting-label">
-                    <span>✍️ Dialogue Speed</span>
-                    <span class="setting-value" id="dialogueSpeedLabel">40ms</span>
-                </div>
-                <input type="range" id="dialogueSpeedSlider" min="10" max="120" step="5" value="40" oninput="updateDialogueSpeed(this.value)">
-                <div class="setting-hint">Lower = faster typing</div>
-            </div>
-
-            <div class="setting-row">
-                <div class="setting-label">
-                    <span>📏 Page Size</span>
-                    <span class="setting-value" id="pageScaleLabel">100%</span>
-                </div>
-                <input type="range" id="pageScaleSlider" min="70" max="140" step="5" value="100" oninput="updatePageScale(this.value)">
-                <div class="setting-hint">Shrink to see your background, or enlarge for bigger UI</div>
-            </div>
-
-            <div class="setting-toggle">
-                <span>⌨️ Typewriter Effect</span>
-                <input type="checkbox" id="typewriterToggle" checked onchange="toggleTypewriter(this.checked)">
-            </div>
-
-            <div class="setting-toggle">
-                <span>🎭 Mood Overtime</span>
-                <input type="checkbox" id="moodOvertimeToggle" checked onchange="toggleMoodOvertime(this.checked)">
-            </div>
-
-            <div class="setting-toggle">
-                <span>🎵 Keep music in background</span>
-                <input type="checkbox" id="bgMusicToggle" onchange="toggleBackgroundMusic(this.checked)">
-            </div>
-
-            <div class="settings-divider"></div>
-
-            <h4>🎨 Background</h4>
-
-            <div style="font-weight: 700; color: var(--dark-pink); font-size: 0.7rem;">Presets:</div>
-            <div class="bg-presets-row">
-                <button class="bg-preset-btn" onclick="setPresetBg('together')">💕 Together</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('together2')">💕 Together 2</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('school')">🏫 Abydos</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('classroom')">☁️ Committee Room</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('classroomsunset')">🌆 Committee Room (sunset)</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('classroomnight')">🌃 Committee Room (night)</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('classroomnightlight')">💡 Committee Room (nightlight)</button>
-                <button class="bg-preset-btn" onclick="setPresetBg('councilroom')">💡 Council Room</button>
-            </div>
-
-            <div style="font-weight: 700; color: var(--dark-pink); font-size: 0.7rem; margin-top: 2px;">Or custom image:</div>
-            <div style="display: flex; gap: 6px;">
-                <button class="action-btn" onclick="document.getElementById('bgFileInput').click()">Upload Image</button>
-                <button class="action-btn" onclick="clearCustomBg()">Reset Default</button>
-            </div>
-
-            <div class="setting-row" style="margin-top: 4px;">
-                <div class="setting-label">
-                    <span>White Box Opacity</span>
-                    <span class="setting-value" id="opacityValLabel">50%</span>
-                </div>
-                <input type="range" id="opacitySlider" min="20" max="100" value="50" oninput="updateCardOpacity(this.value)">
-            </div>
-
-            <div class="settings-divider"></div>
-
-            <h4>🔔 Notifications</h4>
-
-            <button class="submit-btn" style="width: 100%; padding: 8px; font-size: 0.75rem;" onclick="requestNotificationPermission()">🔔 Enable Daily Wallet Reminder</button>
-            <div class="setting-hint">Sends a gentle nudge once per day when the app is open</div>
-        </div>
-
         <div class="backup-controls">
-            <button onclick="toggleSettingsPanel()" id="settingsBtn">⚙️ Settings</button>
+            <button onclick="openSettingsMenu()" id="settingsBtn">⚙️ Settings</button>
             <button onclick="openBackupMenu('export')">💾 Export</button>
             <button onclick="openBackupMenu('import')">📂 Import</button>
         </div>
@@ -2521,7 +2749,7 @@
                 <input type="text" id="note" placeholder="e.g., Bought for a friend" maxlength="120">
             </div>
 
-            <button type="submit" class="submit-btn">Add Entry ✨</button>
+            <button type="submit" class="submit-btn" id="addEntryBtn">Add Entry ✨</button>
         </form>
 
         <div class="history-section">
@@ -2682,25 +2910,182 @@
         </div>
     </div>
 
+    <!-- Settings Modal — full settings content lives here now -->
+    <div class="modal-overlay" id="settingsModalOverlay" onclick="closeSettingsMenu(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>⚙️ Settings</h2>
+                <button class="modal-close" onclick="closeSettingsMenu()">✕</button>
+            </div>
+
+            <div class="modal-body" id="settingsModalBody">
+                <div class="settings-panel">
+                    <h4>🎨 Theme</h4>
+                    <div class="theme-picker-row">
+                        <div class="theme-swatch theme-swatch-pink" data-theme="pink" onclick="setTheme('pink')" title="Pink"><span>🌸</span></div>
+                        <div class="theme-swatch theme-swatch-night" data-theme="night" onclick="setTheme('night')" title="Night"><span>🌙</span></div>
+                        <div class="theme-swatch theme-swatch-ocean" data-theme="ocean" onclick="setTheme('ocean')" title="Ocean"><span>🌊</span></div>
+                        <div class="theme-swatch theme-swatch-spring" data-theme="spring" onclick="setTheme('spring')" title="Spring"><span>🌻</span></div>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <h4>⚙️ Settings</h4>
+
+                    <div class="setting-row">
+                        <div class="setting-label">
+                            <span>✍️ Dialogue Speed</span>
+                            <span class="setting-value" id="dialogueSpeedLabel">25ms</span>
+                        </div>
+                        <input type="range" id="dialogueSpeedSlider" min="10" max="80" step="5" value="25" oninput="updateDialogueSpeed(this.value)">
+                        <div class="setting-hint">Lower = faster typing</div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-label">
+                            <span>📏 Page Size</span>
+                            <span class="setting-value" id="pageScaleLabel">100%</span>
+                        </div>
+                        <input type="range" id="pageScaleSlider" min="70" max="140" step="5" value="100" oninput="updatePageScale(this.value)">
+                        <div class="setting-hint">Shrink to see your background, or enlarge for bigger UI</div>
+                    </div>
+
+                    <div class="setting-toggle">
+                        <span>⌨️ Typewriter Effect</span>
+                        <input type="checkbox" id="typewriterToggle" checked onchange="toggleTypewriter(this.checked)">
+                    </div>
+
+                    <div class="setting-toggle">
+                        <span>🎭 Mood Overtime</span>
+                        <input type="checkbox" id="moodOvertimeToggle" checked onchange="toggleMoodOvertime(this.checked)">
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <h4>🎨 Background</h4>
+
+                    <div style="font-weight: 700; color: var(--dark-pink); font-size: 0.7rem;">Presets:</div>
+                    <div class="bg-presets-row">
+                        <button class="bg-preset-btn" onclick="setPresetBg('together')">💕 Together</button>
+                        <button class="bg-preset-btn" onclick="setPresetBg('together2')">💕 Together 2</button>
+                        <button class="bg-preset-btn" onclick="setPresetBg('school')">🏫 Abydos</button>
+                        <button class="bg-preset-btn" onclick="setPresetBg('classroom')">☁️ Committee Room</button>
+                        <button class="bg-preset-btn" onclick="setPresetBg('classroomsunset')">🌆 Committee Room (sunset)</button>
+                        <button class="bg-preset-btn" onclick="setPresetBg('classroomnight')">🌃 Committee Room (night)</button>
+                        <button class="bg-preset-btn" onclick="setPresetBg('classroomnightlight')">💡 Committee Room (nightlight)</button>
+                        <button class="bg-preset-btn" onclick="setPresetBg('councilroom')">💡 Council Room</button>
+                    </div>
+
+                    <div style="font-weight: 700; color: var(--dark-pink); font-size: 0.7rem; margin-top: 2px;">Or custom image:</div>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="action-btn" onclick="document.getElementById('bgFileInput').click()">Upload Image</button>
+                        <button class="action-btn" onclick="clearCustomBg()">Reset Default</button>
+                    </div>
+
+                    <div class="setting-row" style="margin-top: 4px;">
+                        <div class="setting-label">
+                            <span>White Box Opacity</span>
+                            <span class="setting-value" id="opacityValLabel">50%</span>
+                        </div>
+                        <input type="range" id="opacitySlider" min="20" max="100" value="50" oninput="updateCardOpacity(this.value)">
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <h4>🔔 Notifications</h4>
+
+                    <button class="submit-btn" style="width: 100%; padding: 8px; font-size: 0.75rem;" onclick="requestNotificationPermission()">🔔 Enable Daily Wallet Reminder</button>
+                    <div class="setting-hint">Sends a gentle nudge once per day when the app is open</div>
+
+                    <div class="settings-divider"></div>
+
+                    <h4>💾 Backup</h4>
+
+                    <button class="wallet-action-btn" onclick="closeSettingsMenu(); setTimeout(() => openBackupMenu('export'), 180);">
+                        <span>💾</span>
+                        <div style="flex:1;">
+                            <div style="font-weight:700;">Export Backup</div>
+                            <div class="checkbox-hint" style="padding-left:0;margin-top:2px;">Save to this device or to Dropbox</div>
+                        </div>
+                    </button>
+
+                    <button class="wallet-action-btn" onclick="closeSettingsMenu(); setTimeout(() => openBackupMenu('import'), 180);">
+                        <span>📂</span>
+                        <div style="flex:1;">
+                            <div style="font-weight:700;">Import Backup</div>
+                            <div class="checkbox-hint" style="padding-left:0;margin-top:2px;">Restore from a file or Dropbox</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" onclick="closeSettingsMenu()">Done ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Hub Modal -->
+    <div class="modal-overlay" id="tutorialHubOverlay" onclick="closeTutorialHub(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>❓ Tutorial Chapters</h2>
+                <button class="modal-close" onclick="closeTutorialHub()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="checkbox-hint" style="padding-left: 0;">
+                    Learn a specific feature, or start the Basic tour again. Progress is separate per chapter.
+                </div>
+                <div id="tutorialChapterList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                <button class="submit-btn" style="margin-top: 6px;" onclick="startTutorialChapter('basic')">▶ Start Basic Tour</button>
+                <button class="action-btn" style="width: 100%; padding: 8px; margin-top: 2px; background: transparent; border: 1px dashed var(--primary-pink); color: var(--dark-pink);" onclick="resetTutorialProgress()">
+                    ↺ Reset all tutorial progress
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" onclick="closeTutorialHub()">Done ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Overlay -->
+    <div id="tutorialRoot">
+        <div class="tutorial-shade" id="tutorialShadeTop"></div>
+        <div class="tutorial-shade" id="tutorialShadeBottom"></div>
+        <div class="tutorial-shade" id="tutorialShadeLeft"></div>
+        <div class="tutorial-shade" id="tutorialShadeRight"></div>
+
+        <div id="tutorialRing"></div>
+        <div id="tutorialArrow">⬇️</div>
+        <div id="tutorialBar" class="at-bottom">
+            <div id="tutorialSprite">
+                <img id="tutorialSpriteImg" src="expression/normal.png" alt="Hoshino">
+            </div>
+            <div id="tutorialTextWrap">
+                <div id="tutorialStepCounter">STEP 1 / 1</div>
+                <div id="tutorialTitle">Welcome</div>
+                <div id="tutorialText"></div>
+            </div>
+            <div id="tutorialButtons">
+                <button id="tutorialNextBtn">Next →</button>
+                <button id="tutorialSkipBtn">Skip</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==========================================
         // DROPBOX CONFIG
-        // ⚠️ Replace PASTE_YOUR_DROPBOX_APP_KEY_HERE with your App Key from
-        //    https://www.dropbox.com/developers/apps → your app → Settings → App key
-        // ⚠️ DROPBOX_REDIRECT_URI must EXACTLY match the Redirect URI you added
-        //    in Dropbox App Console (including trailing slash).
         // ==========================================
         const DROPBOX_APP_KEY = 'xp8d0hspuo41ts8';
         const DROPBOX_REDIRECT_URI = 'https://erlanpetok.github.io/Wallet-thingy/';
         const DROPBOX_BACKUP_FILENAME = '/hoshino-daily-backup.json';
 
-        // Storage keys
         const LS_DBX_REFRESH = 'hoshino_dbx_refresh';
         const SS_DBX_VERIFIER = 'hoshino_dbx_verifier';
         const SS_DBX_STATE = 'hoshino_dbx_state';
         const SS_DBX_ACTION = 'hoshino_dbx_action';
 
-        // PKCE helpers
         function base64UrlEncode(bytes) {
             let str = '';
             for (let i = 0; i < bytes.length; i++) str += String.fromCharCode(bytes[i]);
@@ -2719,7 +3104,6 @@
             return base64UrlEncode(new Uint8Array(digest));
         }
 
-        // Start Dropbox auth
         async function startDropboxAuth(action) {
             if (!DROPBOX_APP_KEY || DROPBOX_APP_KEY === 'PASTE_YOUR_DROPBOX_APP_KEY_HERE') {
                 showChipToast('❌ Dropbox App Key not configured. Edit index.html.');
@@ -2744,7 +3128,6 @@
             window.location.href = url.toString();
         }
 
-        // Handle redirect back from Dropbox
         async function handleDropboxRedirect() {
             const params = new URLSearchParams(window.location.search);
             const code = params.get('code');
@@ -2827,7 +3210,6 @@
             } catch (e) {}
         }
 
-        // Get a valid access token (refresh if needed)
         async function getDropboxAccessToken(interactive = false) {
             const cached = sessionStorage.getItem('hoshino_dbx_access');
             const cachedExp = parseInt(sessionStorage.getItem('hoshino_dbx_access_expires') || '0', 10);
@@ -2869,7 +3251,6 @@
             return data.access_token;
         }
 
-        // Save backup to Dropbox
         async function saveToDropbox() {
             closeBackupMenu();
             let token;
@@ -2914,7 +3295,6 @@
             }
         }
 
-        // Load backup from Dropbox
         async function loadFromDropbox() {
             closeBackupMenu();
             let token;
@@ -3012,6 +3392,43 @@
         function closeBackupMenu(event) {
             if (event && event.target !== document.getElementById('backupMenuOverlay')) return;
             document.getElementById('backupMenuOverlay').classList.remove('active');
+        }
+
+        // ==========================================
+        // SETTINGS MENU — opens the full settings modal
+        // ==========================================
+        function openSettingsMenu() {
+            syncSettingsUI();
+            document.getElementById('settingsModalOverlay').classList.add('active');
+        }
+
+        function closeSettingsMenu(event) {
+            if (event && event.target !== document.getElementById('settingsModalOverlay')) return;
+            document.getElementById('settingsModalOverlay').classList.remove('active');
+        }
+
+        // Push current state into the modal UI (checkboxes, sliders, swatches)
+        function syncSettingsUI() {
+            const dsl = document.getElementById('dialogueSpeedSlider');
+            if (dsl) { dsl.value = dialogueSpeed; }
+            document.getElementById('dialogueSpeedLabel').textContent = dialogueSpeed + 'ms';
+
+            const pss = document.getElementById('pageScaleSlider');
+            if (pss) { pss.value = pageScale; }
+            document.getElementById('pageScaleLabel').textContent = pageScale + '%';
+
+            const tw = document.getElementById('typewriterToggle');
+            if (tw) tw.checked = typewriterEnabled;
+            const mo = document.getElementById('moodOvertimeToggle');
+            if (mo) mo.checked = moodOvertimeEnabled;
+
+            const os = document.getElementById('opacitySlider');
+            if (os) os.value = customOpacity;
+            document.getElementById('opacityValLabel').textContent = customOpacity + '%';
+
+            document.querySelectorAll('.theme-swatch').forEach(sw => {
+                sw.classList.toggle('active', sw.dataset.theme === currentTheme);
+            });
         }
 
         // ==========================================
@@ -3216,22 +3633,21 @@
         function renderTrackLabel() {
             const el = document.getElementById('currentTrackDisplay');
             if (el) el.textContent = getTrackTitle(currentPeriod);
-            if (typeof updateMediaSession === 'function') {
-                try { updateMediaSession(); } catch (e) {}
-            }
         }
 
         // ==========================================
         // SETTINGS STATE
         // ==========================================
-        let dialogueSpeed = parseInt(localStorage.getItem('hoshino_dialogue_speed')) || 40;
+        let dialogueSpeed = parseInt(localStorage.getItem('hoshino_dialogue_speed')) || 25;
+        // Clamp to new range in case an old value is out of bounds
+        if (dialogueSpeed > 80) dialogueSpeed = 80;
+        if (dialogueSpeed < 10) dialogueSpeed = 10;
+
         let pageScale = parseInt(localStorage.getItem('hoshino_page_scale')) || 100;
         let typewriterEnabled = localStorage.getItem('hoshino_typewriter') !== 'false';
         let moodOvertimeEnabled = localStorage.getItem('hoshino_mood_overtime') !== 'false';
         let monthlyExpanded = localStorage.getItem('hoshino_monthly_expanded') === 'true';
         let balanceHidden = localStorage.getItem('hoshino_balance_hidden') === 'true';
-        let keepBgmInBackground = localStorage.getItem('hoshino_bgm_background') === 'true';
-        let wasPlayingBeforeHide = false;
 
         let historySearchQuery = '';
         let historyFilter = 'all';
@@ -3277,6 +3693,7 @@
             applyTheme();
             applyBackgroundAndOpacity();
             render();
+            syncSettingsUI();
         }
 
         function toggleTheme() {
@@ -3287,8 +3704,10 @@
 
         function applyPageScale() {
             document.documentElement.style.setProperty('--page-scale', pageScale / 100);
-            document.getElementById('pageScaleLabel').textContent = pageScale + '%';
-            document.getElementById('pageScaleSlider').value = pageScale;
+            const lbl = document.getElementById('pageScaleLabel');
+            if (lbl) lbl.textContent = pageScale + '%';
+            const sl = document.getElementById('pageScaleSlider');
+            if (sl) sl.value = pageScale;
         }
 
         function updatePageScale(val) {
@@ -3300,8 +3719,10 @@
         applyPageScale();
 
         function applyDialogueSpeed() {
-            document.getElementById('dialogueSpeedLabel').textContent = dialogueSpeed + 'ms';
-            document.getElementById('dialogueSpeedSlider').value = dialogueSpeed;
+            const lbl = document.getElementById('dialogueSpeedLabel');
+            if (lbl) lbl.textContent = dialogueSpeed + 'ms';
+            const sl = document.getElementById('dialogueSpeedSlider');
+            if (sl) sl.value = dialogueSpeed;
         }
 
         function updateDialogueSpeed(val) {
@@ -3314,24 +3735,24 @@
 
         let currentTypingTimer = null;
 
-        function typeDialogue(text, callback) {
-            const el = document.getElementById('hoshinoDialogue');
+        function typeDialogue(text, callback, targetEl) {
+            const el = targetEl || document.getElementById('hoshinoDialogue');
             if (currentTypingTimer) { clearTimeout(currentTypingTimer); currentTypingTimer = null; }
 
             if (!typewriterEnabled) {
-                el.textContent = `"${text}"`;
+                el.textContent = targetEl ? text : `"${text}"`;
                 el.classList.remove('typing');
                 if (callback) callback();
                 return;
             }
 
-            el.textContent = '"';
+            el.textContent = targetEl ? '' : '"';
             el.classList.add('typing');
             let i = 0;
 
             function typeNext() {
                 if (i >= text.length) {
-                    el.textContent = `"${text}"`;
+                    el.textContent = targetEl ? text : `"${text}"`;
                     el.classList.remove('typing');
                     currentTypingTimer = null;
                     if (callback) callback();
@@ -3339,12 +3760,12 @@
                 }
 
                 const char = text[i];
-                el.textContent = `"${text.slice(0, i + 1)}`;
+                el.textContent = targetEl ? text.slice(0, i + 1) : `"${text.slice(0, i + 1)}`;
 
                 let extraDelay = 0;
-                if (char === '.' || char === '!' || char === '?') extraDelay = dialogueSpeed * 6;
-                else if (char === ',' || char === ';' || char === ':') extraDelay = dialogueSpeed * 3;
-                else if (char === '~' || char === '…') extraDelay = dialogueSpeed * 4;
+                if (char === '.' || char === '!' || char === '?') extraDelay = dialogueSpeed * 5;
+                else if (char === ',' || char === ';' || char === ':') extraDelay = dialogueSpeed * 2.5;
+                else if (char === '~' || char === '…') extraDelay = dialogueSpeed * 3;
 
                 i++;
                 currentTypingTimer = setTimeout(typeNext, dialogueSpeed + extraDelay);
@@ -3364,8 +3785,10 @@
         function applyBackgroundAndOpacity() {
             const phoneContainer = document.getElementById('phoneContainer');
             phoneContainer.style.background = `rgba(255, 255, 255, ${parseFloat(customOpacity) / 100})`;
-            document.getElementById('opacityValLabel').textContent = customOpacity + '%';
-            document.getElementById('opacitySlider').value = customOpacity;
+            const lbl = document.getElementById('opacityValLabel');
+            if (lbl) lbl.textContent = customOpacity + '%';
+            const sl = document.getElementById('opacitySlider');
+            if (sl) sl.value = customOpacity;
 
             const stickyBgAlpha = Math.min(parseFloat(customOpacity) / 100 + 0.15, 0.98);
             document.documentElement.style.setProperty('--sticky-bg',
@@ -3445,18 +3868,14 @@
         function updateCardOpacity(val) {
             customOpacity = val;
             localStorage.setItem('hoshino_bg_opacity', val);
-            document.getElementById('opacityValLabel').textContent = val + '%';
+            const lbl = document.getElementById('opacityValLabel');
+            if (lbl) lbl.textContent = val + '%';
             const phoneContainer = document.getElementById('phoneContainer');
             phoneContainer.style.background = `rgba(255, 255, 255, ${parseFloat(val) / 100})`;
 
             const stickyBgAlpha = Math.min(parseFloat(val) / 100 + 0.15, 0.98);
             document.documentElement.style.setProperty('--sticky-bg',
                 nightTheme ? `rgba(40, 30, 50, ${stickyBgAlpha})` : `rgba(255, 255, 255, ${stickyBgAlpha})`);
-        }
-
-        function toggleSettingsPanel() {
-            const panel = document.getElementById('settingsPanel');
-            panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
         }
 
         function toggleTypewriter(enabled) {
@@ -3467,23 +3886,8 @@
         function toggleMoodOvertime(enabled) {
             moodOvertimeEnabled = enabled;
             localStorage.setItem('hoshino_mood_overtime', enabled);
-            if (enabled) applyMoodOvertime(true);
+            if (enabled && !tutorialActive) applyMoodOvertime(true);
         }
-
-        function toggleBackgroundMusic(enabled) {
-            keepBgmInBackground = enabled;
-            localStorage.setItem('hoshino_bgm_background', enabled);
-        }
-
-        // Apply saved setting on load
-        document.addEventListener('DOMContentLoaded', () => {
-            const bgToggle = document.getElementById('bgMusicToggle');
-            if (bgToggle) bgToggle.checked = keepBgmInBackground;
-        });
-        setTimeout(() => {
-            const bgToggle = document.getElementById('bgMusicToggle');
-            if (bgToggle) bgToggle.checked = keepBgmInBackground;
-        }, 0);
 
         // ==========================================
         // BALANCE VISIBILITY
@@ -3660,6 +4064,7 @@
         }
 
         function applyMoodOvertime(force) {
+            if (tutorialActive) return;
             const mood = computeMood();
             if (!mood) return;
             const now = Date.now();
@@ -3933,111 +4338,6 @@
             if (!isPlaying) startBGM();
         }
 
-        // ==========================================
-        // BACKGROUND PAUSE + MEDIA SESSION
-        // ==========================================
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                if (!keepBgmInBackground) {
-                    wasPlayingBeforeHide = isPlaying;
-                    if (isPlaying) {
-                        Object.values(audioTracks).forEach(a => a.pause());
-                        isPlaying = false;
-                        musicPlayBtn.textContent = "▶";
-                        updateProgressUI();
-                    }
-                }
-            } else {
-                if (!keepBgmInBackground && wasPlayingBeforeHide) {
-                    wasPlayingBeforeHide = false;
-                    const activeAudio = audioTracks[currentPeriod];
-                    if (activeAudio) {
-                        activeAudio.volume = gameVolume;
-                        activeAudio.play().then(() => {
-                            isPlaying = true;
-                            musicPlayBtn.textContent = "❚❚";
-                        }).catch(() => {});
-                    }
-                }
-            }
-        });
-
-        function updateMediaSession() {
-            if (!('mediaSession' in navigator)) return;
-            const title = getTrackTitle(currentPeriod);
-            try {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: title,
-                    artist: "Hoshino's Daily",
-                    album: "BGM",
-                    artwork: [
-                        { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
-                    ]
-                });
-                navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
-            } catch (e) {}
-        }
-
-        function setupMediaSessionHandlers() {
-            if (!('mediaSession' in navigator)) return;
-            try {
-                navigator.mediaSession.setActionHandler('play', () => {
-                    if (!isPlaying) togglePlayMusic();
-                    updateMediaSession();
-                });
-                navigator.mediaSession.setActionHandler('pause', () => {
-                    if (isPlaying) togglePlayMusic();
-                    updateMediaSession();
-                });
-                navigator.mediaSession.setActionHandler('nexttrack', () => {
-                    nextTrack();
-                    updateMediaSession();
-                });
-                navigator.mediaSession.setActionHandler('previoustrack', () => {
-                    const currentIdx = TRACK_ORDER.indexOf(currentPeriod);
-                    const prevIdx = (currentIdx - 1 + TRACK_ORDER.length) % TRACK_ORDER.length;
-                    currentPeriod = TRACK_ORDER[prevIdx];
-                    manualOverride = true;
-                    Object.keys(audioTracks).forEach(key => {
-                        audioTracks[key].pause();
-                        audioTracks[key].currentTime = 0;
-                    });
-                    renderTrackLabel();
-                    const activeAudio = audioTracks[currentPeriod];
-                    if (activeAudio) {
-                        attachProgressToAudio(activeAudio);
-                        activeAudio.volume = gameVolume;
-                        activeAudio.play().then(() => {
-                            isPlaying = true;
-                            musicPlayBtn.textContent = "❚❚";
-                            updateMediaSession();
-                        }).catch(() => {});
-                    }
-                });
-                navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-                    const audio = audioTracks[currentPeriod];
-                    if (!audio) return;
-                    const offset = details.seekOffset || 10;
-                    try { audio.currentTime = Math.max(0, audio.currentTime - offset); } catch(e){}
-                });
-                navigator.mediaSession.setActionHandler('seekforward', (details) => {
-                    const audio = audioTracks[currentPeriod];
-                    if (!audio) return;
-                    const offset = details.seekOffset || 10;
-                    try { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + offset); } catch(e){}
-                });
-                navigator.mediaSession.setActionHandler('seekto', (details) => {
-                    const audio = audioTracks[currentPeriod];
-                    if (!audio || details.seekTime == null) return;
-                    try { audio.currentTime = details.seekTime; } catch(e){}
-                });
-            } catch (err) {
-                console.warn('Media Session handlers failed:', err);
-            }
-        }
-
-        setupMediaSessionHandlers();
-
         (async () => {
             await handleDropboxRedirect();
 
@@ -4066,14 +4366,12 @@
                 isPlaying = false;
                 musicPlayBtn.textContent = "▶";
                 updateProgressUI();
-                updateMediaSession();
             } else {
                 activeAudio.volume = gameVolume;
                 activeAudio.play().then(() => {
                     isPlaying = true;
                     musicPlayBtn.textContent = "❚❚";
                     attachProgressToAudio(activeAudio);
-                    updateMediaSession();
                 }).catch(e => {});
             }
         }
@@ -4105,14 +4403,12 @@
             activeAudio.play().then(() => {
                 isPlaying = true;
                 musicPlayBtn.textContent = "❚❚";
-                updateMediaSession();
             }).catch(err => {
                 activeAudio.volume = 0;
                 activeAudio.play().then(() => {
                     isPlaying = true;
                     musicPlayBtn.textContent = "❚❚";
                     armBgmUnlock(activeAudio);
-                    updateMediaSession();
                 }).catch(() => {
                     isPlaying = false;
                     musicPlayBtn.textContent = "▶";
@@ -4141,14 +4437,12 @@
                 activeAudio.play().then(() => {
                     isPlaying = true;
                     musicPlayBtn.textContent = "❚❚";
-                    updateMediaSession();
                 }).catch(() => {
                     activeAudio.volume = 0;
                     activeAudio.play().then(() => {
                         isPlaying = true;
                         musicPlayBtn.textContent = "❚❚";
                         armBgmUnlock(activeAudio);
-                        updateMediaSession();
                     }).catch(() => {});
                 });
             }
@@ -4235,7 +4529,9 @@
                 100: "100 days?! I... I don't know what to say... 😳"
             };
             if (milestones[streakData.count]) {
-                setTimeout(() => updateHoshinoDisplay('happy', milestones[streakData.count]), 1200);
+                setTimeout(() => {
+                    if (!tutorialActive) updateHoshinoDisplay('happy', milestones[streakData.count]);
+                }, 1200);
             }
         }
 
@@ -4257,7 +4553,9 @@
 
             if (!reaction) return;
             if (!loggedToday && count > 0) reaction.text += " (Don't forget today!)";
-            setTimeout(() => updateHoshinoDisplay(reaction.expr, reaction.text), 500);
+            setTimeout(() => {
+                if (!tutorialActive) updateHoshinoDisplay(reaction.expr, reaction.text);
+            }, 500);
         }
 
         checkStreakReset();
@@ -4757,7 +5055,6 @@
             activeAudio.play().then(() => {
                 isPlaying = true;
                 musicPlayBtn.textContent = "❚❚";
-                updateMediaSession();
                 closePlaylistModal();
             }).catch(() => {
                 activeAudio.volume = 0;
@@ -4765,7 +5062,6 @@
                     isPlaying = true;
                     musicPlayBtn.textContent = "❚❚";
                     armBgmUnlock(activeAudio);
-                    updateMediaSession();
                     closePlaylistModal();
                 }).catch(() => {});
             });
@@ -4813,7 +5109,6 @@
                         activeAudio.play().then(() => {
                             isPlaying = true;
                             musicPlayBtn.textContent = "❚❚";
-                            updateMediaSession();
                         }).catch(() => {});
                     }
                 } else {
@@ -4830,6 +5125,8 @@
             const walletOverlay = document.getElementById('walletModalOverlay');
             const playlistOverlay = document.getElementById('playlistModalOverlay');
             const backupOverlay = document.getElementById('backupMenuOverlay');
+            const hubOverlay = document.getElementById('tutorialHubOverlay');
+            const settingsOverlay = document.getElementById('settingsModalOverlay');
 
             if (walletOverlay.classList.contains('active')) {
                 if (e.key === 'Escape') closeWalletModal();
@@ -4841,6 +5138,14 @@
             }
             if (backupOverlay.classList.contains('active')) {
                 if (e.key === 'Escape') closeBackupMenu();
+                return;
+            }
+            if (settingsOverlay.classList.contains('active')) {
+                if (e.key === 'Escape') closeSettingsMenu();
+                return;
+            }
+            if (hubOverlay.classList.contains('active')) {
+                if (e.key === 'Escape') closeTutorialHub();
                 return;
             }
             if (!chipOverlay.classList.contains('active')) return;
@@ -5020,6 +5325,7 @@
         }, 15000);
 
         function pokeHoshino() {
+            if (tutorialActive) return;
             hoshinoSpriteImg.classList.remove('squish-anim');
             hoshinoSpriteBox.classList.remove('tapped');
             void hoshinoSpriteImg.offsetWidth;
@@ -5245,8 +5551,11 @@
                     dialogueSpeed: dialogueSpeed,
                     pageScale: pageScale,
                     typewriter: typewriterEnabled,
-                    moodOvertime: moodOvertimeEnabled,
-                    bgmBackground: keepBgmInBackground
+                    moodOvertime: moodOvertimeEnabled
+                },
+                tutorial: {
+                    done: localStorage.getItem('hoshino_tutorial_done') === 'true',
+                    chaptersSeen: JSON.parse(localStorage.getItem('hoshino_tutorial_chapters_seen') || '[]')
                 }
             };
         }
@@ -5277,7 +5586,13 @@
                 if (typeof s.pageScale === 'number') pageScale = s.pageScale;
                 if (typeof s.typewriter === 'boolean') typewriterEnabled = s.typewriter;
                 if (typeof s.moodOvertime === 'boolean') moodOvertimeEnabled = s.moodOvertime;
-                if (typeof s.bgmBackground === 'boolean') keepBgmInBackground = s.bgmBackground;
+            }
+
+            if (imported.tutorial && typeof imported.tutorial === 'object') {
+                if (imported.tutorial.done === true) localStorage.setItem('hoshino_tutorial_done', 'true');
+                if (Array.isArray(imported.tutorial.chaptersSeen)) {
+                    localStorage.setItem('hoshino_tutorial_chapters_seen', JSON.stringify(imported.tutorial.chaptersSeen));
+                }
             }
 
             let missingCustomTracks = [];
@@ -5308,7 +5623,6 @@
             localStorage.setItem('hoshino_typewriter', typewriterEnabled);
             localStorage.setItem('hoshino_mood_overtime', moodOvertimeEnabled);
             localStorage.setItem('hoshino_balance_hidden', balanceHidden);
-            localStorage.setItem('hoshino_bgm_background', keepBgmInBackground);
         }
 
         // ==========================================
@@ -5615,6 +5929,7 @@
         });
 
         function triggerTransactionReaction(type, amount, balanceBefore, todaySpentAfter) {
+            if (tutorialActive) return;
             let exprKey, dialogue;
 
             if (type === 'gain') {
@@ -5682,7 +5997,7 @@
                 "Poof! Entry removed. ✨",
                 "Removed~ (Undo is right there if needed!) 💖"
             ];
-            updateHoshinoDisplay('surprised', reactions[Math.floor(Math.random() * reactions.length)]);
+            if (!tutorialActive) updateHoshinoDisplay('surprised', reactions[Math.floor(Math.random() * reactions.length)]);
 
             showUndoToast();
         }
@@ -5736,7 +6051,7 @@
                 "Back to where it was! 🐋",
                 "Saved! My backup powers are useful, huh~ 😆"
             ];
-            updateHoshinoDisplay('happy', reactions[Math.floor(Math.random() * reactions.length)]);
+            if (!tutorialActive) updateHoshinoDisplay('happy', reactions[Math.floor(Math.random() * reactions.length)]);
         }
 
         function toggleTransactionDrawer(txId) {
@@ -5820,6 +6135,21 @@
         // ==========================================
         // RENDER HISTORY
         // ==========================================
+        const FULL_MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        function getMonthKey(dateStr) {
+            if (!dateStr) return 'unknown';
+            return dateStr.slice(0, 7);
+        }
+        function getMonthDisplayName(dateStr) {
+            if (!dateStr) return 'Unknown';
+            const parts = dateStr.split('-');
+            if (parts.length < 2) return 'Unknown';
+            const y = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10);
+            if (!y || !m || m < 1 || m > 12) return 'Unknown';
+            return `${FULL_MONTH_NAMES[m - 1]} ${y}`;
+        }
+
         function renderHistory() {
             const wallet = getCurrentWallet();
             historyList.innerHTML = '';
@@ -5835,7 +6165,18 @@
                 return;
             }
 
+            let lastMonthKey = null;
+
             filtered.forEach(t => {
+                const thisMonthKey = getMonthKey(t.date);
+                if (thisMonthKey !== lastMonthKey) {
+                    const sep = document.createElement('div');
+                    sep.className = 'history-month-separator';
+                    sep.textContent = getMonthDisplayName(t.date);
+                    historyList.appendChild(sep);
+                    lastMonthKey = thisMonthKey;
+                }
+
                 const container = document.createElement('div');
                 container.className = 'history-item-container';
                 container.onclick = (e) => {
@@ -5873,7 +6214,7 @@
                     if (segments.length > 0) denomTextStr = segments.join(' • ');
                 }
 
-                const noteBadge = t.note ? `<span class="history-note-badge">📎 ${t.note}</span>` : '';
+                const noteBadge = t.note ? `<span class="history-note-badge">📎 ${escapeHtml(t.note)}</span>` : '';
                 const isOpen = activeEditTxId === t.id;
 
                 let editDenomsHtml = '';
@@ -5898,7 +6239,7 @@
                 container.innerHTML = `
                     <div class="history-item">
                         <div class="history-info">
-                            <span class="history-desc">${t.description}</span>
+                            <span class="history-desc">${escapeHtml(t.description)}</span>
                             <span class="history-date">${t.date}${timeDisplay}</span>
                             ${noteBadge}
                         </div>
@@ -5913,7 +6254,7 @@
                     ${isOpen ? `
                     <div class="edit-drawer" style="display: flex;" onclick="event.stopPropagation()">
                         <label>Description:</label>
-                        <input type="text" id="editDesc_${t.id}" value="${t.description}">
+                        <input type="text" id="editDesc_${t.id}" value="${escapeHtml(t.description)}">
                         <div style="display:flex; gap:6px;">
                             <div style="flex:1;">
                                 <label>Amount:</label>
@@ -5928,7 +6269,7 @@
                             </div>
                         </div>
                         <label>Note 📎:</label>
-                        <input type="text" id="editNote_${t.id}" value="${t.note || ''}" placeholder="Optional note..." maxlength="120">
+                        <input type="text" id="editNote_${t.id}" value="${escapeHtml(t.note || '')}" placeholder="Optional note..." maxlength="120">
                         ${editDenomsHtml}
                         <label>Date:</label>
                         <input type="date" id="editDate_${t.id}" value="${t.date}">
@@ -6109,9 +6450,488 @@
         localStorage.setItem('hoshino_last_open', Date.now());
 
         setTimeout(() => {
+            if (tutorialActive) return;
             if (streakData.count > 0) streakOpenReaction();
             else applyMoodOvertime(true);
         }, 2500);
+
+        // ==========================================
+        // TUTORIAL ENGINE
+        // ==========================================
+        let tutorialActive = false;
+        let tutorialChapter = null;
+        let tutorialStepIndex = 0;
+        let tutorialStepList = [];
+        let tutorialGateSatisfied = false;
+        let tutorialGateListeners = [];
+        let tutorialScrollPrevY = 0;
+        let tutorialSavedDialogue = '';
+        let tutorialOpenedSettings = false;
+
+        const TUTORIAL_CHAPTERS = {
+            basic: {
+                title: 'Basic Tour',
+                emoji: '🌸',
+                desc: 'Wallets, balance, chips, adding entries, and the monthly summary.',
+                steps: [
+                    { target: '#walletNav', title: 'Wallet Tabs', text: "Each tab is a separate wallet. Tap one to switch~ 💼", advance: 'button' },
+                    { target: '#walletNavRight', title: 'Add Wallet', text: "Tap + New to create a new wallet. You can give it its own currency! 🌸", advance: 'button' },
+                    { target: '#walletBanner', title: 'Wallet Banner', text: "Tap here to change this wallet's photo. A cute little customizer~ 🖼️", advance: 'button' },
+                    { target: '#hoshinoSpriteBox', title: 'Hoshino', text: "That's me! Tap me anytime for a reaction~ 🌸", advance: 'button' },
+                    { target: '#currentWalletTitle', title: 'Balance', text: "Your total balance for the selected wallet lives here. The 👁️ hides it~ ✨", advance: 'button' },
+                    { target: '#balanceEyeBtn', title: 'Hide Balance', text: "Tap the eye to blur your balance. Perfect when someone's peeking! 🙈", advance: 'button' },
+                    { target: '#quickAddRow', title: 'Quick Chips', text: "These chips fill the form in one tap. Try one — long-press any chip to edit it~ 🍡", advance: 'button' },
+                    { target: '#type', title: 'Type', text: "Pick Gain for money in, or Spend for money out. Simple, right? 🏷️", advance: 'select' },
+                    { target: '#amount', title: 'Amount', text: "Type how much here. Try a small number like 1000~ 💵", advance: 'input' },
+                    { target: '#date', title: 'Date', text: "Change the date if you're logging something from earlier~ 📅", advance: 'input' },
+                    { target: '#description', title: 'Description', text: "Add a short description — what did you buy? Try 'test coffee'~ 📝", advance: 'input' },
+                    { target: '#noteToggleBtn', title: 'Add a Note', text: "Want to remember more? Tap here to open the note field~ 📎", advance: 'click' },
+                    { target: '#addEntryBtn', title: 'Add Entry', text: "Now tap this button to log it. I'll react, promise! ✨", advance: 'click' },
+                    { target: '#historyList', title: 'History', text: "Your entries land here. Tap any to edit, or use the 🗑️ to delete~ 📜", advance: 'button' },
+                    { target: '#monthlyToggleBtn', title: 'Monthly Summary', text: "Tap here for a monthly overview — totals, a 7-day bar chart, and highlights! 📊", advance: 'button' }
+                ]
+            },
+            wallets: {
+                title: 'Wallets & Currency',
+                emoji: '💼',
+                desc: 'Create, switch, rename, and change currency per wallet.',
+                steps: [
+                    { target: '#walletNavRight', title: 'Add Wallet', text: "Tap + New here to create a wallet. You'll be asked for a name and a currency~ 🌸", advance: 'button' },
+                    { target: '#walletNav', title: 'Switch Wallets', text: "Tap any tab to switch wallets. Each keeps its own history and currency~ 💼", advance: 'button' },
+                    { target: '#walletNav', title: 'Edit a Wallet', text: "Long-press (or right-click) a wallet tab to open its editor. On desktop this is also a right-click~ ✏️", advance: 'button' },
+                    { target: '#walletModalOverlay', title: 'Wallet Editor', text: "From here you can Rename, Change Photo, Remove Photo, or Delete the wallet~ 🎨", advance: 'button' },
+                    { target: '#walletCurrencySelect', title: 'Currency', text: "This changes the wallet's currency — IDR, USD, JPY, or EUR. ⚠️ Existing amounts get reinterpreted! 💱", advance: 'button' },
+                    { target: '#walletBanner', title: 'Wallet Photo', text: "Each wallet has a cute banner photo. Tap the banner to change it~ 🖼️", advance: 'button' }
+                ]
+            },
+            denoms: {
+                title: 'Bills & Change',
+                emoji: '💳',
+                desc: 'Track physical bills and calculate change.',
+                steps: [
+                    { target: '#toggleDenomBtn', title: 'Denom Mode', text: "If you want to track physical bills, tap here to turn Denom Mode on~ ⚙️", advance: 'click' },
+                    { target: '#denomInputSection', title: 'Bill Counts', text: "Now you can count bills instead of typing a raw amount. Try entering a few bill counts! 💳", advance: 'input' },
+                    { target: '#quickAddRow', title: 'Chip Fills Bills', text: "Chips with a 💳 badge will fill the bill grid for you in one tap~ 🍡", advance: 'button' },
+                    { target: '#withChangeToggle', title: 'With Change', text: "Got change back? Enable this to track bills out AND bills in, and the net gets calculated. 🔄", advance: 'click' },
+                    { target: '#netPreview', title: 'Net Preview', text: "Here's the net result. If the change is bigger than the payment, the net flips into a gain~ 💡", advance: 'button' }
+                ]
+            },
+            history: {
+                title: 'History Tools',
+                emoji: '📜',
+                desc: 'Search, filter, edit, delete, and analyze.',
+                steps: [
+                    { target: '#historySearchInput', title: 'Search', text: "Search descriptions, notes, or dates here~ 🔍", advance: 'input' },
+                    { target: '.history-filter-row', title: 'Filters', text: "Quick filters: All, Gains, Spends, or With notes. Try tapping one~ 🏷️", advance: 'click' },
+                    { target: '#historyList', title: 'Edit & Delete', text: "Tap any entry to open its edit drawer. There's also a 🗑️ button and an undo toast~ ✏️", advance: 'button' },
+                    { target: '#historyList', title: 'Edit Fields', text: "Inside the drawer, you can change description, amount, type, note, and date~ 📝", advance: 'button' },
+                    { target: '#historyList', title: 'Month Separators', text: "Entries are grouped by month — you'll see month separators between them~ 📅", advance: 'button' },
+                    { target: '#monthlyToggleBtn', title: 'Monthly Summary', text: "Tap here for the month overview — totals, 7-day spending bars, and highlights~ 📊", advance: 'button' }
+                ]
+            },
+            music: {
+                title: 'Music Player',
+                emoji: '🎵',
+                desc: 'BGM, time-of-day tracks, and your custom playlist.',
+                steps: [
+                    { target: '#currentTrackDisplay', title: 'Current Track', text: "The song title and time-of-day label live up here~ 🎵", advance: 'button' },
+                    { target: '#musicPlayBtn', title: 'Play / Pause', text: "Hoshino's daily BGM~ Tap here to pause or play. 🎵", advance: 'click' },
+                    { target: '#musicNextBtn', title: 'Next Track', text: "Skip to the next song. The 5 time-of-day tracks come first, then your custom songs. ⏭️", advance: 'click' },
+                    { target: '#myPlaylistBtn', title: 'My Playlist', text: "Upload your own songs here. They play after the 5 default tracks~ 🎧", advance: 'click' },
+                    { target: '#volumeSlider', title: 'Volume', text: "Slide to adjust the volume. Your choice is remembered~ 🔊", advance: 'input' }
+                ]
+            },
+            themes: {
+                title: 'Themes & Backup',
+                emoji: '🎨',
+                desc: 'Themes, backgrounds, notifications, backup, Dropbox, and currency.',
+                steps: [
+                    { target: '#themeToggleBtn', title: 'Quick Theme', text: "Tap the moon/sun to flip between pink and night in one tap~ 🌙", advance: 'button' },
+                    { target: '#settingsBtn', title: 'Settings', text: "This opens the full settings menu — theme, backgrounds, notifications, export, import... 🎨", advance: 'click', opensSettings: true },
+                    { target: '.theme-picker-row', title: 'Theme Swatches', text: "Four themes: Pink, Night, Ocean, Spring. Pick one you like! ✨", advance: 'click', opensSettings: true },
+                    { target: '.bg-presets-row', title: 'Background Presets', text: "Pick from 8 cute backgrounds, or upload your own image~ 🖼️", advance: 'click', opensSettings: true },
+                    { target: '#dialogueSpeedSlider', title: 'Dialogue Speed', text: "Hoshino's typing speed. Lower is faster~ ✍️", advance: 'input', opensSettings: true },
+                    { target: '#pageScaleSlider', title: 'Page Size', text: "Shrink or enlarge the whole app to see more background~ 📏", advance: 'input', opensSettings: true },
+                    { target: '#settingsModalBody', title: 'Notifications', text: "Scroll down for a gentle daily wallet reminder button~ 🔔", advance: 'button', opensSettings: true },
+                    { target: '#settingsModalBody', title: 'Backup', text: "At the bottom you'll find Export and Import. Save a JSON file to your device, or restore from one! 💾", advance: 'button', opensSettings: true },
+                    { target: '#settingsModalBody', title: 'Dropbox Sync', text: "The Export/Import menus also offer Dropbox login — export pushes to your Dropbox, and import pulls the latest backup from there. ☁️", advance: 'button', opensSettings: true },
+                    { target: '#walletNav', title: 'Multi-Currency', text: "Every wallet has its own currency (IDR, USD, JPY, EUR). Long-press a tab to change it~ 💱", advance: 'button' }
+                ]
+            }
+        };
+
+        const TUTORIAL_ORDER = ['basic', 'wallets', 'denoms', 'history', 'music', 'themes'];
+
+        function tutorialGetSeenChapters() {
+            try {
+                return JSON.parse(localStorage.getItem('hoshino_tutorial_chapters_seen') || '[]');
+            } catch (e) { return []; }
+        }
+
+        function tutorialMarkChapterSeen(chapterId) {
+            const seen = tutorialGetSeenChapters();
+            if (!seen.includes(chapterId)) {
+                seen.push(chapterId);
+                localStorage.setItem('hoshino_tutorial_chapters_seen', JSON.stringify(seen));
+            }
+        }
+
+        function resetTutorialProgress() {
+            if (!confirm("Reset ALL tutorial progress? The Basic tour will auto-start on next reload. 💦")) return;
+            localStorage.removeItem('hoshino_tutorial_done');
+            localStorage.removeItem('hoshino_tutorial_chapters_seen');
+            showChipToast('✨ Tutorial progress reset!');
+            closeTutorialHub();
+            renderTutorialHubList();
+        }
+
+        function openTutorialHub() {
+            if (tutorialActive) return;
+            renderTutorialHubList();
+            document.getElementById('tutorialHubOverlay').classList.add('active');
+        }
+
+        function closeTutorialHub(event) {
+            if (event && event.target !== document.getElementById('tutorialHubOverlay')) return;
+            document.getElementById('tutorialHubOverlay').classList.remove('active');
+        }
+
+        function renderTutorialHubList() {
+            const list = document.getElementById('tutorialChapterList');
+            if (!list) return;
+            list.innerHTML = '';
+            const seen = tutorialGetSeenChapters();
+
+            TUTORIAL_ORDER.forEach(chapterId => {
+                const ch = TUTORIAL_CHAPTERS[chapterId];
+                if (!ch) return;
+                const card = document.createElement('button');
+                card.className = 'chapter-card';
+                card.onclick = () => {
+                    closeTutorialHub();
+                    setTimeout(() => startTutorialChapter(chapterId), 200);
+                };
+                const isSeen = seen.includes(chapterId);
+                card.innerHTML = `
+                    <span class="chapter-emoji">${ch.emoji}</span>
+                    <div class="chapter-body">
+                        <span class="chapter-title">${ch.title}</span>
+                        <span class="chapter-desc">${ch.desc}</span>
+                    </div>
+                    ${isSeen ? '<span class="chapter-seen-badge">✓ done</span>' : ''}
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function startTutorialChapter(chapterId) {
+            const ch = TUTORIAL_CHAPTERS[chapterId];
+            if (!ch) return;
+            if (tutorialActive) endTutorial(false);
+
+            tutorialChapter = chapterId;
+            tutorialStepList = ch.steps.slice();
+            tutorialStepIndex = 0;
+            tutorialActive = true;
+            tutorialOpenedSettings = false;
+            tutorialSavedDialogue = hoshinoDialogue ? hoshinoDialogue.textContent : '';
+
+            if (currentTypingTimer) { clearTimeout(currentTypingTimer); currentTypingTimer = null; }
+
+            document.getElementById('tutorialRoot').classList.add('active');
+            document.getElementById('tutorialSpriteImg').src = expressionSprites.normal || 'expression/normal.png';
+
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
+            tutorialScrollPrevY = window.scrollY || 0;
+
+            showTutorialStep();
+        }
+
+        function endTutorial(markDone) {
+            if (!tutorialActive) return;
+            tutorialActive = false;
+
+            clearTutorialGateListeners();
+
+            const root = document.getElementById('tutorialRoot');
+            root.classList.remove('active');
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+
+            // Close settings modal if the tutorial opened it
+            if (tutorialOpenedSettings) {
+                document.getElementById('settingsModalOverlay').classList.remove('active');
+                tutorialOpenedSettings = false;
+            }
+
+            const ring = document.getElementById('tutorialRing');
+            ring.style.top = '-9999px';
+            ring.style.left = '-9999px';
+            ring.style.width = '0';
+            ring.style.height = '0';
+
+            const arrow = document.getElementById('tutorialArrow');
+            arrow.style.top = '-9999px';
+            arrow.style.left = '-9999px';
+
+            ['tutorialShadeTop','tutorialShadeBottom','tutorialShadeLeft','tutorialShadeRight'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.cssText = 'top:0;left:0;width:0;height:0;';
+            });
+
+            if (markDone) {
+                localStorage.setItem('hoshino_tutorial_done', 'true');
+                if (tutorialChapter === 'basic') tutorialMarkChapterSeen('basic');
+            }
+
+            if (tutorialChapter) tutorialMarkChapterSeen(tutorialChapter);
+            tutorialChapter = null;
+            tutorialStepList = [];
+            tutorialStepIndex = 0;
+
+            setTimeout(() => {
+                if (tutorialSavedDialogue) {
+                    const raw = tutorialSavedDialogue.replace(/^"|"$/g, '');
+                    typeDialogue(raw);
+                }
+            }, 250);
+        }
+
+        function skipTutorial() {
+            if (!tutorialActive) return;
+            if (!confirm("Skip the tutorial? You can replay chapters anytime from the ❓ button. 🌸")) return;
+            endTutorial(true);
+        }
+
+        function clearTutorialGateListeners() {
+            tutorialGateListeners.forEach(({ el, event, handler }) => {
+                try { el.removeEventListener(event, handler); } catch (e) {}
+            });
+            tutorialGateListeners = [];
+            tutorialGateSatisfied = false;
+        }
+
+        function showTutorialStep() {
+            if (!tutorialActive) return;
+            if (tutorialStepIndex >= tutorialStepList.length) {
+                endTutorial(true);
+                return;
+            }
+
+            clearTutorialGateListeners();
+
+            const step = tutorialStepList[tutorialStepIndex];
+
+            // Open the settings modal if this step needs it, close it otherwise
+            const wantsSettings = !!step.opensSettings;
+            const settingsOverlay = document.getElementById('settingsModalOverlay');
+            const settingsOpen = settingsOverlay.classList.contains('active');
+
+            if (wantsSettings && !settingsOpen) {
+                syncSettingsUI();
+                settingsOverlay.classList.add('active');
+                tutorialOpenedSettings = true;
+            } else if (!wantsSettings && tutorialOpenedSettings) {
+                settingsOverlay.classList.remove('active');
+                tutorialOpenedSettings = false;
+            }
+
+            const stepCounter = document.getElementById('tutorialStepCounter');
+            const titleEl = document.getElementById('tutorialTitle');
+            const textEl = document.getElementById('tutorialText');
+            const nextBtn = document.getElementById('tutorialNextBtn');
+            const skipBtn = document.getElementById('tutorialSkipBtn');
+
+            stepCounter.textContent = `CH ${TUTORIAL_ORDER.indexOf(tutorialChapter) + 1} · STEP ${tutorialStepIndex + 1} / ${tutorialStepList.length}`;
+            titleEl.textContent = step.title || '';
+            textEl.classList.remove('typing');
+            typeDialogue(step.text || '', null, textEl);
+
+            nextBtn.classList.add('hidden');
+            tutorialGateSatisfied = (step.advance === 'button');
+
+            // For settings-modal steps, target lives inside the modal.
+            // Delay slightly so the modal open animation can finish.
+            setTimeout(() => {
+                const targetEl = document.querySelector(step.target);
+                if (targetEl) {
+                    try { targetEl.scrollIntoView({ behavior: 'auto', block: 'center' }); } catch (e) {}
+                }
+                positionTutorialUI(step, targetEl);
+                attachTutorialGate(step, targetEl);
+            }, wantsSettings ? 220 : 60);
+
+            nextBtn.onclick = () => {
+                if (!tutorialGateSatisfied && step.advance !== 'button') return;
+                tutorialStepIndex++;
+                showTutorialStep();
+            };
+            skipBtn.onclick = skipTutorial;
+        }
+
+        function attachTutorialGate(step, targetEl) {
+            const nextBtn = document.getElementById('tutorialNextBtn');
+            if (step.advance === 'button' || !targetEl) {
+                tutorialGateSatisfied = true;
+                nextBtn.classList.remove('hidden');
+                return;
+            }
+
+            const revealNext = () => {
+                if (tutorialGateSatisfied) return;
+                tutorialGateSatisfied = true;
+                nextBtn.classList.remove('hidden');
+            };
+
+            if (step.advance === 'input') {
+                const handler = () => {
+                    const val = (targetEl.value || '').toString().trim();
+                    if (val.length > 0) revealNext();
+                };
+                targetEl.addEventListener('input', handler);
+                targetEl.addEventListener('change', handler);
+                tutorialGateListeners.push({ el: targetEl, event: 'input', handler });
+                tutorialGateListeners.push({ el: targetEl, event: 'change', handler });
+                try { targetEl.focus({ preventScroll: true }); } catch (e) {}
+                return;
+            }
+
+            if (step.advance === 'click') {
+                const handler = () => {
+                    setTimeout(revealNext, 60);
+                };
+                targetEl.addEventListener('click', handler, { once: false });
+                tutorialGateListeners.push({ el: targetEl, event: 'click', handler });
+                return;
+            }
+
+            if (step.advance === 'select') {
+                const handler = () => revealNext();
+                targetEl.addEventListener('change', handler);
+                tutorialGateListeners.push({ el: targetEl, event: 'change', handler });
+                return;
+            }
+
+            tutorialGateSatisfied = true;
+            nextBtn.classList.remove('hidden');
+        }
+
+        function positionTutorialUI(step, targetEl) {
+            const shadeTop = document.getElementById('tutorialShadeTop');
+            const shadeBottom = document.getElementById('tutorialShadeBottom');
+            const shadeLeft = document.getElementById('tutorialShadeLeft');
+            const shadeRight = document.getElementById('tutorialShadeRight');
+            const ring = document.getElementById('tutorialRing');
+            const arrow = document.getElementById('tutorialArrow');
+            const bar = document.getElementById('tutorialBar');
+
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+
+            if (!targetEl) {
+                shadeTop.style.cssText = `top:0;left:0;width:${vw}px;height:${vh}px;`;
+                shadeBottom.style.cssText = `top:0;left:0;width:0;height:0;`;
+                shadeLeft.style.cssText = `top:0;left:0;width:0;height:0;`;
+                shadeRight.style.cssText = `top:0;left:0;width:0;height:0;`;
+
+                ring.style.top = '-9999px';
+                ring.style.left = '-9999px';
+                ring.style.width = '0';
+                ring.style.height = '0';
+
+                bar.classList.remove('at-top', 'at-bottom');
+                bar.classList.add('at-bottom');
+                arrow.style.top = (vh - 130) + 'px';
+                arrow.style.left = (vw / 2) + 'px';
+                arrow.textContent = '⬆️';
+                arrow.classList.remove('bounce-up', 'bounce-down');
+                arrow.classList.add('bounce-up');
+                return;
+            }
+
+            const rect = targetEl.getBoundingClientRect();
+            const pad = 8;
+
+            const cutLeft = Math.max(4, rect.left - pad);
+            const cutTop = Math.max(4, rect.top - pad);
+            const cutRight = Math.min(vw - 4, rect.right + pad);
+            const cutBottom = Math.min(vh - 4, rect.bottom + pad);
+            const cutWidth = Math.max(0, cutRight - cutLeft);
+            const cutHeight = Math.max(0, cutBottom - cutTop);
+
+            shadeTop.style.cssText = `top:0;left:0;width:${vw}px;height:${cutTop}px;`;
+            shadeBottom.style.cssText = `top:${cutBottom}px;left:0;width:${vw}px;height:${Math.max(0, vh - cutBottom)}px;`;
+            shadeLeft.style.cssText = `top:${cutTop}px;left:0;width:${cutLeft}px;height:${cutHeight}px;`;
+            shadeRight.style.cssText = `top:${cutTop}px;left:${cutRight}px;width:${Math.max(0, vw - cutRight)}px;height:${cutHeight}px;`;
+
+            ring.style.left = (cutLeft - 4) + 'px';
+            ring.style.top = (cutTop - 4) + 'px';
+            ring.style.width = (cutWidth + 8) + 'px';
+            ring.style.height = (cutHeight + 8) + 'px';
+
+            const targetCenterY = cutTop + cutHeight / 2;
+            const barAtBottom = targetCenterY < vh / 2;
+
+            bar.classList.remove('at-bottom', 'at-top');
+            bar.classList.add(barAtBottom ? 'at-bottom' : 'at-top');
+
+            const centerX = cutLeft + cutWidth / 2;
+            let arrowTop, arrowLeft, arrowChar;
+
+            if (barAtBottom) {
+                arrowChar = '⬇️';
+                arrowTop = cutTop - 40;
+                arrowLeft = centerX;
+            } else {
+                arrowChar = '⬆️';
+                arrowTop = cutTop + cutHeight + 4;
+                arrowLeft = centerX;
+            }
+
+            if (arrowTop < 6) arrowTop = 6;
+            if (arrowTop + 32 > vh) arrowTop = vh - 36;
+            if (arrowLeft < 24) arrowLeft = 24;
+            if (arrowLeft > vw - 24) arrowLeft = vw - 24;
+
+            arrow.style.top = arrowTop + 'px';
+            arrow.style.left = arrowLeft + 'px';
+            arrow.textContent = arrowChar;
+            arrow.classList.remove('bounce-up', 'bounce-down');
+            arrow.classList.add(barAtBottom ? 'bounce-down' : 'bounce-up');
+        }
+
+        window.addEventListener('resize', () => {
+            if (!tutorialActive) return;
+            const step = tutorialStepList[tutorialStepIndex];
+            if (!step) return;
+            positionTutorialUI(step, document.querySelector(step.target));
+        });
+        window.addEventListener('scroll', () => {
+            if (!tutorialActive) return;
+            const step = tutorialStepList[tutorialStepIndex];
+            if (!step) return;
+            positionTutorialUI(step, document.querySelector(step.target));
+        }, { passive: true });
+
+        document.addEventListener('keydown', (e) => {
+            if (!tutorialActive) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                skipTutorial();
+            }
+        });
+
+        setTimeout(() => {
+            try {
+                const alreadyDone = localStorage.getItem('hoshino_tutorial_done') === 'true';
+                const firstWallet = wallets[0];
+                const hasTx = firstWallet && Array.isArray(firstWallet.transactions) && firstWallet.transactions.length > 0;
+                if (!alreadyDone && !hasTx && !tutorialActive) {
+                    startTutorialChapter('basic');
+                }
+            } catch (e) {}
+        }, 900);
 
         // ==========================================
         // SERVICE WORKER
