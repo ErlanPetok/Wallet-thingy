@@ -529,7 +529,10 @@
             color: var(--text-color);
             line-height: 1.3;
             word-break: break-word;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
+        .music-title-row:hover { opacity: 0.7; }
 
         .music-progress-row {
             width: 100%;
@@ -574,7 +577,12 @@
             box-shadow: 0 1px 4px rgba(0,0,0,0.2);
             margin-top: -5px;
             cursor: pointer;
+            visibility: hidden; /* Hide thumb until duration loads */
         }
+
+        /* Show thumb when audio is ready */
+        #progressSlider.ready::-webkit-slider-thumb { visibility: visible; }
+        #progressSlider.ready::-moz-range-thumb { visibility: visible; }
 
         #progressSlider::-moz-range-thumb {
             width: 14px;
@@ -614,28 +622,26 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
-            padding-top: 2px;
+            gap: 6px;
+            padding-top: 6px;
             position: relative;
         }
 
         .music-controls-left {
             display: flex;
             align-items: center;
-            gap: 6px;
             flex-shrink: 0;
-            position: relative;
+            position: absolute;
+            left: 0;
             z-index: 2;
         }
 
         .music-controls-center {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            flex-grow: 1;
             z-index: 1;
         }
 
@@ -644,34 +650,12 @@
             align-items: center;
             gap: 6px;
             flex-shrink: 0;
-            position: relative;
+            position: absolute;
+            right: 0;
             z-index: 2;
         }
 
-        .music-play-btn {
-            background: var(--dark-pink);
-            color: #fff;
-            border: none;
-            width: 30px;
-            height: 30px;
-            min-width: 30px;
-            min-height: 30px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 0.75rem;
-            box-shadow: 0 2px 5px rgba(255,77,109,0.3);
-            flex-shrink: 0;
-            transition: transform 0.1s;
-        }
-
-        .music-play-btn:active {
-            transform: scale(0.9);
-        }
-
-        .music-next-btn {
+        .music-btn {
             background: var(--accent-pink);
             color: var(--dark-pink);
             border: 1.5px solid var(--primary-pink);
@@ -689,12 +673,35 @@
             transition: transform 0.1s, background 0.15s;
         }
 
-        .music-next-btn:hover {
+        .music-btn:hover {
             background: var(--primary-pink);
             color: #fff;
         }
 
-        .music-next-btn:active {
+        .music-btn:active {
+            transform: scale(0.9);
+        }
+
+        .music-play-btn {
+            background: var(--dark-pink);
+            color: #fff;
+            border: none;
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            min-height: 34px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(255,77,109,0.3);
+            flex-shrink: 0;
+            transition: transform 0.1s;
+        }
+
+        .music-play-btn:active {
             transform: scale(0.9);
         }
 
@@ -706,7 +713,7 @@
         }
 
         .music-volume-slider {
-            width: 60px;
+            width: 50px;
             accent-color: var(--dark-pink);
             cursor: pointer;
         }
@@ -875,7 +882,6 @@
 
         input[type="file"] { display: none; }
 
-        /* Settings content — now inside modal */
         .settings-panel {
             display: flex;
             flex-direction: column;
@@ -2637,7 +2643,7 @@
         </div>
 
         <div class="music-bar">
-            <div class="music-title-row" id="currentTrackDisplay">🎵 Loading music...</div>
+            <div class="music-title-row" id="currentTrackDisplay" onclick="openPlaylistModal()" title="Open My Playlist">🎵 Loading music...</div>
             <div class="music-progress-row">
                 <input type="range" id="progressSlider" min="0" max="100" value="0" step="0.1" disabled>
             </div>
@@ -2647,11 +2653,14 @@
             </div>
             <div class="music-controls-row">
                 <div class="music-controls-left">
-                    <button class="music-next-btn" id="myPlaylistBtn" onclick="openPlaylistModal()" title="My Playlist">🎧</button>
+                    <button class="music-btn" id="myPlaylistBtn" onclick="openPlaylistModal()" title="My Playlist">🎧</button>
                 </div>
                 <div class="music-controls-center">
+                    <button class="music-btn" id="musicPrevBtn" onclick="prevTrack()" title="Previous Track">⏮️</button>
+                    <button class="music-btn" id="musicRewindBtn" onclick="seekMusic(-10)" title="Rewind 10s">⏪</button>
                     <button class="music-play-btn" id="musicPlayBtn" onclick="togglePlayMusic()">▶</button>
-                    <button class="music-next-btn" id="musicNextBtn" onclick="nextTrack()" title="Next track">⏭️</button>
+                    <button class="music-btn" id="musicForwardBtn" onclick="seekMusic(10)" title="Forward 10s">⏩</button>
+                    <button class="music-btn" id="musicNextBtn" onclick="nextTrack()" title="Next Track">⏭️</button>
                 </div>
                 <div class="music-controls-right">
                     <span class="music-volume-label">🔊</span>
@@ -2910,7 +2919,7 @@
         </div>
     </div>
 
-    <!-- Settings Modal — full settings content lives here now -->
+    <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModalOverlay" onclick="closeSettingsMenu(event)">
         <div class="modal-card" onclick="event.stopPropagation()">
             <div class="modal-header">
@@ -2996,26 +3005,6 @@
 
                     <button class="submit-btn" style="width: 100%; padding: 8px; font-size: 0.75rem;" onclick="requestNotificationPermission()">🔔 Enable Daily Wallet Reminder</button>
                     <div class="setting-hint">Sends a gentle nudge once per day when the app is open</div>
-
-                    <div class="settings-divider"></div>
-
-                    <h4>💾 Backup</h4>
-
-                    <button class="wallet-action-btn" onclick="closeSettingsMenu(); setTimeout(() => openBackupMenu('export'), 180);">
-                        <span>💾</span>
-                        <div style="flex:1;">
-                            <div style="font-weight:700;">Export Backup</div>
-                            <div class="checkbox-hint" style="padding-left:0;margin-top:2px;">Save to this device or to Dropbox</div>
-                        </div>
-                    </button>
-
-                    <button class="wallet-action-btn" onclick="closeSettingsMenu(); setTimeout(() => openBackupMenu('import'), 180);">
-                        <span>📂</span>
-                        <div style="flex:1;">
-                            <div style="font-weight:700;">Import Backup</div>
-                            <div class="checkbox-hint" style="padding-left:0;margin-top:2px;">Restore from a file or Dropbox</div>
-                        </div>
-                    </button>
                 </div>
             </div>
 
@@ -3078,7 +3067,7 @@
         // DROPBOX CONFIG
         // ==========================================
         const DROPBOX_APP_KEY = 'xp8d0hspuo41ts8';
-        const DROPBOX_REDIRECT_URI = 'https://erlanpetok.web.id/';
+        const DROPBOX_REDIRECT_URI = 'https://wallethingy.erlanpetok.web.id/';
         const DROPBOX_BACKUP_FILENAME = '/hoshino-daily-backup.json';
 
         const LS_DBX_REFRESH = 'hoshino_dbx_refresh';
@@ -3395,7 +3384,7 @@
         }
 
         // ==========================================
-        // SETTINGS MENU — opens the full settings modal
+        // SETTINGS MENU
         // ==========================================
         function openSettingsMenu() {
             syncSettingsUI();
@@ -3407,7 +3396,6 @@
             document.getElementById('settingsModalOverlay').classList.remove('active');
         }
 
-        // Push current state into the modal UI (checkboxes, sliders, swatches)
         function syncSettingsUI() {
             const dsl = document.getElementById('dialogueSpeedSlider');
             if (dsl) { dsl.value = dialogueSpeed; }
@@ -3633,13 +3621,13 @@
         function renderTrackLabel() {
             const el = document.getElementById('currentTrackDisplay');
             if (el) el.textContent = getTrackTitle(currentPeriod);
+            updateMediaSession();
         }
 
         // ==========================================
         // SETTINGS STATE
         // ==========================================
         let dialogueSpeed = parseInt(localStorage.getItem('hoshino_dialogue_speed')) || 25;
-        // Clamp to new range in case an old value is out of bounds
         if (dialogueSpeed > 80) dialogueSpeed = 80;
         if (dialogueSpeed < 10) dialogueSpeed = 10;
 
@@ -4123,7 +4111,7 @@
         }
 
         // ==========================================
-        // AUDIO
+        // AUDIO & MEDIA SESSION
         // ==========================================
         let gameVolume = parseFloat(localStorage.getItem("hoshinoGameVolume"));
         if (isNaN(gameVolume)) gameVolume = 0.5;
@@ -4169,40 +4157,25 @@
             return m + ':' + String(s).padStart(2, '0');
         }
 
-        function ensureDurationKnown(audio) {
-            if (!audio) return;
-            const d = audio.duration;
-            if (Number.isFinite(d) && d > 0) return;
-            if (progressDurationFixAttempted) return;
-            progressDurationFixAttempted = true;
-            try {
-                audio.currentTime = 1e101;
-                const reset = () => {
-                    audio.currentTime = 0;
-                    audio.removeEventListener('timeupdate', reset);
-                };
-                audio.addEventListener('timeupdate', reset, { once: true });
-            } catch (e) {}
-        }
-
         function updateProgressUI() {
             const audio = audioTracks[currentPeriod];
             if (!audio) {
                 progressSlider.disabled = true;
                 progressSlider.value = 0;
+                progressSlider.classList.remove('ready');
                 currentTimeLabel.textContent = '0:00';
                 totalTimeLabel.textContent = '0:00';
                 return;
             }
 
-            ensureDurationKnown(audio);
-
             const dur = Number.isFinite(audio.duration) ? audio.duration : 0;
             if (dur > 0) {
                 progressSlider.disabled = false;
+                progressSlider.classList.add('ready');
                 progressSlider.max = dur;
             } else {
                 progressSlider.disabled = true;
+                progressSlider.classList.remove('ready');
                 progressSlider.max = 100;
             }
 
@@ -4224,6 +4197,7 @@
             progressDurationFixAttempted = false;
 
             progressSlider.value = 0;
+            progressSlider.classList.remove('ready');
             currentTimeLabel.textContent = '0:00';
             totalTimeLabel.textContent = '0:00';
 
@@ -4236,7 +4210,6 @@
             audio.addEventListener('durationchange', updateProgressUI);
             audio.addEventListener('timeupdate', () => { if (!progressSeeking) updateProgressUI(); });
 
-            ensureDurationKnown(audio);
             updateProgressUI();
         }
 
@@ -4266,6 +4239,29 @@
                 setTimeout(() => { progressSeeking = false; updateProgressUI(); }, 80);
             });
         });
+
+        function updateMediaSession() {
+            if ('mediaSession' in navigator) {
+                const iconUrl = window.location.origin + '/icon-512.png';
+
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: getTrackTitle(currentPeriod),
+                    artist: "Hoshino's Daily 🌸",
+                    album: "Abydos High School",
+                    artwork: [
+                        { src: iconUrl, sizes: '512x512', type: 'image/png' },
+                        { src: iconUrl, sizes: '192x192', type: 'image/png' }
+                    ]
+                });
+
+                navigator.mediaSession.setActionHandler('play', () => togglePlayMusic());
+                navigator.mediaSession.setActionHandler('pause', () => togglePlayMusic());
+                navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
+                navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
+                navigator.mediaSession.setActionHandler('seekbackward', () => seekMusic(-10));
+                navigator.mediaSession.setActionHandler('seekforward', () => seekMusic(10));
+            }
+        }
 
         async function startBGM() {
             currentPeriod = getTimePeriod();
@@ -4374,6 +4370,51 @@
                     attachProgressToAudio(activeAudio);
                 }).catch(e => {});
             }
+        }
+
+        function seekMusic(seconds) {
+            const activeAudio = audioTracks[currentPeriod];
+            if (activeAudio) {
+                activeAudio.currentTime = Math.max(0, Math.min(activeAudio.duration || 0, activeAudio.currentTime + seconds));
+                updateProgressUI();
+            }
+        }
+
+        function prevTrack() {
+            let currentIdx = TRACK_ORDER.indexOf(currentPeriod);
+            let prevIdx = (currentIdx - 1 + TRACK_ORDER.length) % TRACK_ORDER.length;
+            currentPeriod = TRACK_ORDER[prevIdx];
+            manualOverride = true;
+
+            Object.keys(audioTracks).forEach(key => {
+                audioTracks[key].pause();
+                audioTracks[key].currentTime = 0;
+            });
+            renderTrackLabel();
+
+            const activeAudio = audioTracks[currentPeriod];
+            if (!activeAudio) {
+                isPlaying = false;
+                musicPlayBtn.textContent = "▶";
+                return;
+            }
+
+            attachProgressToAudio(activeAudio);
+            activeAudio.volume = gameVolume;
+            activeAudio.play().then(() => {
+                isPlaying = true;
+                musicPlayBtn.textContent = "❚❚";
+            }).catch(err => {
+                activeAudio.volume = 0;
+                activeAudio.play().then(() => {
+                    isPlaying = true;
+                    musicPlayBtn.textContent = "❚❚";
+                    armBgmUnlock(activeAudio);
+                }).catch(() => {
+                    isPlaying = false;
+                    musicPlayBtn.textContent = "▶";
+                });
+            });
         }
 
         function nextTrack() {
@@ -6659,7 +6700,6 @@
             document.documentElement.style.overflow = '';
             document.body.style.overflow = '';
 
-            // Close settings modal if the tutorial opened it
             if (tutorialOpenedSettings) {
                 document.getElementById('settingsModalOverlay').classList.remove('active');
                 tutorialOpenedSettings = false;
@@ -6723,7 +6763,6 @@
 
             const step = tutorialStepList[tutorialStepIndex];
 
-            // Open the settings modal if this step needs it, close it otherwise
             const wantsSettings = !!step.opensSettings;
             const settingsOverlay = document.getElementById('settingsModalOverlay');
             const settingsOpen = settingsOverlay.classList.contains('active');
@@ -6751,8 +6790,6 @@
             nextBtn.classList.add('hidden');
             tutorialGateSatisfied = (step.advance === 'button');
 
-            // For settings-modal steps, target lives inside the modal.
-            // Delay slightly so the modal open animation can finish.
             setTimeout(() => {
                 const targetEl = document.querySelector(step.target);
                 if (targetEl) {
