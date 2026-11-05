@@ -1,5 +1,5 @@
 // service-worker.js — Hoshino's Daily offline cache
-const CACHE_NAME = 'hoshino-daily-v1';
+const CACHE_NAME = 'hoshino-daily-v2'; // bumped from v1
 
 const PRECACHE_ASSETS = [
     './',
@@ -22,13 +22,13 @@ const PRECACHE_ASSETS = [
     './background/Committee_Room_Night_1.jpg',
     './background/Committee_Room_Night_2.jpg',
     './background/BG_AbydosCouncilRoom.jpg',
-    './audio/bgm_morning.mp3',
-    './audio/bgm_noon.mp3',
-    './audio/bgm_afternoon.mp3',
-    './audio/bgm_night.mp3',
-    './audio/bgm_latenight.mp3',
-    './audio/login_greeting.mp3',
-    './audio/squish.mp3'
+    './audio/bgm_morning.ogg',
+    './audio/bgm_noon.ogg',
+    './audio/bgm_afternoon.ogg',
+    './audio/bgm_night.ogg',
+    './audio/bgm_latenight.ogg',
+    './audio/login_greeting.ogg',
+    './audio/squish.ogg'
 ];
 
 self.addEventListener('install', event => {
@@ -128,32 +128,3 @@ self.addEventListener('notificationclick', event => {
         })
     );
 });
-
-function changeWalletCurrency(newCurrency) {
-    if (!CURRENCIES[newCurrency]) return;
-
-    const wallet = wallets.find(w => w.id === editingWalletId);
-    if (!wallet) return;
-
-    if (wallet.currency === newCurrency) return;
-
-    const confirmed = confirm(
-        `Change currency to ${CURRENCIES[newCurrency].name}?\n\n` +
-        `⚠️ Existing transactions will be reinterpreted as ${newCurrency}!\n` +
-        `This can cause weird amounts if you switch between currencies with different decimal places.\n\n` +
-        `Continue?`
-    );
-
-    if (!confirmed) {
-        document.getElementById('walletCurrencySelect').value = wallet.currency || 'IDR';
-        return;
-    }
-
-    wallet.currency = newCurrency;
-    // If switching to a non-IDR currency, disable denoms
-    if (!CURRENCIES[newCurrency].denoms) {
-        wallet.useDenom = false;
-    }
-    saveAndRender();
-    closeWalletModal();
-}
