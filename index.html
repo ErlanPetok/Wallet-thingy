@@ -51,6 +51,8 @@
             --sticky-bg: rgba(240, 250, 255, 0.9);
         }
 
+        body.theme-purple { --bg-color:#f4edff; --card-bg:rgba(255,255,255,.9); --primary-pink:#c4a7f5; --dark-pink:#8053c7; --accent-pink:#e9ddff; --text-color:#49365f; --gray-text:#8053c7; --shadow:0 4px 15px rgba(160,120,220,.28); --gain-color:#278653; --header-text:#fff; --sticky-bg:rgba(255,255,255,.9); }
+
         body.theme-spring {
             --bg-color: #fffbe8;
             --card-bg: rgba(255, 253, 240, 0.9);
@@ -253,20 +255,47 @@
         }
 
         .streak-badge {
-            position: absolute;
-            top: 52px;
-            left: 12px;
-            background: rgba(255, 255, 255, 0.75);
-            border: 1.5px solid rgba(255, 255, 255, 0.95);
-            color: var(--dark-pink);
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            backdrop-filter: blur(4px);
-            z-index: 10;
-            pointer-events: none;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            display:inline-flex; align-items:center; justify-content:center; gap:5px;
+            margin:7px auto 0; padding:6px 13px; border-radius:999px;
+            background:rgba(255,255,255,.9); border:2px solid var(--dark-pink);
+            color:var(--dark-pink); font-size:.78rem; font-weight:900;
+            box-shadow:0 3px 10px rgba(0,0,0,.12); cursor:pointer;
+            position:relative; z-index:12; pointer-events:auto;
+        }
+        .streak-badge:active { transform:scale(.97); }
+        .hoshino-pat-counter { display:inline-flex; align-self:center; position:relative; z-index:1; margin-top:5px; border:1.5px solid var(--primary-pink); border-radius:999px; background:var(--card-bg); color:var(--dark-pink); padding:3px 8px; font-size:.66rem; font-weight:900; box-shadow:0 2px 8px rgba(0,0,0,.12); }
+        .streak-reward-card { border:1px solid var(--primary-pink); border-radius:12px; padding:10px; background:var(--card-bg); margin-bottom:8px; }
+        .streak-reward-card.unlocked { border-color:var(--dark-pink); background:var(--accent-pink); }
+        .streak-reward-card strong { display:block; font-size:.78rem; margin-bottom:3px; }
+        .streak-reward-card span { font-size:.68rem; opacity:.82; }
+        .confetti-piece { position:fixed; top:-16px; width:9px; height:13px; z-index:5000; pointer-events:none; animation:confettiFall 2.6s linear forwards; }
+        @keyframes confettiFall { to { transform:translate3d(var(--drift),105vh,0) rotate(780deg); opacity:0; } }
+        .activity-tabs { display:flex; gap:7px; margin:8px 0 12px; }
+        .activity-tab { flex:1; padding:9px 7px; border:1.5px solid var(--primary-pink); border-radius:10px; background:var(--card-bg); color:var(--dark-pink); font-size:.75rem; font-weight:800; cursor:pointer; }
+        .activity-tab.active { background:var(--accent-pink); border-color:var(--dark-pink); box-shadow:0 2px 8px rgba(0,0,0,.08); }
+        .activity-calendar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; }
+        .activity-calendar .planner-day { min-height:43px; font-weight:800; }
+        .activity-day-detail { margin-top:10px; padding:10px; border:1px solid var(--primary-pink); border-radius:12px; background:var(--card-bg); font-size:.74rem; display:flex; flex-direction:column; gap:6px; }
+        .activity-tx { display:flex; justify-content:space-between; gap:8px; padding:6px 0; border-bottom:1px dashed var(--primary-pink); }
+        .activity-tx:last-child { border-bottom:0; }
+        .diary-insight { padding:9px; border-radius:10px; background:var(--accent-pink); font-size:.72rem; line-height:1.45; margin:7px 0; }
+        .plan-progress { width:100%; height:10px; border-radius:99px; overflow:hidden; background:rgba(120,100,130,.18); border:1px solid var(--primary-pink); margin:5px 0; }
+        .plan-progress-fill { height:100%; width:0; background:linear-gradient(90deg,#ff9db7,#a78bfa); border-radius:99px; transition:width .35s ease; }
+        .plan-entry-actions { display:flex; flex-wrap:wrap; gap:5px; }
+        .plan-entry-actions button:disabled { opacity:.4; cursor:not-allowed; }
+        .history-item-container { position:relative; }
+        .history-item-container .delete-btn { position:absolute; right:0; top:0; bottom:0; width:44px; height:100%; display:flex; align-items:center; justify-content:center; background:#d92d55; color:#fff; border:0; border-radius:0 10px 10px 0; font-size:1.45rem; font-weight:900; opacity:0; pointer-events:none; z-index:2; }
+        .history-item-container.swipe-revealed .delete-btn { opacity:1; pointer-events:auto; }
+        @media (hover:hover) { .history-item-container:hover .delete-btn { opacity:.9; pointer-events:auto; } }
+        .history-item-container.swipe-revealed .history-item { transform:translateX(-44px); }
+        .history-item { transition:transform .18s ease; }
+        body.theme-purple { --bg-color:#f4edff; --card-bg:rgba(255,255,255,.9); --primary-pink:#c4a7f5; --dark-pink:#8053c7; --accent-pink:#e9ddff; --text-color:#49365f; --gray-text:#8053c7; --shadow:0 4px 15px rgba(160,120,220,.28); --gain-color:#278653; --header-text:#fff; --sticky-bg:rgba(255,255,255,.9); }
+        .theme-swatch-purple { background:linear-gradient(135deg,#e9ddff,#8053c7); }
+        .theme-swatch.locked { opacity:.35; filter:grayscale(1); position:relative; }
+        .theme-swatch.locked::before { content:'🔒'; position:absolute; inset:0; display:grid; place-items:center; font-size:1.1rem; z-index:2; }
+        @media (max-width:600px) {
+            .history-item-container .delete-btn { opacity:0; pointer-events:none; transition:opacity .15s; }
+            .history-item-container.swipe-revealed .delete-btn { opacity:1; pointer-events:auto; }
         }
 
         @keyframes spin {
@@ -1180,6 +1209,15 @@
             justify-content: center;
             gap: 6px;
             margin-top: 8px;
+            transition: filter 0.35s ease, opacity 0.35s ease;
+        }
+
+        .denomination-summary.hidden-denoms {
+            filter: blur(14px);
+            opacity: 0;
+            visibility: hidden;
+            user-select: none;
+            pointer-events: none;
         }
 
         .denom-badge {
@@ -2614,6 +2652,82 @@
             #tutorialNextBtn { padding: 7px 12px; font-size: 0.72rem; }
             #tutorialSkipBtn { padding: 5px 10px; font-size: 0.62rem; }
         }
+    
+        /* Hoshino's Daily feature additions */
+        .total-amount.hidden-balance { opacity: 0 !important; visibility: hidden; filter: blur(14px); }
+        .denomination-summary.hidden-denoms { opacity: 0 !important; visibility: hidden; filter: blur(14px); }
+        .chip-manager-list { display:flex; flex-direction:column; gap:8px; }
+        .chip-manager-row { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--primary-pink); border-radius:13px; background:var(--accent-pink); min-height:54px; }
+        .chip-manager-row.dragging { opacity:.4; }
+        .chip-manager-row.drag-target { outline:2px dashed var(--dark-pink); }
+        .chip-manager-grip { flex:0 0 34px; min-height:36px; border:1px solid var(--primary-pink); border-radius:9px; background:var(--card-bg); color:var(--dark-pink); font-size:1.1rem; touch-action:none; user-select:none; -webkit-user-select:none; cursor:grab; }
+        .chip-manager-main { flex:1; min-width:0; border:0; background:transparent; color:var(--text-color); text-align:left; padding:3px; cursor:pointer; }
+        .chip-manager-main strong { display:block; overflow-wrap:anywhere; }
+        .chip-manager-main small { display:block; opacity:.72; margin-top:2px; }
+        .chip-manager-empty { text-align:center; padding:18px 10px; opacity:.7; }
+        .chip-manager-add { width:100%; margin-top:12px; }
+        .quick-chip-wrap { display: inline-flex; align-items: stretch; gap: 2px; }
+        .quick-chip-order { display: flex; flex-direction: column; gap: 1px; }
+        .quick-chip-order button, .playlist-order-btn { border: 1px solid var(--primary-pink); background: var(--card-bg); color: var(--dark-pink); border-radius: 6px; padding: 1px 5px; font-size: .62rem; cursor: pointer; }
+        .playlist-item { touch-action: pan-y; }
+        .playlist-item.dragging, .quick-chip-wrap.dragging { opacity: .45; }
+        .playlist-item.drag-over, .quick-chip-wrap.drag-over { outline: 2px dashed var(--dark-pink); }
+        .plan-denom-row { display:flex; justify-content:flex-end; padding:2px 16px 0; }
+        .plan-denom-row button { background:var(--card-bg); border:1px solid var(--primary-pink); border-radius:9px; color:var(--dark-pink); padding:5px 9px; font-size:.7rem; font-weight:800; cursor:pointer; text-shadow:0 0 .25px currentColor; }
+        .row-inputs .input-group:first-child { flex:0 0 55%; min-width:0; }
+        .row-inputs .input-group:last-child { flex:1 1 45%; min-width:0; }
+        #amount { text-align:right; }
+        .amount-calc-hint {
+            margin: 3px 2px 7px;
+            padding: 0;
+            color: var(--text-color);
+            opacity: .62;
+            font-size: .62rem;
+            line-height: 1.25;
+            font-weight: 600;
+            text-align: center;
+        }
+        .backup-controls button, .wallet-controls button, .note-toggle-btn, .search-clear-btn, .activity-tab, .filter-chip, .monthly-toggle-btn, .action-btn { -webkit-text-stroke:.18px currentColor; text-shadow:0 1px 0 rgba(0,0,0,.10); }
+        .backup-controls button { border:1px solid var(--primary-pink); border-radius:8px; padding:5px 8px; background:var(--card-bg); color:var(--dark-pink); text-decoration:none; font-weight:800; text-shadow:0 0 .3px currentColor, 0 1px 0 rgba(0,0,0,.12); }
+        .wallet-controls button { border:1px solid var(--primary-pink); border-radius:8px; padding:5px 8px; background:var(--card-bg); color:var(--dark-pink); text-decoration:none; }
+        .note-toggle-btn { border:1px solid var(--primary-pink); background:var(--card-bg); color:var(--dark-pink); border-radius:9px; padding:8px 10px; }
+        .activity-history-toolbar { display:flex; flex-direction:column; gap:6px; }
+        .history-mode-setting select { width:100%; padding:8px; border:1px solid var(--primary-pink); border-radius:9px; background:var(--card-bg); color:var(--text-color); font-size:.75rem; }
+        @media (max-width:380px) { .row-inputs .input-group:first-child { flex-basis:52%; } .plan-denom-row { padding-right:12px; } }
+        .history-day-separator { display:flex; align-items:center; gap:8px; margin:12px 2px 6px; color:var(--dark-pink); font-size:.72rem; font-weight:800; }
+        .history-day-separator::after { content:''; height:1px; flex:1; background:var(--primary-pink); opacity:.55; }
+        .planner-hub { margin-top:8px; padding:8px 9px; border:1.5px solid var(--primary-pink); border-radius:13px; background:var(--card-bg); display:flex; flex-direction:column; gap:6px; }
+        .planner-hub h3 { color:var(--dark-pink); font-size:.82rem; margin:0; }
+        .planner-grid { display:grid; grid-template-columns:1fr 1fr; gap:5px 7px; }
+        .planner-field { display:flex; flex-direction:column; gap:3px; min-width:0; }
+        .planner-field.full { grid-column:1/-1; }
+        .planner-field label { font-size:.63rem; font-weight:700; color:var(--dark-pink); }
+        .planner-field input, .planner-field select, .planner-field textarea { width:100%; min-width:0; border:1px solid var(--primary-pink); border-radius:7px; padding:6px 7px; background:var(--card-bg); color:var(--text-color); font-size:.73rem; min-height:32px; }
+        .planner-field textarea { resize:vertical; min-height:62px; }
+        .planner-action { border:0; border-radius:8px; padding:6px 9px; background:var(--dark-pink); color:white; font-size:.7rem; font-weight:700; cursor:pointer; }
+        .planner-secondary { border:1px solid var(--primary-pink); border-radius:9px; padding:6px 9px; background:var(--accent-pink); color:var(--dark-pink); font-size:.7rem; cursor:pointer; }
+        .planner-list { display:flex; flex-direction:column; gap:6px; }
+        .planner-entry { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:6px 7px; border-radius:8px; background:var(--accent-pink); font-size:.68rem; }
+        .planner-entry-main { min-width:0; display:flex; flex-direction:column; gap:2px; }
+        .planner-entry-main span { overflow-wrap:anywhere; }
+        .planner-calendar-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+        .planner-calendar-title { font-weight:800; color:var(--dark-pink); font-size:.8rem; }
+        .planner-calendar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px; }
+        .planner-calendar-label { text-align:center; font-size:.6rem; font-weight:800; opacity:.7; padding:3px 0; }
+        .planner-day { min-height:37px; border:1px solid var(--primary-pink); border-radius:7px; background:var(--card-bg); color:var(--text-color); font-size:.68rem; position:relative; padding:4px 2px; cursor:pointer; }
+        .planner-day.selected { outline:2px solid var(--dark-pink); background:var(--accent-pink); }
+        .planner-day.has-data::after { content:''; position:absolute; width:5px; height:5px; border-radius:50%; background:var(--dark-pink); bottom:3px; left:calc(50% - 2px); }
+        .planner-day.empty { visibility:hidden; }
+        .planner-detail { border:1px dashed var(--primary-pink); border-radius:10px; padding:8px; font-size:.72rem; display:flex; flex-direction:column; gap:5px; }
+        .reward-row { display:flex; flex-wrap:wrap; gap:6px; }
+        .reward-pill { padding:6px 8px; border-radius:9px; border:1px solid var(--primary-pink); font-size:.67rem; background:var(--accent-pink); opacity:.5; }
+        .reward-pill.unlocked { opacity:1; border-color:var(--dark-pink); box-shadow:0 2px 6px rgba(255,77,109,.16); }
+        .planner-hint { font-size:.65rem; opacity:.75; line-height:1.4; }
+        @media (max-width:600px) {
+            .history-item-container .delete-btn { opacity:0; pointer-events:none; transition:opacity .15s; }
+            .history-item-container.swipe-revealed .delete-btn { opacity:1; pointer-events:auto; }
+        }
+
     </style>
 </head>
 <body>
@@ -2622,18 +2736,19 @@
             <button class="update-btn" id="updateBtn" onclick="checkForUpdates()" title="Check for updates">🔄</button>
             <button class="tutorial-help-btn" id="tutorialHelpBtn" onclick="openTutorialHub()" title="Tutorial chapters">❓</button>
             <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
-            <div class="streak-badge" id="streakBadge" style="display: none;"></div>
             <div class="header-title-box">
                 <h1>🌸 Hoshino's Daily 🌸</h1>
             </div>
             <p>✨ Your clean & cozy wallet tracker~ 🐋</p>
+            <button class="streak-badge" id="streakBadge" type="button" onclick="openStreakRewards()" aria-label="Open streak rewards">🔥 0 day streak · Rewards</button>
         </header>
 
         <div class="vn-section">
             <div class="hoshino-sprite-wrap">
                 <div class="hoshino-avatar" id="hoshinoSpriteBox" onclick="pokeHoshino()">
-                    <img id="hoshinoSpriteImg" src="" alt="Hoshino Sprite" onerror="this.src='expression/normal.png';">
+                    <img id="hoshinoSpriteImg" src="" alt="Hoshino Sprite" onerror="this.onerror=null;this.src='expression/normal.png';">
                 </div>
+                <span class="hoshino-pat-counter" id="hoshinoPatCounter">♡ 0 pats</span>
                 <div class="hoshino-emotion-badge" id="hoshinoEmotionBadge">✨</div>
                 <span class="hoshino-tap-hint" id="hoshinoTapHint">👆 tap me!</span>
             </div>
@@ -2677,9 +2792,6 @@
 
         <div class="wallet-controls">
             <span class="wallet-hint">💡 Long-press a wallet tab to edit</span>
-            <div class="wallet-controls-group">
-                <button onclick="toggleDenomSystem()" id="toggleDenomBtn">⚙️ Denoms: OFF</button>
-            </div>
         </div>
 
         <div class="backup-controls">
@@ -2702,7 +2814,23 @@
         </div>
 
         <div class="quick-add-row" id="quickAddRow"></div>
-        <div class="chip-hint" id="chipHint">💡 Tip: long-press (or right-click) a chip to edit it</div>
+        <div class="chip-hint" id="chipHint">💡 Tip: long-press a chip to manage, reorder, or edit your chips</div>
+
+        <section class="planner-hub" id="walletPlansHub">
+            <h3>🐋 Money Plans</h3>
+            <div class="planner-hint">Set a savings target or plan a purchase. Progress updates from your real transactions; plans never change your balance by themselves.</div>
+            <div class="planner-grid">
+                <div class="planner-field"><label for="planType">Plan type</label><select id="planType"><option value="goal">🎯 Save / receive a target</option><option value="spend">🛍️ Planned spending</option></select></div>
+                <div class="planner-field"><label for="planDate">Target date</label><input type="date" id="planDate"></div>
+                <div class="planner-field"><label for="planAmount">Target amount</label><input type="number" id="planAmount" min="1" step="any" placeholder="0"></div>
+                <div class="planner-field"><label for="planDescription">What for?</label><input type="text" id="planDescription" maxlength="80" placeholder="e.g. New PC / Rent"></div>
+                <div class="planner-field full"><button type="button" class="planner-action" onclick="addWalletPlan()">＋ Add money plan</button></div>
+            </div>
+            <div><strong style="font-size:.75rem;">📌 Your plans</strong><div class="planner-list" id="walletPlanList"></div></div>
+        </section>
+        <div class="plan-denom-row">
+            <button onclick="toggleDenomSystem()" id="toggleDenomBtn">⚙️ Denoms: OFF</button>
+        </div>
 
         <form id="transactionForm">
             <div class="row-inputs">
@@ -2715,9 +2843,10 @@
                 </div>
                 <div class="input-group">
                     <label for="amount">Amount 💵</label>
-                    <input type="number" id="amount" placeholder="0" required min="1">
+                    <input type="text" id="amount" placeholder="e.g. 20k + 30k" required inputmode="decimal" autocomplete="off" aria-describedby="amountCalcHint">
                 </div>
             </div>
+            <p class="amount-calc-hint" id="amountCalcHint">Calculator: + − × ÷ · parentheses · k = thousand · m = million</p>
 
             <div class="input-group" id="denomInputSection" style="display: none;">
                 <label>Bill Counts 💳</label>
@@ -2762,23 +2891,40 @@
             <button type="submit" class="submit-btn" id="addEntryBtn">Add Entry ✨</button>
         </form>
 
-        <div class="history-section">
-            <h2>History 📜</h2>
-
-            <div class="history-search-bar">
-                <span>🔍</span>
-                <input type="text" id="historySearchInput" placeholder="Search description or note..." oninput="onHistorySearchInput()">
-                <button class="search-clear-btn" id="historySearchClear" onclick="clearHistorySearch()" style="display: none;">✕</button>
+        <div class="history-section" id="activitySection">
+            <h2>📅 Pocket Money Calendar</h2>
+            <div class="activity-tabs">
+                <button type="button" class="activity-tab active" id="calendarViewTab" onclick="switchActivityView('calendar')">📜 History</button>
+                <button type="button" class="activity-tab" id="diaryViewTab" onclick="switchActivityView('diary')">📖 Hoshino's Diary</button>
             </div>
-
-            <div class="history-filter-row">
-                <button class="filter-chip active" data-filter="all" onclick="setHistoryFilter('all')">All</button>
-                <button class="filter-chip" data-filter="gain" onclick="setHistoryFilter('gain')">📈 Gains</button>
-                <button class="filter-chip" data-filter="spend" onclick="setHistoryFilter('spend')">📉 Spends</button>
-                <button class="filter-chip" data-filter="noted" onclick="setHistoryFilter('noted')">📎 With notes</button>
+            <div id="calendarActivityView">
+                <div id="calendarMonthPanel">
+                <div class="planner-calendar-head"><button class="planner-secondary" onclick="changeActivityMonth(-1)">◀</button><span class="planner-calendar-title" id="activityMonthTitle">Calendar</span><button class="planner-secondary" onclick="changeActivityMonth(1)">▶</button></div>
+                <div class="activity-calendar" id="activityCalendar"></div>
+                <div class="activity-day-detail" id="activityDayDetail">Choose a day to see your money activity~</div>
+                </div>
+                <div id="allTransactionsPanel" class="activity-history-toolbar">
+                <div class="history-search-bar">
+                    <span>🔍</span><input type="text" id="historySearchInput" placeholder="Search description or note..." oninput="onHistorySearchInput()">
+                    <button class="search-clear-btn" id="historySearchClear" onclick="clearHistorySearch()" style="display:none;">✕</button>
+                </div>
+                <div class="history-filter-row">
+                    <button class="filter-chip active" data-filter="all" onclick="setHistoryFilter('all')">All</button>
+                    <button class="filter-chip" data-filter="gain" onclick="setHistoryFilter('gain')">📈 Gains</button>
+                    <button class="filter-chip" data-filter="spend" onclick="setHistoryFilter('spend')">📉 Spends</button>
+                    <button class="filter-chip" data-filter="noted" onclick="setHistoryFilter('noted')">📎 Notes</button>
+                </div>
+                <div class="history-list" id="historyList"></div>
+                </div>
             </div>
-
-            <div class="history-list" id="historyList"></div>
+            <div id="diaryActivityView" style="display:none;">
+                <div class="planner-grid">
+                    <div class="planner-field full"><label for="diaryDate">Diary date</label><input type="date" id="diaryDate" onchange="selectActivityDate(this.value)"></div>
+                    <div class="planner-field full"><div class="diary-insight" id="diarySpendingInsight">Hoshino will summarize your gains and spending for this day~</div></div>
+                    <div class="planner-field full"><label for="diaryText">Today's little memory</label><textarea id="diaryText" maxlength="500" placeholder="Write a little memory about today..."></textarea></div>
+                    <div class="planner-field full"><button type="button" class="planner-action" onclick="saveDiaryEntry()">💗 Save diary entry</button></div>
+                </div>
+            </div>
         </div>
 
         <div class="monthly-summary-section">
@@ -2787,6 +2933,21 @@
                 <span id="monthlyToggleIcon">▼ Show</span>
             </button>
             <div class="monthly-card" id="monthlyCard" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Quick Chip Manager -->
+    <div class="modal-overlay" id="chipManagerOverlay" onclick="closeChipManager(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Manage Quick Chips ✨</h2>
+                <button class="modal-close" onclick="closeChipManager()">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="planner-hint">Drag the grip (☰) to change the order. Tap a chip to edit it.</p>
+                <div class="chip-manager-list" id="chipManagerList"></div>
+                <button type="button" class="modal-btn modal-btn-primary chip-manager-add" onclick="openChipEditor(null)">＋ Add Chip</button>
+            </div>
         </div>
     </div>
 
@@ -2936,11 +3097,24 @@
                         <div class="theme-swatch theme-swatch-night" data-theme="night" onclick="setTheme('night')" title="Night"><span>🌙</span></div>
                         <div class="theme-swatch theme-swatch-ocean" data-theme="ocean" onclick="setTheme('ocean')" title="Ocean"><span>🌊</span></div>
                         <div class="theme-swatch theme-swatch-spring" data-theme="spring" onclick="setTheme('spring')" title="Spring"><span>🌻</span></div>
+                        <div class="theme-swatch theme-swatch-purple locked" data-theme="purple" onclick="setTheme('purple')" title="Unlock at a 7-day streak"><span>💜</span></div>
+                        <div class="settings-divider"></div>
+                        <h4>👙 Hoshino's Skins</h4>
+                        <div class="setting-hint" id="hoshinoSkinHint">Reach a 30-day streak to unlock the swimsuit skin. Add matching expression images in skins/swimsuit/ (normal.png, happy.png, sleepy.png, squished.png, joking.png, surprised.png, embarrassed.png).</div>
+                        <button class="action-btn" id="hoshinoSkinBtn" style="width:100%;" onclick="toggleHoshinoSwimsuitSkin()" disabled>🔒 Swimsuit skin · Day 30</button>
                     </div>
 
                     <div class="settings-divider"></div>
 
                     <h4>⚙️ Settings</h4>
+                    <div class="setting-row history-mode-setting">
+                        <div class="setting-label"><span>📚 History display</span></div>
+                        <select id="historyDisplayMode" onchange="setHistoryDisplayMode(this.value)">
+                            <option value="transactions">📜 All Transactions (default)</option>
+                            <option value="calendar">📅 Pocket Money Calendar</option>
+                        </select>
+                        <div class="setting-hint">Choose one history layout at a time. Hoshino's Diary stays available separately.</div>
+                    </div>
 
                     <div class="setting-row">
                         <div class="setting-label">
@@ -3002,16 +3176,42 @@
 
                     <div class="settings-divider"></div>
 
-                    <h4>🔔 Notifications</h4>
+                    <h4>🙈 Balance Privacy</h4>
+                    <button class="action-btn" style="width:100%; padding:8px;" onclick="configureBalancePassword()">🔐 Set / Change / Remove Privacy Password</button>
+                    <div class="setting-hint">A password is required to reveal a hidden balance. It is stored as a salted hash on this device, not as plain text.</div>
 
-                    <button class="submit-btn" style="width: 100%; padding: 8px; font-size: 0.75rem;" onclick="requestNotificationPermission()">🔔 Enable Daily Wallet Reminder</button>
-                    <div class="setting-hint">Sends a gentle nudge once per day when the app is open</div>
+                    <!-- Daily notification reminders are intentionally omitted from this build. -->
                 </div>
             </div>
 
             <div class="modal-footer">
                 <button class="modal-btn modal-btn-primary" onclick="closeSettingsMenu()">Done ✨</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Streak Rewards Modal -->
+    <div class="modal-overlay" id="streakRewardsOverlay" onclick="closeStreakRewards(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header"><h2>🔥 Hoshino's Streak Rewards</h2><button class="modal-close" onclick="closeStreakRewards()">✕</button></div>
+            <div class="modal-body">
+                <div class="diary-insight" id="streakRewardStatus">Keep logging one transaction each day to unlock rewards~</div>
+                <div id="streakRewardList"></div>
+                <div class="setting-hint">Rewards unlock permanently when your longest streak reaches the milestone.</div>
+            </div>
+            <div class="modal-footer"><button class="modal-btn modal-btn-primary" onclick="closeStreakRewards()">Let's go~ ✨</button></div>
+        </div>
+    </div>
+
+    <!-- Balance Privacy Password Modal -->
+    <div class="modal-overlay" id="privacyPasswordOverlay" onclick="closePrivacyPasswordModal(null)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-header"><h2 id="privacyPasswordTitle">🔐 Balance Privacy</h2><button class="modal-close" onclick="closePrivacyPasswordModal(null)">✕</button></div>
+            <div class="modal-body">
+                <div class="checkbox-hint" id="privacyPasswordMessage" style="padding-left:0; margin-bottom:8px;"></div>
+                <input type="password" id="privacyPasswordInput" autocomplete="current-password" placeholder="Enter password" style="width:100%; padding:10px; border:1px solid var(--primary-pink); border-radius:9px; background:var(--card-bg); color:var(--text-color);">
+            </div>
+            <div class="modal-footer"><button class="modal-btn" onclick="closePrivacyPasswordModal(null)">Cancel</button><button class="modal-btn modal-btn-primary" onclick="submitPrivacyPasswordModal()">Continue</button></div>
         </div>
     </div>
 
@@ -3646,7 +3846,7 @@
         // ==========================================
         // THEME SYSTEM
         // ==========================================
-        const THEMES = ['pink', 'night', 'ocean', 'spring'];
+        const THEMES = ['pink', 'night', 'ocean', 'spring', 'purple'];
         const DARK_THEMES = ['night'];
 
         let currentTheme = localStorage.getItem('hoshino_theme') || 'pink';
@@ -3661,7 +3861,7 @@
         let nightTheme = DARK_THEMES.includes(currentTheme);
 
         function applyTheme() {
-            document.body.classList.remove('theme-pink', 'theme-night', 'theme-ocean', 'theme-spring', 'night-theme');
+            document.body.classList.remove('theme-pink', 'theme-night', 'theme-ocean', 'theme-spring', 'theme-purple', 'night-theme');
             if (currentTheme !== 'pink') document.body.classList.add('theme-' + currentTheme);
             if (DARK_THEMES.includes(currentTheme)) document.body.classList.add('night-theme');
 
@@ -3676,6 +3876,7 @@
 
         function setTheme(theme) {
             if (!THEMES.includes(theme)) theme = 'pink';
+            if (theme === 'purple' && (streakData.longestStreak || 0) < 7) { alert('Reach a 7-day streak to unlock the purple theme, Sensei~ 💜'); return; }
             currentTheme = theme;
             localStorage.setItem('hoshino_theme', theme);
             localStorage.setItem('hoshino_night_theme', String(DARK_THEMES.includes(theme)));
@@ -3879,39 +4080,109 @@
         }
 
         // ==========================================
+        // DEVICE-LOCAL BALANCE PASSWORD (PBKDF2)
+        // ==========================================
+        async function hashBalancePin(pin, saltB64) {
+            if (!crypto.subtle) throw new Error('Secure Web Crypto is unavailable. Use HTTPS.');
+            const enc = new TextEncoder();
+            const salt = saltB64 ? Uint8Array.from(atob(saltB64), c => c.charCodeAt(0)) : crypto.getRandomValues(new Uint8Array(16));
+            const key = await crypto.subtle.importKey('raw', enc.encode(pin), 'PBKDF2', false, ['deriveBits']);
+            const bits = await crypto.subtle.deriveBits({ name:'PBKDF2', salt, iterations:150000, hash:'SHA-256' }, key, 256);
+            const bytes = new Uint8Array(bits);
+            const hash = btoa(String.fromCharCode(...bytes));
+            const saltOut = btoa(String.fromCharCode(...salt));
+            return { salt: saltB64 || saltOut, hash };
+        }
+        async function verifyBalancePin(pin) {
+            try {
+                const saved = JSON.parse(localStorage.getItem('hoshino_balance_pin') || 'null');
+                if (!saved || !saved.salt || !saved.hash) return true;
+                const check = await hashBalancePin(pin, saved.salt);
+                return check.hash === saved.hash;
+            } catch (e) { return false; }
+        }
+        let privacyPasswordResolver = null;
+        function askPrivacyPassword(title, message, placeholder) {
+            return new Promise(resolve => {
+                privacyPasswordResolver = resolve;
+                document.getElementById('privacyPasswordTitle').textContent = title;
+                document.getElementById('privacyPasswordMessage').textContent = message;
+                const input = document.getElementById('privacyPasswordInput');
+                input.value = ''; input.placeholder = placeholder || 'Enter password';
+                document.getElementById('privacyPasswordOverlay').classList.add('active');
+                setTimeout(() => input.focus(), 50);
+            });
+        }
+        function submitPrivacyPasswordModal() {
+            const value = document.getElementById('privacyPasswordInput').value;
+            document.getElementById('privacyPasswordOverlay').classList.remove('active');
+            document.getElementById('privacyPasswordInput').value = '';
+            const resolve = privacyPasswordResolver; privacyPasswordResolver = null;
+            if (resolve) resolve(value);
+        }
+        function closePrivacyPasswordModal(value) {
+            const overlay = document.getElementById('privacyPasswordOverlay');
+            if (overlay) overlay.classList.remove('active');
+            const input = document.getElementById('privacyPasswordInput'); if (input) input.value = '';
+            const resolve = privacyPasswordResolver; privacyPasswordResolver = null;
+            if (resolve) resolve(value);
+        }
+        async function configureBalancePassword() {
+            const saved = localStorage.getItem('hoshino_balance_pin');
+            if (saved) {
+                const current = await askPrivacyPassword('🔐 Verify current password', 'Enter your current balance privacy password.', 'Current password');
+                if (current === null) return;
+                if (!(await verifyBalancePin(current))) { alert('Incorrect password.'); return; }
+            }
+            const next = await askPrivacyPassword('🔐 Set a new password', saved ? 'Enter a new password. Leave it empty to remove the password.' : 'Create a privacy password with at least 4 characters.', saved ? 'New password (empty = remove)' : 'New password');
+            if (next === null) return;
+            if (!next) {
+                if (saved) { localStorage.removeItem('hoshino_balance_pin'); showChipToast('🔓 Privacy password removed on this device.'); }
+                else alert('Please enter a password with at least 4 characters.');
+                return;
+            }
+            if (next.length < 4) { alert('Please use at least 4 characters.'); return; }
+            const confirmPin = await askPrivacyPassword('🔐 Confirm password', 'Enter the same password one more time.', 'Confirm password');
+            if (confirmPin !== next) { alert('The passwords did not match.'); return; }
+            try {
+                const hashed = await hashBalancePin(next);
+                localStorage.setItem('hoshino_balance_pin', JSON.stringify(hashed));
+                showChipToast('🔐 Balance privacy password saved.');
+            } catch (e) { alert(e.message || 'Could not save the password.'); }
+        }
+
+
+        // ==========================================
         // BALANCE VISIBILITY
         // ==========================================
         function applyBalanceVisibility() {
             const totalEl = document.getElementById('totalBalance');
+            const denomEl = document.getElementById('denomSummary');
             const eyeBtn = document.getElementById('balanceEyeBtn');
             if (balanceHidden) {
                 totalEl.classList.add('hidden-balance');
+                denomEl.classList.add('hidden-denoms');
                 eyeBtn.textContent = '🙈';
             } else {
                 totalEl.classList.remove('hidden-balance');
+                denomEl.classList.remove('hidden-denoms');
                 eyeBtn.textContent = '👁️';
             }
         }
 
-        function toggleBalanceVisibility() {
+        async function toggleBalanceVisibility() {
+            if (balanceHidden && localStorage.getItem('hoshino_balance_pin')) {
+                const pin = await askPrivacyPassword('🔐 Unlock balance', 'Enter your privacy password to reveal the balance.', 'Privacy password');
+                if (pin === null) return;
+                if (!(await verifyBalancePin(pin))) { alert('Incorrect password. The balance stays hidden.'); return; }
+            }
             balanceHidden = !balanceHidden;
             localStorage.setItem('hoshino_balance_hidden', balanceHidden);
             applyBalanceVisibility();
-
             if (balanceHidden) {
-                const reactions = [
-                    "Hiding from someone? Don't worry, I won't peek either~ 🙈",
-                    "Ooh, secret mode! Your wallet is safe with me. 💖",
-                    "Uhe~ Privacy mode on. I'll look away. 🙈"
-                ];
-                updateHoshinoDisplay('joking', reactions[Math.floor(Math.random() * reactions.length)]);
+                updateHoshinoDisplay('joking', "Uhe~ Privacy mode on. I'll look away. 🙈");
             } else {
-                const reactions = [
-                    "Peek-a-boo~ Your balance is back! 👁️",
-                    "All clear! I can see it again~ ✨",
-                    "Welcome back, Sensei's money! 💰"
-                ];
-                updateHoshinoDisplay('happy', reactions[Math.floor(Math.random() * reactions.length)]);
+                updateHoshinoDisplay('happy', "Peek-a-boo~ Your balance is back! 👁️");
             }
         }
 
@@ -4064,52 +4335,7 @@
 
         setInterval(() => applyMoodOvertime(false), 60000);
 
-        // ==========================================
-        // NOTIFICATIONS
-        // ==========================================
-        function requestNotificationPermission() {
-            if (!("Notification" in window)) {
-                alert("This browser does not support desktop notifications, Sensei! 💦");
-                return;
-            }
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    alert("Notifications enabled successfully! Hoshino will remind you daily~ ✨");
-                    localStorage.setItem('hoshino_notifications_enabled', 'true');
-                    scheduleDailyReminder();
-                } else {
-                    alert("Notification permission denied. 😢");
-                }
-            });
-        }
-
-        function scheduleDailyReminder() {
-            if (localStorage.getItem('hoshino_notifications_enabled') !== 'true') return;
-            setInterval(() => {
-                const lastNotifDate = localStorage.getItem('hoshino_last_notif_date');
-                const todayStr = new Date().toISOString().slice(0, 10);
-                if (lastNotifDate !== todayStr && Notification.permission === "granted") {
-                    try {
-                        navigator.serviceWorker.ready.then(registration => {
-                            registration.showNotification("🌸 Hoshino's Daily Reminder", {
-                                body: "Time to check your wallet and log today's expenses, Sensei! Uhe~ 🐋",
-                                icon: "icon-192.png", badge: "icon-192.png"
-                            });
-                        });
-                    } catch (e) {
-                        new Notification("🌸 Hoshino's Daily Reminder", {
-                            body: "Time to check your wallet and log today's expenses, Sensei! Uhe~ 🐋",
-                            icon: "icon-192.png"
-                        });
-                    }
-                    localStorage.setItem('hoshino_last_notif_date', todayStr);
-                }
-            }, 60 * 60 * 1000);
-        }
-
-        if (localStorage.getItem('hoshino_notifications_enabled') === 'true') {
-            scheduleDailyReminder();
-        }
+        // Daily notification reminders are intentionally not part of this build.
 
         // ==========================================
         // AUDIO & MEDIA SESSION
@@ -4339,6 +4565,12 @@
             await handleDropboxRedirect();
 
             customTracks = await loadCustomTracksFromDB();
+            const savedTrackOrder = JSON.parse(localStorage.getItem('hoshino_custom_track_order') || '[]');
+            if (savedTrackOrder.length) customTracks.sort((a,b) => {
+                const ai=savedTrackOrder.indexOf(String(a.id)), bi=savedTrackOrder.indexOf(String(b.id));
+                return (ai < 0 ? 9999 : ai) - (bi < 0 ? 9999 : bi);
+            });
+            persistPlaylistOrder();
             rebuildCustomAudio();
             rebuildTrackOrder();
             renderTrackLabel();
@@ -4520,8 +4752,9 @@
         };
 
         function updateStreakOnLog(txDate) {
-            const today = new Date().toISOString().slice(0, 10);
-            const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+            const today = localDateString(new Date());
+            const yesterdayDate = new Date(); yesterdayDate.setDate(yesterdayDate.getDate()-1);
+            const yesterday = localDateString(yesterdayDate);
 
             if (txDate !== today) return;
             if (streakData.lastLogDate === today) return;
@@ -4535,11 +4768,14 @@
             localStorage.setItem('hoshino_streak', JSON.stringify(streakData));
             renderStreakBadge();
             checkStreakMilestone();
+            updateStreakUnlocks();
+            if (typeof renderStreakRewards === 'function') renderStreakRewards();
         }
 
         function checkStreakReset() {
-            const today = new Date().toISOString().slice(0, 10);
-            const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+            const today = localDateString(new Date());
+            const yesterdayDate = new Date(); yesterdayDate.setDate(yesterdayDate.getDate()-1);
+            const yesterday = localDateString(yesterdayDate);
             const last = streakData.lastLogDate;
 
             if (last && last !== today && last !== yesterday) {
@@ -4551,35 +4787,49 @@
         }
 
         function renderStreakBadge() {
-            const badge = document.getElementById('streakBadge');
-            if (!badge) return;
-            if (streakData.count > 0) {
-                badge.style.display = 'block';
-                badge.textContent = `🔥 ${streakData.count} day${streakData.count > 1 ? 's' : ''}`;
-                badge.title = `Longest streak: ${streakData.longestStreak} days`;
-            } else {
-                badge.style.display = 'none';
-            }
+            const badge = document.getElementById('streakBadge'); if (!badge) return;
+            badge.style.display = 'inline-flex';
+            badge.textContent = `🔥 ${streakData.count || 0} day${streakData.count === 1 ? '' : 's'} · Rewards`;
+            badge.title = `Current: ${streakData.count || 0} days · Best: ${streakData.longestStreak || 0} days. Tap to view rewards.`;
+            updateStreakUnlocks();
         }
-
+        function updateStreakUnlocks() {
+            const best = streakData.longestStreak || 0;
+            const purple = document.querySelector('.theme-swatch-purple');
+            if (purple) { purple.classList.toggle('locked', best < 7); purple.title = best >= 7 ? 'Abydos Violet unlocked' : 'Unlock at a 7-day streak'; }
+            const skinBtn = document.getElementById('hoshinoSkinBtn');
+            if (skinBtn) { skinBtn.disabled = best < 30; skinBtn.textContent = best >= 30 ? (localStorage.getItem('hoshino_skin') === 'swimsuit' ? '🌴 Use default Hoshino' : '👙 Use swimsuit skin') : '🔒 Swimsuit skin · Day 30'; }
+            const skinHint = document.getElementById('hoshinoSkinHint');
+            if (skinHint && best >= 30) skinHint.textContent = 'Swimsuit skin unlocked. Matching expressions load from skins/swimsuit/. Missing expressions fall back to the original skin.';
+        }
+        function openStreakRewards() { renderStreakRewards(); const el=document.getElementById('streakRewardsOverlay'); if(el) el.classList.add('active'); }
+        function closeStreakRewards(event) { if(event && event.target && event.target.id!=='streakRewardsOverlay') return; const el=document.getElementById('streakRewardsOverlay'); if(el) el.classList.remove('active'); }
+        function renderStreakRewards() {
+            const rewards=[
+                {days:3,icon:'💬',name:'More Hoshino dialogue',desc:'Extra dialogue lines become available when you pat Hoshino and while she reacts to your activity.'},
+                {days:7,icon:'💜',name:'Abydos Violet theme',desc:'A purple-ish theme is unlocked in Settings → Theme.'},
+                {days:14,icon:'✨',name:'More emojis & dialogue set',desc:'Hoshino gets extra reactions and a larger set of dialogue.'},
+                {days:30,icon:'👙',name:'Swimsuit Hoshino skin',desc:'Unlocks the swimsuit skin selector in Settings, plus swimsuit-specific dialogue.'}
+            ];
+            const list=document.getElementById('streakRewardList'); if(!list) return;
+            list.innerHTML='';
+            rewards.forEach(r=>{const unlocked=(streakData.longestStreak||0)>=r.days;const el=document.createElement('div');el.className='streak-reward-card'+(unlocked?' unlocked':'');el.innerHTML=`<strong>${unlocked?'🔓':'🔒'} Day ${r.days} · ${r.icon} ${r.name}</strong><span>${escapeHtml(r.desc)}</span>`;list.appendChild(el);});
+            const status=document.getElementById('streakRewardStatus'); if(status) status.textContent=`Current streak: ${streakData.count||0} day(s) · Best streak: ${streakData.longestStreak||0} day(s). Rewards remain unlocked permanently.`;
+            updateStreakUnlocks();
+        }
+        function burstStreakConfetti() {
+            const colors=['#ff6b9d','#ffd166','#8ecae6','#b8e0a5','#b692f6'];
+            for(let i=0;i<72;i++){const bit=document.createElement('i');bit.className='confetti-piece';bit.style.left=(Math.random()*100)+'vw';bit.style.background=colors[i%colors.length];bit.style.setProperty('--drift',((Math.random()-.5)*220)+'px');bit.style.animationDelay=(Math.random()*.55)+'s';document.body.appendChild(bit);setTimeout(()=>bit.remove(),3400);}
+        }
         function checkStreakMilestone() {
-            const milestones = {
-                3: "Three days in a row! You're on fire, Sensei~ 🔥",
-                7: "A whole week! I'm proud of you 💖",
-                14: "Two weeks straight! Amazing discipline ✨",
-                30: "THIRTY DAYS! Sensei is a legend! 🐋",
-                100: "100 days?! I... I don't know what to say... 😳"
-            };
-            if (milestones[streakData.count]) {
-                setTimeout(() => {
-                    if (!tutorialActive) updateHoshinoDisplay('happy', milestones[streakData.count]);
-                }, 1200);
-            }
+            const milestoneTexts={3:'Day 3! Uhe~ I have more stories to tell you now, Sensei! 💗',7:'A whole week! I unlocked a new purple theme for you~ 💜',14:'Two weeks?! I have even more reactions and emojis now! ✨',30:'THIRTY DAYS! You unlocked my special swimsuit outfit! Ehehe~ 🐋'};
+            const day=streakData.count, key='hoshino_streak_reward_confetti_'+day+'_'+streakData.lastLogDate;
+            if(milestoneTexts[day]) { if(!localStorage.getItem(key)){localStorage.setItem(key,'1');burstStreakConfetti();} setTimeout(()=>{if(!tutorialActive)updateHoshinoDisplay('happy',milestoneTexts[day]);},1200); }
         }
 
         function streakOpenReaction() {
             const count = streakData.count;
-            const today = new Date().toISOString().slice(0, 10);
+            const today = localDateString(new Date());
             const loggedToday = streakData.lastLogDate === today;
             let reaction = null;
 
@@ -4621,6 +4871,22 @@
             localStorage.setItem('hoshino_chips', JSON.stringify(chips));
         }
 
+        function moveChipById(sourceId, targetId) {
+            const from = chips.findIndex(c => String(c.id) === String(sourceId));
+            const to = chips.findIndex(c => String(c.id) === String(targetId));
+            if (from < 0 || to < 0 || from === to) return;
+            const [item] = chips.splice(from, 1);
+            chips.splice(to, 0, item);
+            saveChips(); buildQuickAddChips();
+        }
+        function nudgeChip(id, delta) {
+            const index = chips.findIndex(c => String(c.id) === String(id));
+            const target = index + delta;
+            if (index < 0 || target < 0 || target >= chips.length) return;
+            [chips[index], chips[target]] = [chips[target], chips[index]];
+            saveChips(); buildQuickAddChips();
+        }
+
         function buildQuickAddChips() {
             const row = document.getElementById('quickAddRow');
             row.innerHTML = '';
@@ -4632,45 +4898,153 @@
                 el.type = 'button';
                 el.className = 'quick-add-chip';
                 el.dataset.chipId = chip.id;
-
                 const denomBadge = (chip.useDenom && walletUsesDenoms) ? ' 💳' : '';
                 el.textContent = `${chip.label} · ${formatMoney(chip.amount, getCurrentCurrency())}${denomBadge}`;
-                el.title = 'Tap to fill · Long-press / right-click to edit';
-
+                el.title = 'Tap to fill · Long-press / right-click to manage chips';
                 if (chip.useDenom && walletUsesDenoms) el.classList.add('denom-chip');
-                el.onclick = () => applyQuickAdd(chip);
-
-                let pressTimer = null, wasLongPress = false;
-                el.addEventListener('touchstart', () => {
-                    wasLongPress = false;
-                    pressTimer = setTimeout(() => { wasLongPress = true; openChipEditor(chip.id); }, 600);
-                }, { passive: true });
-                el.addEventListener('touchend', (e) => {
-                    clearTimeout(pressTimer);
-                    if (wasLongPress) { e.preventDefault(); wasLongPress = false; }
+                let pressTimer = null, longPressed = false;
+                const clearPress = () => { if (pressTimer) clearTimeout(pressTimer); pressTimer = null; };
+                el.addEventListener('pointerdown', e => {
+                    if (e.pointerType === 'mouse' && e.button !== 0) return;
+                    longPressed = false;
+                    clearPress();
+                    pressTimer = setTimeout(() => {
+                        longPressed = true;
+                        el.dataset.longPressed = '1';
+                        openChipManager();
+                    }, 550);
                 });
-                el.addEventListener('touchmove', () => clearTimeout(pressTimer));
-                el.oncontextmenu = (e) => { e.preventDefault(); openChipEditor(chip.id); };
-
+                ['pointerup','pointercancel','pointerleave'].forEach(evt => el.addEventListener(evt, clearPress));
+                el.onclick = e => {
+                    if (longPressed || el.dataset.longPressed === '1') {
+                        e.preventDefault(); e.stopPropagation();
+                        longPressed = false; delete el.dataset.longPressed;
+                        return;
+                    }
+                    applyQuickAdd(chip);
+                };
+                el.oncontextmenu = e => { e.preventDefault(); clearPress(); openChipManager(); };
                 row.appendChild(el);
             });
 
             const addEl = document.createElement('button');
-            addEl.type = 'button';
-            addEl.className = 'quick-add-chip quick-add-new';
-            addEl.textContent = '＋ Add Chip';
-            addEl.onclick = () => openChipEditor(null);
-            row.appendChild(addEl);
-
+            addEl.type = 'button'; addEl.className = 'quick-add-chip quick-add-new'; addEl.textContent = '＋ Add Chip'; addEl.onclick = () => openChipEditor(null); row.appendChild(addEl);
             if (JSON.stringify(chips) !== JSON.stringify(DEFAULT_CHIPS)) {
-                const resetEl = document.createElement('button');
-                resetEl.type = 'button';
-                resetEl.className = 'quick-add-chip quick-add-reset';
-                resetEl.textContent = '↺ Reset';
-                resetEl.title = 'Restore default starter chips';
-                resetEl.onclick = resetChips;
-                row.appendChild(resetEl);
+                const resetEl = document.createElement('button'); resetEl.type = 'button'; resetEl.className = 'quick-add-chip quick-add-reset'; resetEl.textContent = '↺ Reset'; resetEl.title = 'Restore default starter chips'; resetEl.onclick = resetChips; row.appendChild(resetEl);
             }
+        }
+
+        function openChipManager() {
+            renderChipManager();
+            document.getElementById('chipManagerOverlay').classList.add('active');
+        }
+
+        function closeChipManager(event) {
+            const overlay = document.getElementById('chipManagerOverlay');
+            if (event && event.target !== overlay) return;
+            overlay.classList.remove('active');
+        }
+
+        function renderChipManager() {
+            const list = document.getElementById('chipManagerList');
+            if (!list) return;
+            list.innerHTML = '';
+            if (!chips.length) {
+                const empty = document.createElement('div');
+                empty.className = 'chip-manager-empty';
+                empty.textContent = 'No quick chips yet. Add one below!';
+                list.appendChild(empty);
+                return;
+            }
+
+            chips.forEach(chip => {
+                const item = document.createElement('div');
+                item.className = 'chip-manager-row';
+                item.dataset.chipId = String(chip.id);
+
+                const grip = document.createElement('button');
+                grip.type = 'button';
+                grip.className = 'chip-manager-grip';
+                grip.textContent = '☰';
+                grip.title = 'Drag to reorder';
+                grip.setAttribute('aria-label', `Reorder ${chip.label}`);
+
+                const main = document.createElement('button');
+                main.type = 'button';
+                main.className = 'chip-manager-main';
+                const title = document.createElement('strong');
+                title.textContent = chip.label;
+                const detail = document.createElement('small');
+                detail.textContent = `${chip.type === 'gain' ? 'Gain' : 'Spend'} · ${formatMoney(chip.amount, getCurrentCurrency())}${chip.useDenom ? ' · Bill denominations' : ''}`;
+                main.append(title, detail);
+                main.onclick = () => openChipEditor(chip.id);
+
+                item.append(grip, main);
+                list.appendChild(item);
+            });
+
+            // Use document-level pointer tracking rather than pointer capture.
+            // Pointer capture retargets events to the grip and can prevent reliable
+            // hit-testing of the row underneath on some mobile browsers.
+            let activeDrag = null;
+
+            const clearTargets = () => {
+                list.querySelectorAll('.drag-target').forEach(row => row.classList.remove('drag-target'));
+            };
+
+            const finishDrag = () => {
+                if (!activeDrag) return;
+                activeDrag.item.classList.remove('dragging');
+                clearTargets();
+
+                const ids = [...list.querySelectorAll('.chip-manager-row')].map(row => row.dataset.chipId);
+                const order = new Map(ids.map((id, index) => [id, index]));
+                chips.sort((a, b) => order.get(String(a.id)) - order.get(String(b.id)));
+                saveChips();
+                buildQuickAddChips();
+                activeDrag = null;
+
+                document.removeEventListener('pointermove', moveDrag, true);
+                document.removeEventListener('pointerup', finishDrag, true);
+                document.removeEventListener('pointercancel', finishDrag, true);
+            };
+
+            const moveDrag = event => {
+                if (!activeDrag || event.pointerId !== activeDrag.pointerId) return;
+                event.preventDefault();
+
+                // elementsFromPoint returns the actual row beneath the finger,
+                // even while the pointer is moving over the drag handle itself.
+                const under = document.elementsFromPoint(event.clientX, event.clientY);
+                const target = under.map(el => el.closest && el.closest('.chip-manager-row'))
+                    .find(row => row && list.contains(row) && row !== activeDrag.item);
+
+                clearTargets();
+                if (!target) return;
+
+                target.classList.add('drag-target');
+                const rect = target.getBoundingClientRect();
+                if (event.clientY < rect.top + rect.height / 2) {
+                    list.insertBefore(activeDrag.item, target);
+                } else {
+                    list.insertBefore(activeDrag.item, target.nextSibling);
+                }
+            };
+
+            list.querySelectorAll('.chip-manager-grip').forEach(grip => {
+                grip.addEventListener('pointerdown', event => {
+                    if (event.pointerType === 'mouse' && event.button !== 0) return;
+                    event.preventDefault();
+                    const item = grip.closest('.chip-manager-row');
+                    if (!item) return;
+
+                    activeDrag = { item, pointerId: event.pointerId };
+                    item.classList.add('dragging');
+                    document.addEventListener('pointermove', moveDrag, { capture: true, passive: false });
+                    document.addEventListener('pointerup', finishDrag, true);
+                    document.addEventListener('pointercancel', finishDrag, true);
+                });
+            });
         }
 
         function breakIntoDenoms(amountInCents) {
@@ -4796,6 +5170,7 @@
         // ==========================================
         let editingChipId = null;
         let pendingNewChipId = null;
+        let returnToChipManager = false;
 
         function openChipEditor(chipId) {
             const isNew = chipId === null;
@@ -4818,6 +5193,8 @@
             deleteBtn.classList.toggle('hidden', isNew);
 
             setModalError('');
+            returnToChipManager = document.getElementById('chipManagerOverlay').classList.contains('active');
+            document.getElementById('chipManagerOverlay').classList.remove('active');
             document.getElementById('chipModalOverlay').classList.add('active');
             setTimeout(() => document.getElementById('chipNameInput').focus(), 250);
         }
@@ -4825,6 +5202,7 @@
         function closeChipModal(event) {
             if (event && event.target !== document.getElementById('chipModalOverlay')) return;
             document.getElementById('chipModalOverlay').classList.remove('active');
+            if (returnToChipManager) { returnToChipManager = false; renderChipManager(); document.getElementById('chipManagerOverlay').classList.add('active'); }
             editingChipId = null;
             pendingNewChipId = null;
         }
@@ -4999,30 +5377,52 @@
             document.getElementById('playlistModalOverlay').classList.remove('active');
         }
 
+        function persistPlaylistOrder() {
+            localStorage.setItem('hoshino_custom_track_order', JSON.stringify(customTracks.map(t => String(t.id))));
+            rebuildTrackOrder();
+        }
+        function moveCustomTrack(id, delta) {
+            const index = customTracks.findIndex(t => String(t.id) === String(id));
+            const target = index + delta;
+            if (index < 0 || target < 0 || target >= customTracks.length) return;
+            [customTracks[index], customTracks[target]] = [customTracks[target], customTracks[index]];
+            persistPlaylistOrder(); renderPlaylistList();
+        }
+        function reorderCustomTrack(sourceId, targetId) {
+            const from = customTracks.findIndex(t => String(t.id) === String(sourceId));
+            const to = customTracks.findIndex(t => String(t.id) === String(targetId));
+            if (from < 0 || to < 0 || from === to) return;
+            const [item] = customTracks.splice(from,1); customTracks.splice(to,0,item);
+            persistPlaylistOrder(); renderPlaylistList();
+        }
         function renderPlaylistList() {
             const list = document.getElementById('playlistList');
             list.innerHTML = '';
-
             if (customTracks.length === 0) {
                 list.innerHTML = '<div class="history-empty-filter">No custom songs yet~ 🎧 Tap + to add one.</div>';
                 return;
             }
-
-            customTracks.forEach(t => {
+            let draggedId = null;
+            customTracks.forEach((t,index) => {
                 const row = document.createElement('div');
-                row.className = 'playlist-item';
+                row.className = 'playlist-item'; row.draggable = true; row.dataset.trackId = t.id;
                 const sizeMB = (t.blob.size / (1024 * 1024)).toFixed(1);
                 row.innerHTML = `
-                    <div class="playlist-item-info">
-                        <span class="playlist-item-title">🎧 ${escapeHtml(t.name)}</span>
-                        <span class="playlist-item-meta">${sizeMB} MB · plays after defaults in ⏭️</span>
-                    </div>
+                    <div class="playlist-item-info"><span class="playlist-item-title">🎧 ${escapeHtml(t.name)}</span><span class="playlist-item-meta">${sizeMB} MB · custom track ${index+1} · drag or use arrows to reorder</span></div>
                     <div class="playlist-item-actions">
+                        <button class="playlist-order-btn" title="Move up" ${index===0?'disabled':''}>↑</button>
+                        <button class="playlist-order-btn" title="Move down" ${index===customTracks.length-1?'disabled':''}>↓</button>
                         <button class="playlist-icon-btn" title="Play this song" onclick="playCustomTrack('${t.id}')">▶</button>
                         <button class="playlist-icon-btn" title="Rename" onclick="renameCustomTrack('${t.id}')">✏️</button>
                         <button class="playlist-icon-btn" title="Delete" onclick="confirmDeleteCustomTrack('${t.id}')">🗑️</button>
-                    </div>
-                `;
+                    </div>`;
+                const orderBtns=row.querySelectorAll('.playlist-order-btn');
+                orderBtns[0].onclick=()=>moveCustomTrack(t.id,-1); orderBtns[1].onclick=()=>moveCustomTrack(t.id,1);
+                row.addEventListener('dragstart',e=>{draggedId=t.id; e.dataTransfer.effectAllowed='move'; row.classList.add('dragging');});
+                row.addEventListener('dragend',()=>{row.classList.remove('dragging'); list.querySelectorAll('.drag-over').forEach(x=>x.classList.remove('drag-over'));});
+                row.addEventListener('dragover',e=>{e.preventDefault(); row.classList.add('drag-over');});
+                row.addEventListener('dragleave',()=>row.classList.remove('drag-over'));
+                row.addEventListener('drop',e=>{e.preventDefault();row.classList.remove('drag-over');if(draggedId&&draggedId!==t.id)reorderCustomTrack(draggedId,t.id);});
                 list.appendChild(row);
             });
         }
@@ -5164,6 +5564,7 @@
 
         document.addEventListener('keydown', (e) => {
             const chipOverlay = document.getElementById('chipModalOverlay');
+            const chipManagerOverlay = document.getElementById('chipManagerOverlay');
             const walletOverlay = document.getElementById('walletModalOverlay');
             const playlistOverlay = document.getElementById('playlistModalOverlay');
             const backupOverlay = document.getElementById('backupMenuOverlay');
@@ -5188,6 +5589,10 @@
             }
             if (hubOverlay.classList.contains('active')) {
                 if (e.key === 'Escape') closeTutorialHub();
+                return;
+            }
+            if (chipManagerOverlay.classList.contains('active')) {
+                if (e.key === 'Escape') closeChipManager();
                 return;
             }
             if (!chipOverlay.classList.contains('active')) return;
@@ -5347,13 +5752,38 @@
 
         let lastDialogueChangeTime = 0;
 
+        const swimsuitExpressionSprites = {
+            normal: 'skins/swimsuit/normal.png',
+            squished: 'skins/swimsuit/squished.png',
+            sleepy: 'skins/swimsuit/sleepy.png',
+            happy: 'skins/swimsuit/happy.png',
+            joking: 'skins/swimsuit/joking.png',
+            surprised: 'skins/swimsuit/surprised.png',
+            embarrassed: 'skins/swimsuit/embarrassed.png'
+        };
+
         function updateHoshinoDisplay(exprKey, text) {
             lastDialogueChangeTime = Date.now();
             typeDialogue(text);
             hoshinoSpriteImg.style.display = 'block';
-            hoshinoSpriteImg.src = expressionSprites[exprKey] || 'expression/normal.png';
 
-            const emoji = emotionEmoji[exprKey] || '🌸';
+            const useSwimsuit = localStorage.getItem('hoshino_skin') === 'swimsuit'
+                && (streakData.longestStreak || 0) >= 30;
+            const originalSprite = expressionSprites[exprKey] || expressionSprites.normal;
+            const selectedSprite = useSwimsuit
+                ? (swimsuitExpressionSprites[exprKey] || swimsuitExpressionSprites.normal)
+                : originalSprite;
+
+            // If a swimsuit expression has not been uploaded yet, gracefully use
+            // the matching original expression instead of showing a broken image.
+            hoshinoSpriteImg.onerror = function () {
+                this.onerror = null;
+                this.src = originalSprite;
+            };
+            hoshinoSpriteImg.src = selectedSprite;
+
+            const extraEmoji = ['💜','🥰','🐋','🌸','✨','💗','😴','🎀'];
+            const emoji = (streakData.longestStreak || 0) >= 14 ? extraEmoji[Math.floor(Math.random()*extraEmoji.length)] : (emotionEmoji[exprKey] || '🌸');
             hoshinoEmotionBadge.textContent = emoji;
             hoshinoEmotionBadge.classList.remove('pulse');
             void hoshinoEmotionBadge.offsetWidth;
@@ -5366,8 +5796,12 @@
             if (hoshinoTapHint && !hoshinoTapHint.classList.contains('hidden')) hoshinoTapHint.classList.add('hidden');
         }, 15000);
 
+        let hoshinoPatCount = Number(localStorage.getItem('hoshino_pat_count') || 0);
+        function renderHoshinoPatCount(){const el=document.getElementById('hoshinoPatCounter');if(el)el.textContent=`♡ ${hoshinoPatCount.toLocaleString()} pats`;}
+        function toggleHoshinoSwimsuitSkin(){if((streakData.longestStreak||0)<30)return;const next=localStorage.getItem('hoshino_skin')==='swimsuit'?'default':'swimsuit';localStorage.setItem('hoshino_skin',next);const hint=document.getElementById('hoshinoSkinHint');if(hint)hint.textContent=next==='swimsuit'?'Swimsuit skin selected on this device~':'Default Hoshino appearance selected.';updateStreakUnlocks();updateHoshinoDisplay('happy',next==='swimsuit'?'Uhe~ What do you think of my swimsuit look, Sensei? 🌴':'Back to my usual uniform~ 🌸');}
         function pokeHoshino() {
             if (tutorialActive) return;
+            hoshinoPatCount++;localStorage.setItem('hoshino_pat_count',String(hoshinoPatCount));renderHoshinoPatCount();
             hoshinoSpriteImg.classList.remove('squish-anim');
             hoshinoSpriteBox.classList.remove('tapped');
             void hoshinoSpriteImg.offsetWidth;
@@ -5380,8 +5814,19 @@
             squishAudio.currentTime = 0;
             squishAudio.play().catch(e => {});
 
-            const randomPoke = pokeDialogues[Math.floor(Math.random() * pokeDialogues.length)];
-            const chosenText = getRandomDialogue(randomPoke.expr);
+            const unlockedDays=streakData.longestStreak||0;
+            const extraPokes=unlockedDays>=14?[
+                {text:'Uhe~ Sensei is becoming a regular at the patting station! 🐋',expr:'happy'},
+                {text:'Pat pat~ I have a special emoji for you now! 💜✨',expr:'squished'},
+                {text:'Ehehe, that makes '+hoshinoPatCount+' pats! I counted them all~ 🥰',expr:'embarrassed'}
+            ]:unlockedDays>=3?[
+                {text:'You came back to pat me again? Uhe~ I do not mind, Sensei. 💗',expr:'happy'},
+                {text:'A little pat break sounds nice. Thank you~ 🌸',expr:'squished'}
+            ]:[];
+            const swimsuitPokes=localStorage.getItem('hoshino_skin')==='swimsuit'?[{text:'Uhe~ It is nice to have a little summer break with you, Sensei~ 🌴💗',expr:'happy'},{text:'Ehehe, this outfit is comfy, right? Please do not stare too much~ 😳',expr:'embarrassed'},{text:'The beach breeze makes me want to nap... zzz~ 🐋',expr:'sleepy'}]:[];
+            const pool=pokeDialogues.concat(extraPokes,swimsuitPokes);
+            const randomPoke=pool[Math.floor(Math.random()*pool.length)];
+            const chosenText=randomPoke.text || getRandomDialogue(randomPoke.expr);
             updateHoshinoDisplay(randomPoke.expr, chosenText);
 
             if (hoshinoTapHint && !hoshinoTapHint.classList.contains('hidden')) hoshinoTapHint.classList.add('hidden');
@@ -5589,6 +6034,7 @@
                     mime: t.mime,
                     size: t.blob.size
                 })),
+                customTrackOrder: customTracks.map(t => String(t.id)),
                 settings: {
                     dialogueSpeed: dialogueSpeed,
                     pageScale: pageScale,
@@ -5621,6 +6067,7 @@
             if (typeof imported.gameVolume === 'number') gameVolume = imported.gameVolume;
             if (typeof imported.customBg === 'string') customBg = imported.customBg;
             if (imported.streak && typeof imported.streak === 'object') streakData = imported.streak;
+            if (Array.isArray(imported.customTrackOrder)) localStorage.setItem('hoshino_custom_track_order', JSON.stringify(imported.customTrackOrder));
             if (typeof imported.balanceHidden === 'boolean') balanceHidden = imported.balanceHidden;
             if (imported.settings && typeof imported.settings === 'object') {
                 const s = imported.settings;
@@ -5852,6 +6299,67 @@
         }
 
         // ==========================================
+        // LOCALE-INDEPENDENT AMOUNT CALCULATOR
+        // Decimal/group separators follow the browser locale. No eval() is used.
+        // ==========================================
+        function parseAmountExpression(raw) {
+            let input = String(raw || '').trim().replace(/\s+/g, '');
+            const localeParts = new Intl.NumberFormat().formatToParts(12345.6);
+            const decimalSeparator = (localeParts.find(p => p.type === 'decimal') || {}).value || '.';
+            const groupSeparator = (localeParts.find(p => p.type === 'group') || {}).value || ',';
+            if (groupSeparator) input = input.split(groupSeparator).join('');
+            if (decimalSeparator && decimalSeparator !== '.') input = input.split(decimalSeparator).join('.');
+            input = input.replace(/[−]/g, '-').replace(/[×]/g, '*').replace(/[÷]/g, '/');
+            if (!input) return NaN;
+            const tokens = input.match(/(?:\d+(?:\.\d*)?|\.\d+)|[()+\-*/]|(?:rb|jt)|[kKmMbB]/gi);
+            if (!tokens || tokens.join('') !== input) return NaN;
+            let i = 0;
+            function factor() {
+                if (tokens[i] === '+') { i++; return factor(); }
+                if (tokens[i] === '-') { i++; return -factor(); }
+                let value;
+                if (tokens[i] === '(') {
+                    i++; value = expression();
+                    if (tokens[i] !== ')') throw new Error('Missing closing parenthesis');
+                    i++;
+                } else {
+                    const token = tokens[i++];
+                    if (!token || !/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(token)) throw new Error('Expected a number');
+                    value = Number(token);
+                }
+                const suffix = tokens[i];
+                if (suffix && /^(?:k|m|b|rb|jt)$/i.test(suffix)) {
+                    i++;
+                    const lower = suffix.toLowerCase();
+                    value *= (lower === 'k' || lower === 'rb') ? 1e3 : (lower === 'm' || lower === 'jt') ? 1e6 : 1e9;
+                }
+                return value;
+            }
+            function term() {
+                let value = factor();
+                while (tokens[i] === '*' || tokens[i] === '/') {
+                    const op = tokens[i++], next = factor();
+                    if (op === '/' && next === 0) throw new Error('Cannot divide by zero');
+                    value = op === '*' ? value * next : value / next;
+                }
+                return value;
+            }
+            function expression() {
+                let value = term();
+                while (tokens[i] === '+' || tokens[i] === '-') {
+                    const op = tokens[i++], next = term();
+                    value = op === '+' ? value + next : value - next;
+                }
+                return value;
+            }
+            try {
+                const result = expression();
+                if (i !== tokens.length || !Number.isFinite(result)) return NaN;
+                return result;
+            } catch (e) { return NaN; }
+        }
+
+        // ==========================================
         // FORM SUBMIT
         // ==========================================
         form.addEventListener('submit', function(e) {
@@ -5895,21 +6403,12 @@
                         return;
                     }
                     const net = totalPrimary - totalSecondary;
-                    if (net === 0) {
-                        alert("Primary and change grids cancel out to zero. Add something to log, Sensei! 💸");
-                        return;
-                    }
                     const currentType = document.getElementById('type').value;
-                    if (currentType === 'spend') {
-                        if (net > 0) { type = 'spend'; amountCents = net; }
-                        else { type = 'gain'; amountCents = Math.abs(net); }
-                    } else {
-                        if (net > 0) { type = 'gain'; amountCents = net; }
-                        else { type = 'spend'; amountCents = Math.abs(net); }
-                    }
+                    if (currentType === 'spend') { type = 'spend'; amountCents = Math.abs(net); }
+                    else { type = 'gain'; amountCents = Math.abs(net); }
                 }
             } else {
-                const amountDisplay = parseFloat(amountInput.value);
+                const amountDisplay = parseAmountExpression(amountInput.value);
                 amountCents = toCents(amountDisplay, currency.code);
                 if (!amountCents || amountCents <= 0) {
                     alert("Please enter a valid amount, Sensei! 💸");
@@ -6207,27 +6706,35 @@
                 return;
             }
 
-            let lastMonthKey = null;
+            let lastDateKey = null;
+            const localDateKey = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            const todayKey = localDateKey(new Date());
+            const yesterdayDate = new Date(); yesterdayDate.setDate(yesterdayDate.getDate()-1);
+            const yesterdayKey = localDateKey(yesterdayDate);
 
             filtered.forEach(t => {
-                const thisMonthKey = getMonthKey(t.date);
-                if (thisMonthKey !== lastMonthKey) {
+                if (t.date !== lastDateKey) {
                     const sep = document.createElement('div');
-                    sep.className = 'history-month-separator';
-                    sep.textContent = getMonthDisplayName(t.date);
+                    sep.className = 'history-day-separator';
+                    const d = t.date ? new Date(t.date + 'T00:00:00') : null;
+                    sep.textContent = t.date === todayKey ? 'Today' : t.date === yesterdayKey ? 'Yesterday' : (d && !isNaN(d) ? d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}) : 'Unknown date');
                     historyList.appendChild(sep);
-                    lastMonthKey = thisMonthKey;
+                    lastDateKey = t.date;
                 }
 
                 const container = document.createElement('div');
                 container.className = 'history-item-container';
+                container.dataset.date = t.date || '';
                 container.onclick = (e) => {
+                    if (container.dataset.ignoreNextClick === '1') { container.dataset.ignoreNextClick = '0'; return; }
                     if (e.target.closest('.delete-btn') || e.target.closest('.edit-drawer')) return;
                     toggleTransactionDrawer(t.id);
                 };
 
-                const sign = t.type === 'gain' ? '+' : '-';
-                const amountClass = t.type === 'gain' ? 'amount-gain' : 'amount-spend';
+                let sign = t.type === 'gain' ? '+' : '-';
+                let amountClass = t.type === 'gain' ? 'amount-gain' : 'amount-spend';
+                let displayAmt = formatMoney(t.amount, getCurrentCurrency());
+                if (t.amount === 0) { sign = '🔄'; amountClass = ''; displayAmt = 'Trade'; }
                 const timeDisplay = t.time ? ` • ${t.time}` : '';
 
                 const historyCurrency = CURRENCIES[wallet.currency || 'IDR'];
@@ -6287,12 +6794,12 @@
                         </div>
                         <div class="history-amount-group">
                             <div style="display: flex; align-items: center; gap: 6px;">
-                                <span class="history-amount ${amountClass}">${sign}${formatMoney(t.amount, historyCurrency.code)}</span>
-                                <button class="delete-btn" onclick="deleteTransaction(${t.id})">&times;</button>
+                                <span class="history-amount ${amountClass}">${sign} ${displayAmt}</span>
                             </div>
                             ${denomTextStr ? `<span class="history-denoms">${denomTextStr}</span>` : ''}
                         </div>
                     </div>
+                    <button class="delete-btn" type="button" aria-label="Delete transaction" onclick="event.stopPropagation();deleteTransaction(${t.id})">×</button>
                     ${isOpen ? `
                     <div class="edit-drawer" style="display: flex;" onclick="event.stopPropagation()">
                         <label>Description:</label>
@@ -6319,8 +6826,70 @@
                     </div>` : ''}
                 `;
                 historyList.appendChild(container);
+                let swipeStartX = 0, swipeStartY = 0;
+                container.addEventListener('touchstart', e => { const touch=e.changedTouches[0]; swipeStartX=touch.clientX; swipeStartY=touch.clientY; }, {passive:true});
+                container.addEventListener('touchend', e => {
+                    const touch=e.changedTouches[0], dx=touch.clientX-swipeStartX, dy=touch.clientY-swipeStartY;
+                    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+                        container.dataset.ignoreNextClick = '1';
+                        setTimeout(() => { container.dataset.ignoreNextClick = '0'; }, 500);
+                        if (dx < 0) container.classList.add('swipe-revealed');
+                        else container.classList.remove('swipe-revealed');
+                    }
+                }, {passive:true});
             });
         }
+
+        // ==========================================
+        // MONEY PLANS, POCKET-MONEY CALENDAR & DIARY
+        // Stored inside each wallet object and included in wallet backups.
+        // ==========================================
+        let activityMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+        let activitySelectedDate = localDateString(new Date());
+        let activityDiaryContext = '';
+        function localDateString(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+        function ensureWalletExtras(wallet) { if (!Array.isArray(wallet.plans)) wallet.plans=[]; wallet.plans.forEach(plan=>{if(plan.type==='gain')plan.type='goal';}); if (!wallet.diary || typeof wallet.diary!=='object') wallet.diary={}; }
+        function getWalletBalanceCents(wallet) { return wallet.transactions.reduce((sum,t)=>sum+(t.type==='gain'?1:-1)*Number(t.amount||0),0); }
+        function addWalletPlan() {
+            const wallet=getCurrentWallet(); ensureWalletExtras(wallet);
+            const type=document.getElementById('planType').value, date=document.getElementById('planDate').value;
+            const amount=toCents(parseFloat(document.getElementById('planAmount').value),getCurrentCurrency());
+            const description=document.getElementById('planDescription').value.trim();
+            if(!date||!Number.isFinite(amount)||amount<=0||!description){alert('Please enter a target date, a valid amount, and a short description.');return;}
+            const today=localDateString(new Date());
+            wallet.plans.push({id:'plan_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),type,date,amount,description,status:'active',startDate:today,createdAt:Date.now()});
+            document.getElementById('planAmount').value='';document.getElementById('planDescription').value='';
+            saveAndRender();renderWalletPlans();showChipToast('📌 Money plan saved~');
+        }
+        function cancelWalletPlan(id) { const wallet=getCurrentWallet();ensureWalletExtras(wallet);const plan=wallet.plans.find(p=>String(p.id)===String(id));if(!plan)return;if(!confirm(`Cancel this plan?\n${plan.description}`))return;plan.status='cancelled';plan.cancelledAt=Date.now();saveAndRender();renderWalletPlans(); }
+        function completeWalletPlan(id) { const wallet=getCurrentWallet();ensureWalletExtras(wallet);const plan=wallet.plans.find(p=>String(p.id)===String(id));if(!plan||plan.status!=='active')return;const balance=getWalletBalanceCents(wallet);if(plan.type==='spend'&&balance<plan.amount){alert('There is not enough money in this wallet to complete this plan yet.');return;}if(plan.type==='goal'&&balance<plan.amount){alert('Your wallet balance has not reached this target yet. Keep going~');return;}plan.status='completed';plan.completedAt=Date.now();saveAndRender();renderWalletPlans();showChipToast('🎉 Plan completed! Hoshino is proud~'); }
+        function getPlanProgress(wallet,p){return Math.min(1,Math.max(0,getWalletBalanceCents(wallet))/Math.max(1,p.amount));}
+        function renderWalletPlans() {
+            const wallet=getCurrentWallet();if(!wallet)return;ensureWalletExtras(wallet);const list=document.getElementById('walletPlanList');if(!list)return;list.innerHTML='';
+            const plans=[...wallet.plans].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+            if(!plans.length){list.innerHTML='<div class="planner-hint">No plans yet. Add a savings target or a purchase plan above~</div>';return;}
+            plans.forEach(p=>{const progress=getPlanProgress(wallet,p),pct=Math.round(progress*100),row=document.createElement('div');row.className='planner-entry';const main=document.createElement('div');main.className='planner-entry-main';const status=p.status==='completed'?'✅ Completed':p.status==='cancelled'?'🚫 Cancelled':p.type==='goal'?'🎯 Savings target':'🛍️ Planned purchase';const current=Math.max(0,getWalletBalanceCents(wallet));main.innerHTML=`<strong>${status} · ${escapeHtml(p.description)}</strong><span>${escapeHtml(p.date)} · ${formatMoney(p.amount,getCurrentCurrency())}</span><div class="plan-progress"><div class="plan-progress-fill" style="width:${pct}%"></div></div><span>${p.type==='goal'?formatMoney(current,getCurrentCurrency())+' / ':''}${pct}% ${p.status==='active'?'progress':''}</span>`;const actions=document.createElement('div');actions.className='plan-entry-actions';if(p.status==='active'){const complete=document.createElement('button');complete.className='planner-action';complete.textContent='✓ Complete';complete.disabled=p.type==='goal'?progress<1:getWalletBalanceCents(wallet)<p.amount;complete.onclick=()=>completeWalletPlan(p.id);const cancel=document.createElement('button');cancel.className='planner-secondary';cancel.textContent='Cancel';cancel.onclick=()=>cancelWalletPlan(p.id);actions.append(complete,cancel);}row.append(main,actions);list.appendChild(row);});
+        }
+        function getHistoryDisplayMode(){return localStorage.getItem('hoshino_history_display_mode')==='calendar'?'calendar':'transactions';}
+        function setHistoryDisplayMode(mode){const next=mode==='calendar'?'calendar':'transactions';localStorage.setItem('hoshino_history_display_mode',next);applyHistoryDisplayMode();}
+        function applyHistoryDisplayMode(){
+            const mode=getHistoryDisplayMode();
+            const picker=document.getElementById('historyDisplayMode');if(picker)picker.value=mode;
+            const monthPanel=document.getElementById('calendarMonthPanel');
+            const txPanel=document.getElementById('allTransactionsPanel');
+            const heading=document.querySelector('#activitySection > h2');
+            if(monthPanel)monthPanel.style.display=mode==='calendar'?'block':'none';
+            if(txPanel)txPanel.style.display=mode==='transactions'?'flex':'none';
+            if(heading)heading.textContent=mode==='calendar'?'📅 Pocket Money Calendar':'📜 All Transactions';
+        }
+        function switchActivityView(view){const calendar=view==='calendar';document.getElementById('calendarActivityView').style.display=calendar?'block':'none';document.getElementById('diaryActivityView').style.display=calendar?'none':'block';document.getElementById('calendarViewTab').classList.toggle('active',calendar);document.getElementById('diaryViewTab').classList.toggle('active',!calendar);if(!calendar){renderDiaryInsight();const heading=document.querySelector('#activitySection > h2');if(heading)heading.textContent="📖 Hoshino's Diary";}else applyHistoryDisplayMode();}
+        function changeActivityMonth(delta){activityMonth.setMonth(activityMonth.getMonth()+delta);renderActivityCalendar();}
+        function selectActivityDate(date){activitySelectedDate=date;const dateInput=document.getElementById('diaryDate');if(dateInput)dateInput.value=date;renderActivityCalendar();renderDiaryInsight();const wallet=getCurrentWallet();ensureWalletExtras(wallet);const text=document.getElementById('diaryText');if(text)text.value=wallet.diary[date]||'';activityDiaryContext=`${currentWalletId}|${date}`;}
+        function renderDiaryInsight(){const wallet=getCurrentWallet();if(!wallet)return;ensureWalletExtras(wallet);const date=(document.getElementById('diaryDate')||{}).value||activitySelectedDate;const txs=wallet.transactions.filter(t=>t.date===date);const gain=txs.filter(t=>t.type==='gain').reduce((n,t)=>n+t.amount,0);const spend=txs.filter(t=>t.type==='spend').reduce((n,t)=>n+t.amount,0);const insight=document.getElementById('diarySpendingInsight');if(!insight)return;const line=spend>gain?`You spent ${formatMoney(spend,getCurrentCurrency())} and received ${formatMoney(gain,getCurrentCurrency())}.`:`You received ${formatMoney(gain,getCurrentCurrency())} and spent ${formatMoney(spend,getCurrentCurrency())}.`;const mood=txs.length?`Hoshino says: “${spend>gain?'Uhe~ quite a spending day, Sensei. I hope it was worth it!':'Nice balance today, Sensei! Keep taking care of your wallet~'}”`:'Hoshino says: “A quiet wallet day~ Nothing wrong with taking a little break.”';insight.textContent=`${date}: ${line} Net: ${formatMoney(gain-spend,getCurrentCurrency())}. ${mood}`;}
+        function saveDiaryEntry(){const wallet=getCurrentWallet();ensureWalletExtras(wallet);const date=document.getElementById('diaryDate').value,textValue=document.getElementById('diaryText').value.trim();if(!date){alert('Choose a diary date first.');return;}if(textValue)wallet.diary[date]=textValue;else delete wallet.diary[date];activitySelectedDate=date;saveAndRender();renderActivityCalendar();renderDiaryInsight();showChipToast('📖 Diary saved~');}
+        function renderActivityCalendar(){const wallet=getCurrentWallet();if(!wallet)return;ensureWalletExtras(wallet);const title=document.getElementById('activityMonthTitle'),cal=document.getElementById('activityCalendar');if(!cal)return;const year=activityMonth.getFullYear(),month=activityMonth.getMonth();title.textContent=activityMonth.toLocaleDateString(undefined,{month:'long',year:'numeric'});cal.innerHTML='';['S','M','T','W','T','F','S'].forEach(label=>{const el=document.createElement('div');el.className='planner-calendar-label';el.textContent=label;cal.appendChild(el);});const first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();for(let i=0;i<first;i++){const blank=document.createElement('div');blank.className='planner-day empty';cal.appendChild(blank);}for(let day=1;day<=days;day++){const date=localDateString(new Date(year,month,day)),hasTx=wallet.transactions.some(t=>t.date===date),hasPlan=wallet.plans.some(p=>p.date===date&&p.status==='active'),hasDiary=!!wallet.diary[date];const btn=document.createElement('button');btn.type='button';btn.className='planner-day'+(hasTx||hasPlan||hasDiary?' has-data':'')+(activitySelectedDate===date?' selected':'');btn.textContent=day;btn.title=[hasTx?'Transactions':'',hasPlan?'Plans':'',hasDiary?'Diary':''].filter(Boolean).join(' · ')||date;btn.onclick=()=>{activitySelectedDate=date;document.getElementById('diaryDate').value=date;document.getElementById('diaryText').value=wallet.diary[date]||'';renderActivityCalendar();renderActivityDayDetail();renderDiaryInsight();};cal.appendChild(btn);}renderActivityDayDetail();}
+        function renderActivityDayDetail(){const wallet=getCurrentWallet();if(!wallet)return;const detail=document.getElementById('activityDayDetail');if(!detail)return;const txs=wallet.transactions.filter(t=>t.date===activitySelectedDate).sort((a,b)=>(a.time||'').localeCompare(b.time||''));const plans=wallet.plans.filter(p=>p.date===activitySelectedDate);const diary=wallet.diary[activitySelectedDate];const dateLabel=new Date(activitySelectedDate+'T00:00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});let html=`<strong>📅 ${escapeHtml(dateLabel)}</strong>`;if(txs.length){txs.forEach(t=>{html+=`<div class="activity-tx"><span>${t.type==='gain'?'📈':'📉'} ${escapeHtml(t.description)}</span><strong>${t.type==='gain'?'+':'−'}${formatMoney(t.amount,getCurrentCurrency())}</strong></div>`;});}else html+='<span class="planner-hint">No transactions logged on this day.</span>';if(plans.length)html+=plans.map(p=>`<span>📌 ${escapeHtml(p.description)} · ${formatMoney(p.amount,getCurrentCurrency())} (${escapeHtml(p.status)})</span>`).join('');if(diary)html+=`<div class="diary-insight">📖 ${escapeHtml(diary)}</div>`;detail.innerHTML=html;}
+        function renderPlannerHub(){renderWalletPlans();renderActivityCalendar();renderDiaryInsight();renderStreakRewards();}
 
         // ==========================================
         // RENDER
@@ -6466,9 +7035,36 @@
             renderHistory();
             applyBalanceVisibility();
             updateMonthlySummary();
+            if (typeof renderPlannerHub === 'function') renderPlannerHub();
+            if (typeof applyHistoryDisplayMode === 'function') applyHistoryDisplayMode();
         }
 
         render();
+        renderStreakBadge();
+        renderHoshinoPatCount();
+        updateStreakUnlocks();
+        (function initializePlannerDates() {
+            const today = localDateString(new Date());
+            const planDate = document.getElementById('planDate');
+            const diaryDate = document.getElementById('diaryDate');
+            if (planDate && !planDate.value) planDate.value = today;
+            if (diaryDate && !diaryDate.value) diaryDate.value = today;
+            const amountHint = document.getElementById('amountCalcHint');
+            if (amountHint) {
+                const parts = new Intl.NumberFormat().formatToParts(12345.6);
+                const decimal = (parts.find(p => p.type === 'decimal') || {}).value || '.';
+                const group = (parts.find(p => p.type === 'group') || {}).value || ',';
+                amountHint.textContent = `Calculator: + − × ÷ and parentheses; use “${decimal}” for decimals and “${group}” for thousands. k/rb = thousand, m/jt = million, b = billion. Follows your device locale.`;
+            }
+            activitySelectedDate = today;
+            activityDiaryContext = '';
+            if (planDate) planDate.value = today;
+            if (diaryDate) diaryDate.value = today;
+            renderPlannerHub();
+            applyHistoryDisplayMode();
+            renderStreakBadge();
+            renderHoshinoPatCount();
+        })();
 
         (function showMissingCustomTracksBanner() {
             const raw = localStorage.getItem('hoshino_missing_custom_tracks');
@@ -6529,7 +7125,7 @@
                     { target: '#description', title: 'Description', text: "Add a short description — what did you buy? Try 'test coffee'~ 📝", advance: 'input' },
                     { target: '#noteToggleBtn', title: 'Add a Note', text: "Want to remember more? Tap here to open the note field~ 📎", advance: 'click' },
                     { target: '#addEntryBtn', title: 'Add Entry', text: "Now tap this button to log it. I'll react, promise! ✨", advance: 'click' },
-                    { target: '#historyList', title: 'History', text: "Your entries land here. Tap any to edit, or use the 🗑️ to delete~ 📜", advance: 'button' },
+                    { target: '#activitySection', title: 'Pocket Money Calendar', text: "Your transactions are grouped by day below the calendar. Swipe a transaction left to reveal its delete button, or tap it to edit~ 📅", advance: 'button' },
                     { target: '#monthlyToggleBtn', title: 'Monthly Summary', text: "Tap here for a monthly overview — totals, a 7-day bar chart, and highlights! 📊", advance: 'button' }
                 ]
             },
@@ -6565,9 +7161,9 @@
                 steps: [
                     { target: '#historySearchInput', title: 'Search', text: "Search descriptions, notes, or dates here~ 🔍", advance: 'input' },
                     { target: '.history-filter-row', title: 'Filters', text: "Quick filters: All, Gains, Spends, or With notes. Try tapping one~ 🏷️", advance: 'click' },
-                    { target: '#historyList', title: 'Edit & Delete', text: "Tap any entry to open its edit drawer. There's also a 🗑️ button and an undo toast~ ✏️", advance: 'button' },
+                    { target: '#historyList', title: 'Edit & Delete', text: "Tap any transaction to edit it. Swipe left to reveal the full-height red × delete action; Undo is available after deletion~ ✏️", advance: 'button' },
                     { target: '#historyList', title: 'Edit Fields', text: "Inside the drawer, you can change description, amount, type, note, and date~ 📝", advance: 'button' },
-                    { target: '#historyList', title: 'Month Separators', text: "Entries are grouped by month — you'll see month separators between them~ 📅", advance: 'button' },
+                    { target: '#historyList', title: 'Day Groups', text: "Transactions are grouped under Today, Yesterday, and each date~ 📅", advance: 'button' },
                     { target: '#monthlyToggleBtn', title: 'Monthly Summary', text: "Tap here for the month overview — totals, 7-day spending bars, and highlights~ 📊", advance: 'button' }
                 ]
             },
@@ -6586,15 +7182,14 @@
             themes: {
                 title: 'Themes & Backup',
                 emoji: '🎨',
-                desc: 'Themes, backgrounds, notifications, backup, Dropbox, and currency.',
+                desc: 'Themes, backgrounds, backup, Dropbox, and currency.',
                 steps: [
                     { target: '#themeToggleBtn', title: 'Quick Theme', text: "Tap the moon/sun to flip between pink and night in one tap~ 🌙", advance: 'button' },
                     { target: '#settingsBtn', title: 'Settings', text: "This opens the full settings menu — theme, backgrounds, notifications, export, import... 🎨", advance: 'click', opensSettings: true },
-                    { target: '.theme-picker-row', title: 'Theme Swatches', text: "Four themes: Pink, Night, Ocean, Spring. Pick one you like! ✨", advance: 'click', opensSettings: true },
+                    { target: '.theme-picker-row', title: 'Theme Swatches', text: "Pink, Night, Ocean, Spring, and the Day 7 Abydos Violet theme. Pick one you like! ✨", advance: 'click', opensSettings: true },
                     { target: '.bg-presets-row', title: 'Background Presets', text: "Pick from 8 cute backgrounds, or upload your own image~ 🖼️", advance: 'click', opensSettings: true },
                     { target: '#dialogueSpeedSlider', title: 'Dialogue Speed', text: "Hoshino's typing speed. Lower is faster~ ✍️", advance: 'input', opensSettings: true },
                     { target: '#pageScaleSlider', title: 'Page Size', text: "Shrink or enlarge the whole app to see more background~ 📏", advance: 'input', opensSettings: true },
-                    { target: '#settingsModalBody', title: 'Notifications', text: "Scroll down for a gentle daily wallet reminder button~ 🔔", advance: 'button', opensSettings: true },
                     { target: '#settingsModalBody', title: 'Backup', text: "At the bottom you'll find Export and Import. Save a JSON file to your device, or restore from one! 💾", advance: 'button', opensSettings: true },
                     { target: '#settingsModalBody', title: 'Dropbox Sync', text: "The Export/Import menus also offer Dropbox login — export pushes to your Dropbox, and import pulls the latest backup from there. ☁️", advance: 'button', opensSettings: true },
                     { target: '#walletNav', title: 'Multi-Currency', text: "Every wallet has its own currency (IDR, USD, JPY, EUR). Long-press a tab to change it~ 💱", advance: 'button' }

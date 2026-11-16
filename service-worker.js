@@ -1,5 +1,5 @@
 // service-worker.js — Hoshino's Daily offline cache
-const CACHE_NAME = 'hoshino-daily-v2'; // bumped from v1
+const CACHE_NAME = 'hoshino-daily-v5'; // bumped from v1
 
 const PRECACHE_ASSETS = [
     './',
@@ -14,6 +14,13 @@ const PRECACHE_ASSETS = [
     './expression/joking.png',
     './expression/surprised.png',
     './expression/embarrassed.png',
+    './skins/swimsuit/normal.png',
+    './skins/swimsuit/squished.png',
+    './skins/swimsuit/sleepy.png',
+    './skins/swimsuit/happy.png',
+    './skins/swimsuit/joking.png',
+    './skins/swimsuit/surprised.png',
+    './skins/swimsuit/embarrassed.png',
     './background/together.jpg',
     './background/together2.jpg',
     './background/abydos.jpg',
