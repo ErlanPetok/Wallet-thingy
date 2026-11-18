@@ -279,6 +279,7 @@
         .activity-tx { display:flex; justify-content:space-between; gap:8px; padding:6px 0; border-bottom:1px dashed var(--primary-pink); }
         .activity-tx:last-child { border-bottom:0; }
         .diary-insight { padding:9px; border-radius:10px; background:var(--accent-pink); font-size:.72rem; line-height:1.45; margin:7px 0; }
+        .history-diary-memory { border:1px dashed var(--primary-pink); margin:5px 0 9px; }
         .plan-progress { width:100%; height:10px; border-radius:99px; overflow:hidden; background:rgba(120,100,130,.18); border:1px solid var(--primary-pink); margin:5px 0; }
         .plan-progress-fill { height:100%; width:0; background:linear-gradient(90deg,#ff9db7,#a78bfa); border-radius:99px; transition:width .35s ease; }
         .plan-entry-actions { display:flex; flex-wrap:wrap; gap:5px; }
@@ -286,9 +287,11 @@
         .history-item-container { position:relative; }
         .history-item-container .delete-btn { position:absolute; right:0; top:0; bottom:0; width:44px; height:100%; display:flex; align-items:center; justify-content:center; background:#d92d55; color:#fff; border:0; border-radius:0 10px 10px 0; font-size:1.45rem; font-weight:900; opacity:0; pointer-events:none; z-index:2; }
         .history-item-container.swipe-revealed .delete-btn { opacity:1; pointer-events:auto; }
-        @media (hover:hover) { .history-item-container:hover .delete-btn { opacity:.9; pointer-events:auto; } }
+        /* Delete is revealed only by an intentional horizontal swipe/drag, never by hover. */
         .history-item-container.swipe-revealed .history-item { transform:translateX(-44px); }
-        .history-item { transition:transform .18s ease; }
+        .history-item { transition:transform .18s ease; touch-action:pan-y; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; cursor:grab; }
+        .history-item * { user-select:none; -webkit-user-select:none; }
+        .history-item-container.is-dragging .history-item { transition:none !important; cursor:grabbing; }
         body.theme-purple { --bg-color:#f4edff; --card-bg:rgba(255,255,255,.9); --primary-pink:#c4a7f5; --dark-pink:#8053c7; --accent-pink:#e9ddff; --text-color:#49365f; --gray-text:#8053c7; --shadow:0 4px 15px rgba(160,120,220,.28); --gain-color:#278653; --header-text:#fff; --sticky-bg:rgba(255,255,255,.9); }
         .theme-swatch-purple { background:linear-gradient(135deg,#e9ddff,#8053c7); }
         .theme-swatch.locked { opacity:.35; filter:grayscale(1); position:relative; }
@@ -2816,18 +2819,6 @@
         <div class="quick-add-row" id="quickAddRow"></div>
         <div class="chip-hint" id="chipHint">💡 Tip: long-press a chip to manage, reorder, or edit your chips</div>
 
-        <section class="planner-hub" id="walletPlansHub">
-            <h3>🐋 Money Plans</h3>
-            <div class="planner-hint">Set a savings target or plan a purchase. Progress updates from your real transactions; plans never change your balance by themselves.</div>
-            <div class="planner-grid">
-                <div class="planner-field"><label for="planType">Plan type</label><select id="planType"><option value="goal">🎯 Save / receive a target</option><option value="spend">🛍️ Planned spending</option></select></div>
-                <div class="planner-field"><label for="planDate">Target date</label><input type="date" id="planDate"></div>
-                <div class="planner-field"><label for="planAmount">Target amount</label><input type="number" id="planAmount" min="1" step="any" placeholder="0"></div>
-                <div class="planner-field"><label for="planDescription">What for?</label><input type="text" id="planDescription" maxlength="80" placeholder="e.g. New PC / Rent"></div>
-                <div class="planner-field full"><button type="button" class="planner-action" onclick="addWalletPlan()">＋ Add money plan</button></div>
-            </div>
-            <div><strong style="font-size:.75rem;">📌 Your plans</strong><div class="planner-list" id="walletPlanList"></div></div>
-        </section>
         <div class="plan-denom-row">
             <button onclick="toggleDenomSystem()" id="toggleDenomBtn">⚙️ Denoms: OFF</button>
         </div>
@@ -2890,6 +2881,19 @@
 
             <button type="submit" class="submit-btn" id="addEntryBtn">Add Entry ✨</button>
         </form>
+
+        <section class="planner-hub" id="walletPlansHub">
+            <h3>🐋 Money Plans</h3>
+            <div class="planner-hint">Set a savings target or plan a purchase. Progress updates from your real transactions; plans never change your balance by themselves.</div>
+            <div class="planner-grid">
+                <div class="planner-field"><label for="planType">Plan type</label><select id="planType"><option value="goal">🎯 Save / receive a target</option><option value="spend">🛍️ Planned spending</option></select></div>
+                <div class="planner-field"><label for="planDate">Target date</label><input type="date" id="planDate"></div>
+                <div class="planner-field"><label for="planAmount">Target amount</label><input type="number" id="planAmount" min="1" step="any" placeholder="0"></div>
+                <div class="planner-field"><label for="planDescription">What for?</label><input type="text" id="planDescription" maxlength="80" placeholder="e.g. New PC / Rent"></div>
+                <div class="planner-field full"><button type="button" class="planner-action" onclick="addWalletPlan()">＋ Add money plan</button></div>
+            </div>
+            <div><strong style="font-size:.75rem;">📌 Your plans</strong><div class="planner-list" id="walletPlanList"></div></div>
+        </section>
 
         <div class="history-section" id="activitySection">
             <h2>📅 Pocket Money Calendar</h2>
@@ -6695,15 +6699,18 @@
             const wallet = getCurrentWallet();
             historyList.innerHTML = '';
 
+            const diaryEntries = wallet.diary && typeof wallet.diary === 'object' ? wallet.diary : {};
             if (wallet.transactions.length === 0) {
-                historyList.innerHTML = '<div class="empty-state">No entries in this wallet yet. Time to relax! Uhe~ ☕💤</div>';
-                return;
+                const entries = Object.entries(diaryEntries).filter(([, memory]) => !!memory).sort((a,b) => b[0].localeCompare(a[0]));
+                if (!entries.length) { historyList.innerHTML = '<div class="empty-state">No entries in this wallet yet. Time to relax! Uhe~ ☕💤</div>'; return; }
+                entries.forEach(([date,memory]) => { const sep=document.createElement('div');sep.className='history-day-separator';const d=new Date(date+'T00:00:00');sep.textContent=isNaN(d)?date:d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});historyList.appendChild(sep);const card=document.createElement('div');card.className='diary-insight history-diary-memory';card.innerHTML=`<strong>📖 Hoshino's little memory</strong><div>${escapeHtml(memory)}</div>`;historyList.appendChild(card); }); return;
             }
 
             const filtered = getFilteredTransactions(wallet);
             if (filtered.length === 0) {
-                historyList.innerHTML = '<div class="history-empty-filter">No matching transactions~ 🌸</div>';
-                return;
+                const entries = Object.entries(diaryEntries).filter(([, memory]) => !!memory).sort((a,b) => b[0].localeCompare(a[0]));
+                if (!entries.length) { historyList.innerHTML = '<div class="history-empty-filter">No matching transactions~ 🌸</div>'; return; }
+                entries.forEach(([date,memory]) => { const sep=document.createElement('div');sep.className='history-day-separator';const d=new Date(date+'T00:00:00');sep.textContent=isNaN(d)?date:d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});historyList.appendChild(sep);const card=document.createElement('div');card.className='diary-insight history-diary-memory';card.innerHTML=`<strong>📖 Hoshino's little memory</strong><div>${escapeHtml(memory)}</div>`;historyList.appendChild(card); }); return;
             }
 
             let lastDateKey = null;
@@ -6720,6 +6727,8 @@
                     sep.textContent = t.date === todayKey ? 'Today' : t.date === yesterdayKey ? 'Yesterday' : (d && !isNaN(d) ? d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}) : 'Unknown date');
                     historyList.appendChild(sep);
                     lastDateKey = t.date;
+                    const memory = diaryEntries[t.date];
+                    if (memory) { const diaryCard=document.createElement('div');diaryCard.className='diary-insight history-diary-memory';diaryCard.innerHTML=`<strong>📖 Hoshino's little memory</strong><div>${escapeHtml(memory)}</div>`;historyList.appendChild(diaryCard); }
                 }
 
                 const container = document.createElement('div');
@@ -6826,18 +6835,63 @@
                     </div>` : ''}
                 `;
                 historyList.appendChild(container);
-                let swipeStartX = 0, swipeStartY = 0;
-                container.addEventListener('touchstart', e => { const touch=e.changedTouches[0]; swipeStartX=touch.clientX; swipeStartY=touch.clientY; }, {passive:true});
-                container.addEventListener('touchend', e => {
-                    const touch=e.changedTouches[0], dx=touch.clientX-swipeStartX, dy=touch.clientY-swipeStartY;
-                    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
-                        container.dataset.ignoreNextClick = '1';
-                        setTimeout(() => { container.dataset.ignoreNextClick = '0'; }, 500);
-                        if (dx < 0) container.classList.add('swipe-revealed');
-                        else container.classList.remove('swipe-revealed');
+                // Drag the transaction row live with the pointer; prevent text selection.
+                let swipeStartX = 0, swipeStartY = 0, swipePointerId = null, swipeDragging = false;
+                const swipeRow = container.querySelector('.history-item');
+                container.addEventListener('pointerdown', e => {
+                    if (e.button !== 0 || e.target.closest('.delete-btn, .edit-drawer, input, select, textarea, button')) return;
+                    swipeStartX = e.clientX;
+                    swipeStartY = e.clientY;
+                    swipePointerId = e.pointerId;
+                    swipeDragging = false;
+                    if (container.hasPointerCapture && !container.hasPointerCapture(e.pointerId)) {
+                        try { container.setPointerCapture(e.pointerId); } catch (_) {}
                     }
-                }, {passive:true});
+                });
+                container.addEventListener('pointermove', e => {
+                    if (swipePointerId !== e.pointerId || !swipeRow) return;
+                    const dx = e.clientX - swipeStartX;
+                    const dy = e.clientY - swipeStartY;
+                    // Only take over a deliberate horizontal drag, not vertical scrolling.
+                    if (!swipeDragging && Math.abs(dx) > 4 && Math.abs(dx) > Math.abs(dy)) {
+                        swipeDragging = true;
+                        container.classList.add('is-dragging');
+                    }
+                    if (swipeDragging) {
+                        e.preventDefault();
+                        const offset = Math.max(-44, Math.min(0, (container.classList.contains('swipe-revealed') ? -44 : 0) + dx));
+                        swipeRow.style.transform = `translateX(${offset}px)`;
+                    }
+                });
+                const finishSwipeDrag = e => {
+                    if (swipePointerId !== e.pointerId) return;
+                    if (swipeDragging) {
+                        const dx = e.clientX - swipeStartX;
+                        const dy = e.clientY - swipeStartY;
+                        const wasOpen = container.classList.contains('swipe-revealed');
+                        const shouldOpen = wasOpen ? dx < 18 : dx < -18;
+                        if (Math.abs(dx) > Math.abs(dy)) {
+                            container.dataset.ignoreNextClick = '1';
+                            setTimeout(() => { container.dataset.ignoreNextClick = '0'; }, 500);
+                        }
+                        container.classList.toggle('swipe-revealed', shouldOpen);
+                        swipeRow.style.transform = '';
+                        container.classList.remove('is-dragging');
+                    }
+                    swipePointerId = null;
+                    swipeDragging = false;
+                };
+                container.addEventListener('pointerup', finishSwipeDrag);
+                container.addEventListener('pointercancel', e => {
+                    if (swipePointerId !== e.pointerId) return;
+                    if (swipeRow) swipeRow.style.transform = '';
+                    container.classList.remove('is-dragging');
+                    swipePointerId = null;
+                    swipeDragging = false;
+                });
             });
+            const renderedDates = new Set(filtered.map(t => t.date));
+            Object.entries(diaryEntries).filter(([date,memory]) => !!memory && !renderedDates.has(date)).sort((a,b) => b[0].localeCompare(a[0])).forEach(([date,memory]) => { const sep=document.createElement('div');sep.className='history-day-separator';const d=new Date(date+'T00:00:00');sep.textContent=isNaN(d)?date:d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});historyList.appendChild(sep);const card=document.createElement('div');card.className='diary-insight history-diary-memory';card.innerHTML=`<strong>📖 Hoshino's little memory</strong><div>${escapeHtml(memory)}</div>`;historyList.appendChild(card); });
         }
 
         // ==========================================
@@ -6882,7 +6936,7 @@
             if(txPanel)txPanel.style.display=mode==='transactions'?'flex':'none';
             if(heading)heading.textContent=mode==='calendar'?'📅 Pocket Money Calendar':'📜 All Transactions';
         }
-        function switchActivityView(view){const calendar=view==='calendar';document.getElementById('calendarActivityView').style.display=calendar?'block':'none';document.getElementById('diaryActivityView').style.display=calendar?'none':'block';document.getElementById('calendarViewTab').classList.toggle('active',calendar);document.getElementById('diaryViewTab').classList.toggle('active',!calendar);if(!calendar){renderDiaryInsight();const heading=document.querySelector('#activitySection > h2');if(heading)heading.textContent="📖 Hoshino's Diary";}else applyHistoryDisplayMode();}
+        function switchActivityView(view){const diary=view==='diary';document.getElementById('calendarActivityView').style.display=diary?'none':'block';document.getElementById('diaryActivityView').style.display=diary?'block':'none';document.getElementById('calendarViewTab').classList.toggle('active',!diary);document.getElementById('diaryViewTab').classList.toggle('active',diary);const heading=document.querySelector('#activitySection > h2');if(diary){renderDiaryInsight();if(heading)heading.textContent="📖 Hoshino's Diary";}else applyHistoryDisplayMode();}
         function changeActivityMonth(delta){activityMonth.setMonth(activityMonth.getMonth()+delta);renderActivityCalendar();}
         function selectActivityDate(date){activitySelectedDate=date;const dateInput=document.getElementById('diaryDate');if(dateInput)dateInput.value=date;renderActivityCalendar();renderDiaryInsight();const wallet=getCurrentWallet();ensureWalletExtras(wallet);const text=document.getElementById('diaryText');if(text)text.value=wallet.diary[date]||'';activityDiaryContext=`${currentWalletId}|${date}`;}
         function renderDiaryInsight(){const wallet=getCurrentWallet();if(!wallet)return;ensureWalletExtras(wallet);const date=(document.getElementById('diaryDate')||{}).value||activitySelectedDate;const txs=wallet.transactions.filter(t=>t.date===date);const gain=txs.filter(t=>t.type==='gain').reduce((n,t)=>n+t.amount,0);const spend=txs.filter(t=>t.type==='spend').reduce((n,t)=>n+t.amount,0);const insight=document.getElementById('diarySpendingInsight');if(!insight)return;const line=spend>gain?`You spent ${formatMoney(spend,getCurrentCurrency())} and received ${formatMoney(gain,getCurrentCurrency())}.`:`You received ${formatMoney(gain,getCurrentCurrency())} and spent ${formatMoney(spend,getCurrentCurrency())}.`;const mood=txs.length?`Hoshino says: “${spend>gain?'Uhe~ quite a spending day, Sensei. I hope it was worth it!':'Nice balance today, Sensei! Keep taking care of your wallet~'}”`:'Hoshino says: “A quiet wallet day~ Nothing wrong with taking a little break.”';insight.textContent=`${date}: ${line} Net: ${formatMoney(gain-spend,getCurrentCurrency())}. ${mood}`;}
